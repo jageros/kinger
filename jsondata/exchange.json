@@ -1,0 +1,10 @@
+[
+	{ "__id__": 1, "resouce": "weapon", "buy": 200, "sold": 50 },
+	{ "__id__": 2, "resouce": "horse", "buy": 200, "sold": 50 },
+	{ "__id__": 3, "resouce": "material", "buy": 200, "sold": 50 },
+	{ "__id__": 5, "resouce": "forage", "buy": 200, "sold": 50 },
+	{ "__id__": 6, "resouce": "medicine", "buy": 2000, "sold": 500 },
+	{ "__id__": 7, "resouce": "bandage", "buy": 200, "sold": 50 },
+	{ "__id__": 8, "resouce": "wine", "buy": 200, "sold": 50 },
+	{ "__id__": 9, "resouce": "book", "buy": 200, "sold": 50 }
+]

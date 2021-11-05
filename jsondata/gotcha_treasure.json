@@ -1,0 +1,4 @@
+[
+	{ "__id__": "1", "treasureId": "BX7101", "jadePrice": 198, "bowdlerPrice": 0, "team": 0, "pvpLevelCondition": 0, "switch": 1, "openWeekDays": [1, 2, 3, 4, 5, 6, 7], "areas": [] },
+	{ "__id__": "2", "treasureId": "BX7102", "jadePrice": 98, "bowdlerPrice": 0, "team": 0, "pvpLevelCondition": 0, "switch": 0, "openWeekDays": [1, 2, 3, 4, 5, 6, 7], "areas": [] }
+]

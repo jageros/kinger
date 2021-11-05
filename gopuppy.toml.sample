@@ -1,0 +1,125 @@
+logDir = "logs"
+readTimeout = 50  # s
+maxPacketSize = 2097152  # byte
+debug = false
+
+[database]
+type = "mongodb"
+addr = "127.0.0.1:27017"
+db = "kingwar"
+#user = "openew_io1"
+#password = "1qa@WS3edio1"
+
+[redis]
+addr = "localhost:6379"
+
+[Opmon]
+dumpInterval = 3600
+#falconAgentPort = 1988
+
+# ----------------- gates begin --------------------
+[[gates]]
+  id = 1
+  logFile = "gate.log"
+  logLevel = "debug"
+  [[gates.listens]]
+    network = "ws"
+    bindIP = "0.0.0.0"
+    port = 9100
+  [[gates.listens]]
+    network = "ws"
+    certfile = "tls/cert.pem"
+    keyfile = "tls/privkey.pem"
+    bindIP = "0.0.0.0"
+    port = 9101
+
+[[gates]]
+  id = 2
+  logFile = "gate.log"
+  logLevel = "debug"
+  [[gates.listens]]
+    network = "ws"
+    bindIP = "0.0.0.0"
+    port = 9103
+  [[gates.listens]]
+    network = "ws"
+    certfile = "tls/cert.pem"
+    keyfile = "tls/privkey.pem"
+    bindIP = "0.0.0.0"
+    port = 9104
+# ----------------- gates end --------------------
+
+# ----------------- centers begin --------------------
+[[centers]]
+  id = 1
+  logFile = "center.log"
+  logLevel = "debug"
+  [centers.listen]
+  network = "tcp"
+  bindIP = "127.0.0.1"
+  port = 9200
+
+[[centers]]
+  id = 2
+  logFile = "center.log"
+  logLevel = "debug"
+  [centers.listen]
+  network = "tcp"
+  bindIP = "127.0.0.1"
+  port = 9201
+# ----------------- centers end --------------------
+
+# ----------------- games begin --------------------
+[[logics]]
+  id = 1
+  name = "game"
+  logFile = "game.log"
+  logLevel = "debug"
+  httpPort = 6669
+# ----------------- games end --------------------
+
+# ----------------- battles begin --------------------
+[[logics]]
+  id = 1
+  name = "battle"
+  logFile = "battle.log"
+  logLevel = "debug"
+[[logics]]
+  id = 2
+  name = "battle"
+  logFile = "battle.log"
+  logLevel = "debug"
+# ----------------- battles end --------------------
+
+[[logics]]
+  id = 1
+  name = "match"
+  logFile = "match.log"
+  logLevel = "debug"
+
+[[logics]]
+  id = 1
+  name = "chat"
+  logFile = "chat.log"
+  logLevel = "debug"
+
+[[logics]]
+  id = 1
+  name = "rank"
+  logFile = "chat.log"
+  logLevel = "debug"
+
+[[logics]]
+  id = 1
+  name = "video"
+  logFile = "chat.log"
+  logLevel = "debug"
+
+
+
+
+[[logics]]
+  id = 1
+  name = "robot"
+  logFile = "robot.log"
+  logLevel = "info"

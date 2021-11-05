@@ -1,0 +1,5 @@
+[
+	{ "__id__": "1", "soldGold": 2000, "jadePrice": 0, "bowlderPrice": 30, "desc": 10308, "icon": "shop_goldIcon1_png" },
+	{ "__id__": "2", "soldGold": 7000, "jadePrice": 0, "bowlderPrice": 100, "desc": 10309, "icon": "shop_goldIcon3_png" },
+	{ "__id__": "3", "soldGold": 15000, "jadePrice": 0, "bowlderPrice": 200, "desc": 10310, "icon": "shop_goldIcon5_png" }
+]

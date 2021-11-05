@@ -1,0 +1,5 @@
+[
+	{ "__id__": 1, "cardId": 105, "piece": 50, "cnt": 1, "areas": [], "version": 1 },
+	{ "__id__": 2, "cardId": 110, "piece": 50, "cnt": 1, "areas": [], "version": 2 },
+	{ "__id__": 3, "cardId": 107, "piece": 50, "cnt": 1, "areas": [], "version": 3 }
+]

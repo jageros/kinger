@@ -1,0 +1,8 @@
+[
+	{ "__id__": "rmb6", "price": 6, "jadePrice": 0, "jadeCnt": 60, "firstJadeCnt": 120, "firstJaceVersion": 1, "desc": 10301, "icon": "ui://common/jadeIcon1", "textFlag": "", "us": 0.99, "hk": 8, "tw": 60, "areas": [] },
+	{ "__id__": "rmb30", "price": 30, "jadePrice": 0, "jadeCnt": 300, "firstJadeCnt": 600, "firstJaceVersion": 1, "desc": 10302, "icon": "ui://common/jadeIcon2", "textFlag": "", "us": 4.99, "hk": 38, "tw": 150, "areas": [] },
+	{ "__id__": "rmb68", "price": 68, "jadePrice": 0, "jadeCnt": 680, "firstJadeCnt": 1360, "firstJaceVersion": 1, "desc": 10303, "icon": "ui://common/jadeIcon3", "textFlag": "", "us": 9.99, "hk": 78, "tw": 300, "areas": [] },
+	{ "__id__": "rmb128", "price": 128, "jadePrice": 0, "jadeCnt": 1280, "firstJadeCnt": 2560, "firstJaceVersion": 1, "desc": 10304, "icon": "ui://common/jadeIcon4", "textFlag": "", "us": 19.99, "hk": 158, "tw": 590, "areas": [] },
+	{ "__id__": "rmb328", "price": 328, "jadePrice": 0, "jadeCnt": 3280, "firstJadeCnt": 6560, "firstJaceVersion": 1, "desc": 10305, "icon": "ui://common/jadeIcon5", "textFlag": "", "us": 49.99, "hk": 398, "tw": 1490, "areas": [] },
+	{ "__id__": "rmb648", "price": 648, "jadePrice": 0, "jadeCnt": 6480, "firstJadeCnt": 12960, "firstJaceVersion": 1, "desc": 10306, "icon": "ui://common/jadeIcon6", "textFlag": "", "us": 99.99, "hk": 788, "tw": 2990, "areas": [] }
+]

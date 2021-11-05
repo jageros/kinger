@@ -1,0 +1,6 @@
+[
+	{ "__id__": 1, "type": "skin", "rewardId": "SK05901", "cnt": 1, "exchangeCnt": 1, "price": 50 },
+	{ "__id__": 2, "type": "headFrame", "rewardId": "19", "cnt": 1, "exchangeCnt": 1, "price": 35 },
+	{ "__id__": 3, "type": "gold", "rewardId": "", "cnt": 666, "exchangeCnt": 9999, "price": 1 },
+	{ "__id__": 4, "type": "gold", "rewardId": "", "cnt": 6666, "exchangeCnt": 9999, "price": 10 }
+]

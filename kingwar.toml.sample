@@ -1,0 +1,33 @@
+debug = true
+isPC = false
+version = "0.0.1"
+appStoreCanTest = true
+isMultiLan = false
+gmtoolKey = ""
+hostID = 1000
+isBanShu = false
+
+[wxgame]
+isExamined = false
+accTreasureCnt = 10
+notSubStarCnt = 3
+accTreasureTime = 1800
+delayRewardTime = 3
+triggerTreasureShareHDCnt = 3
+
+[[channels]]
+  channel = "lzd_pkgsdk"
+  tdkey = "DA82D687626F4F3185D914C449302546"
+
+[[channels]]
+  channel = "lzd_xianfeng"
+  tdkey = "DA82D687626F4F3185D914C449302546"
+
+  [[loginChannels]]
+    channel = "xianfeng"
+    appID = "10035"
+    loginKey = "2fb5fdee287b4c84"
+    loginSecret = "ad5e2f177ffdb286"
+    payKey = "2fb5fdee287b4c84"
+    paySecret = "ad5e2f177ffdb286"
+

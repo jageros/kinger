@@ -1,0 +1,5 @@
+[
+	{ "__id__": 0, "name": "Success", "desc": "" },
+	{ "__id__": -2, "name": "InternalErr", "desc": "通讯失败" },
+	{ "__id__": 100, "name": "LevelLockErr", "desc": "关卡未解锁" }
+]

@@ -1,0 +1,18 @@
+region = 1
+
+[database]
+type = "mongodb"
+addr = "localhost:27017"
+db = "kingwar"
+user = ""
+password = ""
+
+[global_database]
+type = "mongodb"
+addr = "localhost:27017"
+db = "kingwar"
+user = ""
+password = ""
+
+[redis]
+addr = "localhost:6379"

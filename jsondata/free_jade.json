@@ -1,0 +1,10 @@
+[
+	{ "__id__": 1, "soldJade": 5, "time": 43200, "team": 2, "desc": 10301, "icon": "ui://common/jadeIcon1", "advert": 1 },
+	{ "__id__": 2, "soldJade": 5, "time": 43200, "team": 3, "desc": 10301, "icon": "ui://common/jadeIcon1", "advert": 1 },
+	{ "__id__": 3, "soldJade": 5, "time": 43200, "team": 4, "desc": 10301, "icon": "ui://common/jadeIcon1", "advert": 1 },
+	{ "__id__": 4, "soldJade": 5, "time": 43200, "team": 5, "desc": 10301, "icon": "ui://common/jadeIcon1", "advert": 1 },
+	{ "__id__": 5, "soldJade": 5, "time": 43200, "team": 6, "desc": 10301, "icon": "ui://common/jadeIcon1", "advert": 1 },
+	{ "__id__": 6, "soldJade": 5, "time": 43200, "team": 7, "desc": 10301, "icon": "ui://common/jadeIcon1", "advert": 1 },
+	{ "__id__": 7, "soldJade": 5, "time": 43200, "team": 8, "desc": 10301, "icon": "ui://common/jadeIcon1", "advert": 1 },
+	{ "__id__": 8, "soldJade": 5, "time": 43200, "team": 9, "desc": 10301, "icon": "ui://common/jadeIcon1", "advert": 1 }
+]

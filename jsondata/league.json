@@ -1,0 +1,12 @@
+[
+	{ "__id__": 1, "title": 10031, "leagueLevel": 1, "leagueIcon": "", "name": 10060, "rank_integral": 4080, "reward": ["gold:2000"] },
+	{ "__id__": 2, "title": 10032, "leagueLevel": 1, "leagueIcon": "", "name": 10060, "rank_integral": 4380, "reward": ["ticket:10"] },
+	{ "__id__": 3, "title": 10033, "leagueLevel": 1, "leagueIcon": "", "name": 10060, "rank_integral": 4680, "reward": ["BX0905:2"] },
+	{ "__id__": 4, "title": 10034, "leagueLevel": 2, "leagueIcon": "", "name": 10061, "rank_integral": 5080, "reward": ["gold:3000"] },
+	{ "__id__": 5, "title": 10035, "leagueLevel": 2, "leagueIcon": "", "name": 10061, "rank_integral": 5380, "reward": ["ticket:15"] },
+	{ "__id__": 6, "title": 10036, "leagueLevel": 2, "leagueIcon": "", "name": 10061, "rank_integral": 5680, "reward": ["BX0903:2"] },
+	{ "__id__": 7, "title": 10037, "leagueLevel": 3, "leagueIcon": "", "name": 10062, "rank_integral": 6080, "reward": ["gold:4000"] },
+	{ "__id__": 8, "title": 10038, "leagueLevel": 3, "leagueIcon": "", "name": 10062, "rank_integral": 6380, "reward": ["ticket:20"] },
+	{ "__id__": 9, "title": 10039, "leagueLevel": 3, "leagueIcon": "", "name": 10062, "rank_integral": 6680, "reward": ["BX0906:2"] },
+	{ "__id__": 10, "title": 10040, "leagueLevel": 4, "leagueIcon": "", "name": 10063, "rank_integral": 7080, "reward": ["BX0904:2"] }
+]

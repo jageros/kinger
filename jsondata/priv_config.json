@@ -1,0 +1,16 @@
+[
+	{ "__id__": 1, "icon": "privIcon1", "name": 10501, "desc": 10601, "shortDesc": 10701, "hide": 0, "level1Buff": [100, 2, 1], "level2Buff": [100, 3, 1], "level3Buff": [100, 3, 1], "level4Buff": [100, 3, 1] },
+	{ "__id__": 2, "icon": "privIcon2", "name": 10502, "desc": 10602, "shortDesc": 10702, "hide": 0, "level1Buff": [100, 10, 100], "level2Buff": [100, 15, 100], "level3Buff": [100, 15, 100], "level4Buff": [100, 15, 100] },
+	{ "__id__": 3, "icon": "privIcon3", "name": 10503, "desc": 10603, "shortDesc": 10703, "hide": 1, "level1Buff": [0, 2, 1], "level2Buff": [0, 2, 1], "level3Buff": [0, 2, 1], "level4Buff": [0, 2, 1] },
+	{ "__id__": 4, "icon": "privIcon4", "name": 10504, "desc": 10604, "shortDesc": 10704, "hide": 0, "level1Buff": [100, 2, 1], "level2Buff": [100, 3, 1], "level3Buff": [100, 3, 1], "level4Buff": [100, 3, 1] },
+	{ "__id__": 5, "icon": "privIcon5", "name": 10505, "desc": 10605, "shortDesc": 10705, "hide": 0, "level1Buff": [100, 6, 1], "level2Buff": [100, 9, 1], "level3Buff": [100, 6, 1], "level4Buff": [100, 6, 1] },
+	{ "__id__": 6, "icon": "privIcon6", "name": 10506, "desc": 10606, "shortDesc": 10706, "hide": 0, "level1Buff": [100, 10, 100], "level2Buff": [100, 15, 100], "level3Buff": [100, 15, 100], "level4Buff": [100, 15, 100] },
+	{ "__id__": 7, "icon": "privIcon7", "name": 10507, "desc": 10607, "shortDesc": 10707, "hide": 1, "level1Buff": [0, 100, 100], "level2Buff": [0, 100, 100], "level3Buff": [0, 100, 100], "level4Buff": [0, 100, 100] },
+	{ "__id__": 8, "icon": "privIcon8", "name": 10508, "desc": 10608, "shortDesc": 10708, "hide": 0, "level1Buff": [10, 1, 1], "level2Buff": [15, 1, 1], "level3Buff": [15, 1, 1], "level4Buff": [15, 1, 1] },
+	{ "__id__": 9, "icon": "privIcon9", "name": 10509, "desc": 10609, "shortDesc": 10709, "hide": 0, "level1Buff": [10, 0, 1], "level2Buff": [15, 0, 1], "level3Buff": [15, 0, 1], "level4Buff": [15, 0, 1] },
+	{ "__id__": 10, "icon": "privIcon10", "name": 10510, "desc": 10610, "shortDesc": 10710, "hide": 0, "level1Buff": [10, 1, 1], "level2Buff": [15, 1, 1], "level3Buff": [15, 1, 1], "level4Buff": [15, 1, 1] },
+	{ "__id__": 11, "icon": "privIcon11", "name": 10511, "desc": 10611, "shortDesc": 10711, "hide": 0, "level1Buff": [100, 10, 100], "level2Buff": [100, 15, 100], "level3Buff": [100, 15, 100], "level4Buff": [100, 15, 100] },
+	{ "__id__": 12, "icon": "vipIcon", "name": 10512, "desc": 10612, "shortDesc": 10712, "hide": 1, "level1Buff": [100, 100, 100], "level2Buff": [100, 100, 100], "level3Buff": [100, 100, 100], "level4Buff": [100, 100, 100] },
+	{ "__id__": 13, "icon": "vipIcon", "name": 10513, "desc": 10613, "shortDesc": 10713, "hide": 1, "level1Buff": [100, 2, 1], "level2Buff": [100, 2, 1], "level3Buff": [100, 2, 1], "level4Buff": [100, 2, 1] },
+	{ "__id__": 14, "icon": "vipIcon", "name": 10514, "desc": 10614, "shortDesc": 10714, "hide": 1, "level1Buff": [0, 1, 1], "level2Buff": [0, 1, 1], "level3Buff": [0, 1, 1], "level4Buff": [0, 1, 1] }
+]

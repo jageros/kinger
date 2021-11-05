@@ -1,0 +1,3 @@
+[
+	{ "__id__": 1, "team": 6, "beginTime": "2017-10-23 10:00:00", "endTime": "2017-11-12 23:59:59", "handCardType": [2, 8, 5], "player1Buff": [], "player2Buff": [], "battleCard": [], "again": [3, 3] }
+]

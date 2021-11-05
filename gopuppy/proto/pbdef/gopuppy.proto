@@ -1,0 +1,150 @@
+syntax = "proto3";
+
+package pb;
+
+//@ A2C_REGISTER_APP    req: AppInfo    resp: ok or err
+//@ GT2C_ON_CLIENT_ACCEPT    req: ClientProxy    resp: ok or err
+//@ GT2C_ON_CLIENT_CLOSE    req: PlayerClient
+//@ GT2C_CLIENT_RPC_CALL    req: RpcCallArg    resp: RpcCallReply
+//@ GT2C_CLIENT_RPC_PUSH    req: RpcCallArg
+//@ C2GT_PUSH_CLIENT    req: RpcCallArg
+//@ L2C_REPORT_RPC    req: RpcHandlers    resp: ok or err
+//@ G2C_PLAYER_LOGIN    req: PlayerClient    resp: ok or err
+//@ C2L_KICK_OUT_PLAYER    req: PlayerClient    resp: ok or err
+//@ PLAYER_LOGIN_DONE    req: PlayerLoginDone
+//@ L2L_CALL_AGENT    req: RpcCallArg    resp: RpcCallReply
+//@ L2L_PUSH_AGENT    req: RpcCallArg
+//@ L2CL_PUSH_CLIENT    req: RpcCallArg
+//@ L2C_SET_DISPATCH    req: SetDispatchArg
+//@ L2L_NO_PLAYER_RPC_CALL    req: NoPlayerRpcCallArg    resp: RpcCallReply
+//@ L2L_NO_PLAYER_RPC_PUSH    req: NoPlayerRpcCallArg
+//@ C2GT_BROADCAST_CLIENT    req: BroadcastClientArg
+//@ C2L_RESTORE_AGENT    req: RestoreAgentArg    resp: ok or err
+//@ LOAD_PLAYER    req: TargetPlayer    resp: RpcCallReply
+//@ DEL_CLIENT_DISPATCH_INFO    req: TargetPlayer
+//@ C2GT_CLIENT_SET_FILTER    req: ClientSetFilterArg
+//@ C2GT_CLIENT_CLEAR_FILTER    req: PlayerClient
+//@ L2C_MQ_PUBLISH    req: RmqMessage
+//@ L2C_MQ_ADD_CONSUMER    req: MqConsumerArg
+//@ L2C_MQ_REMOVE_CONSUMER    req: MqConsumerArg
+//@ C2L_MQ_CONSUME    req: RmqMessage
+//@ GT2C_ON_SNET_DISCONNECT    req: PlayerClient
+//@ GT2C_ON_SNET_RECONNECT    req: PlayerClient
+//@ L2L_NO_PLAYER_BROADCAST   req: NoPlayerBroadcastArg
+//@ L2C_BEGIN_HOT_FIX    resp: ok or err
+//@ END_MONITOR_PLAYER    req: PlayerClient    resp: ok or err
+//@ L2C_PLAYER_LOGOUT    req: PlayerClient
+
+message AppInfo {
+    uint32 AppID = 1;
+    string AppName = 2;
+    uint32 Region = 3;
+    bool IsReconnect = 4;
+}
+
+message ClientID {
+    uint32 GateID = 1;
+    int64 SesID = 2;
+}
+
+message ClientProxy {
+    uint32 GateID = 1;
+    uint64 ClientID = 2;
+}
+
+message RpcCallArg {
+    PlayerClient Client = 1;
+    int32 MsgID = 2;
+    bytes Payload = 3;
+}
+
+message RpcCallReply {
+    bytes Payload = 1;
+}
+
+message RpcHandler {
+    int32 MsgID = 1;
+    bool IsPlayer = 2;
+}
+
+message RpcHandlers {
+    uint32 AppID = 1;
+    string AppName = 2;
+    repeated RpcHandler Handlers = 3;
+}
+
+message PlayerClient {
+    uint64 ClientID = 1;
+    uint32 GateID = 2;
+    uint64 Uid = 3;
+    uint32 Region = 4;
+    string IP = 5;
+}
+
+message SetDispatchArg {
+    uint64 Uid = 1;
+    string AppName = 2;
+    uint32 AppID = 3;
+}
+
+message NoPlayerRpcCallArg {
+    string AppName = 1;
+    uint32 AppID = 2;
+    int32 MsgID = 3;
+    bytes Payload = 4;
+}
+
+message NoPlayerBroadcastArg {
+    int32 MsgID = 1;
+    bytes Payload = 2;
+}
+
+message BroadcastClientArg {
+    int32 MsgID = 1;
+    bytes Payload = 2;
+    BroadcastClientFilter Filter = 3;
+}
+
+message BroadcastClientFilter {
+    enum OpType {
+        EQ = 0;
+        NE = 1;
+        GT = 2;
+        LT = 3;
+        GTE = 4;
+        LTE = 5;
+    };
+
+    OpType OP = 1;
+    string Key = 2;
+    string Val = 3;
+}
+
+message ClientSetFilterArg {
+    uint64 Uid = 1;
+    uint64 ClientID = 2;
+    BroadcastClientFilter Filter = 3;
+}
+
+message RestoreAgentArg {
+    repeated PlayerClient Clients = 1;
+}
+
+message TargetPlayer {
+    uint64 Uid = 1;
+}
+
+message RmqMessage {
+    string Queue = 1;
+    int32 Type = 2;
+    bytes Payload = 3;
+}
+
+message MqConsumerArg {
+    string Queue = 1;
+}
+
+message PlayerLoginDone {
+    PlayerClient Client = 1;
+    bool BeMonitor = 2;
+}

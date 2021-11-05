@@ -1,0 +1,13 @@
+[
+	{ "__id__": "SK02701", "resource": "SK02701", "general": 27, "head": "27_1", "name": 23001, "desc": 23002, "bind": "" },
+	{ "__id__": "SK00201", "resource": "SK00201", "general": 2, "head": "2_1", "name": 23003, "desc": 23004, "bind": "" },
+	{ "__id__": "SK04301", "resource": "SK04301", "general": 43, "head": "43_1", "name": 23005, "desc": 23006, "bind": "" },
+	{ "__id__": "SK00901", "resource": "skin00901", "general": 9, "head": "9_1", "name": 23007, "desc": 23008, "bind": "" },
+	{ "__id__": "SK06101", "resource": "SK06101", "general": 61, "head": "61_1", "name": 23009, "desc": 23010, "bind": "" },
+	{ "__id__": "SK02501", "resource": "SK02501", "general": 25, "head": "25_1", "name": 23011, "desc": 23012, "bind": "" },
+	{ "__id__": "SK04901", "resource": "SK04901", "general": 49, "head": "49_1", "name": 23013, "desc": 23014, "bind": "" },
+	{ "__id__": "SK01901", "resource": "skin01901", "general": 19, "head": "19_1", "name": 23015, "desc": 23016, "bind": "" },
+	{ "__id__": "SK04001", "resource": "skin04001", "general": 40, "head": "40_1", "name": 23017, "desc": 23018, "bind": "" },
+	{ "__id__": "SK05901", "resource": "skin05901", "general": 59, "head": "59_1", "name": 23019, "desc": 23020, "bind": "" },
+	{ "__id__": "SK00801", "resource": "skin00801", "general": 8, "head": "8_1", "name": 23021, "desc": 23022, "bind": "" }
+]

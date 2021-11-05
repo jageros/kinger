@@ -1,0 +1,14 @@
+[
+	{ "__id__": 1, "type": "card", "itemID": "105", "amount": 1, "team": 1, "pro": 50, "showIcon": "", "text": 0 },
+	{ "__id__": 2, "type": "resource", "itemID": "11", "amount": 20, "team": 1, "pro": 1500, "showIcon": "icon:jadeIconBig", "text": 70381 },
+	{ "__id__": 3, "type": "resource", "itemID": "18", "amount": 1, "team": 1, "pro": 1500, "showIcon": "icon:cardPieceIconBig", "text": 70389 },
+	{ "__id__": 4, "type": "resource", "itemID": "103", "amount": 10, "team": 1, "pro": 500, "showIcon": "icon:ticketIconBig", "text": 70384 },
+	{ "__id__": 5, "type": "resource", "itemID": "4", "amount": 2000, "team": 1, "pro": 1500, "showIcon": "icon:goldIconBig", "text": 70380 },
+	{ "__id__": 6, "type": "tryPriv", "itemID": "-1", "amount": 1, "team": 1, "pro": 1000, "showIcon": "icon:priv1", "text": 70391 },
+	{ "__id__": 7, "type": "skin", "itemID": "SK02701", "amount": 1, "team": 1, "pro": 100, "showIcon": "", "text": 0 },
+	{ "__id__": 8, "type": "resource", "itemID": "11", "amount": 30, "team": 1, "pro": 1000, "showIcon": "icon:jadeIconBig", "text": 70381 },
+	{ "__id__": 9, "type": "tryVip", "itemID": "", "amount": 1, "team": 1, "pro": 250, "showIcon": "icon:advip", "text": 0 },
+	{ "__id__": 10, "type": "resource", "itemID": "18", "amount": 2, "team": 1, "pro": 1000, "showIcon": "icon:cardPieceIconBig", "text": 70390 },
+	{ "__id__": 11, "type": "resource", "itemID": "4", "amount": 5000, "team": 1, "pro": 600, "showIcon": "icon:goldIconBig", "text": 70380 },
+	{ "__id__": 12, "type": "tryPriv", "itemID": "-1", "amount": 1, "team": 1, "pro": 1000, "showIcon": "icon:priv1", "text": 70391 }
+]

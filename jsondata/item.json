@@ -1,0 +1,17 @@
+[
+	{ "__id__": "EQ1", "name": 11001, "icon": "eq1", "iconSmall": "eq1_s", "version": 0, "skill": [5001], "type": 2 },
+	{ "__id__": "EQ2", "name": 11002, "icon": "eq2", "iconSmall": "eq2_s", "version": 0, "skill": [5002], "type": 1 },
+	{ "__id__": "EQ3", "name": 11003, "icon": "eq3", "iconSmall": "eq3_s", "version": 0, "skill": [5003, 5007, 5008, 5009], "type": 2 },
+	{ "__id__": "EQ4", "name": 11004, "icon": "eq4", "iconSmall": "eq4_s", "version": 0, "skill": [5004], "type": 3 },
+	{ "__id__": "EQ5", "name": 11005, "icon": "eq5", "iconSmall": "eq5_s", "version": 0, "skill": [5005], "type": 3 },
+	{ "__id__": "EQ6", "name": 11006, "icon": "eq6", "iconSmall": "eq6_s", "version": 0, "skill": [5006], "type": 1 },
+	{ "__id__": "EQ7", "name": 11007, "icon": "eq7", "iconSmall": "eq7_s", "version": 0, "skill": [5011], "type": 4 },
+	{ "__id__": "EQ8", "name": 11008, "icon": "eq8", "iconSmall": "eq8_s", "version": 0, "skill": [5012, 5015, 5016], "type": 1 },
+	{ "__id__": "EQ9", "name": 11009, "icon": "eq9", "iconSmall": "eq9_s", "version": 0, "skill": [5013], "type": 4 },
+	{ "__id__": "EQ10", "name": 11010, "icon": "eq10", "iconSmall": "eq10_s", "version": 0, "skill": [5017], "type": 2 },
+	{ "__id__": "EQ11", "name": 11011, "icon": "eq11", "iconSmall": "eq11_s", "version": 0, "skill": [5018], "type": 1 },
+	{ "__id__": "EQ12", "name": 11012, "icon": "eq12", "iconSmall": "eq12_s", "version": 0, "skill": [5019], "type": 3 },
+	{ "__id__": "EQ14", "name": 11014, "icon": "eq14", "iconSmall": "eq14_s", "version": 0, "skill": [5021], "type": 1 },
+	{ "__id__": "EQ15", "name": 11015, "icon": "eq15", "iconSmall": "eq15_s", "version": 0, "skill": [5022], "type": 2 },
+	{ "__id__": "EQ16", "name": 11016, "icon": "eq16", "iconSmall": "eq16_s", "version": 0, "skill": [5023], "type": 4 }
+]

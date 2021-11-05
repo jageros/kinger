@@ -1,0 +1,5 @@
+[
+	{ "__id__": 1, "country": [], "wid": 25, "reward": ["eventItem:3"] },
+	{ "__id__": 2, "country": [], "wid": 50, "reward": ["eventItem:5"] },
+	{ "__id__": 3, "country": [], "wid": 80, "reward": ["eventItem:8"] }
+]

@@ -1,0 +1,11 @@
+[
+	{ "__id__": 1, "privId": 1, "honorPrice": 0, "famePrice": 0, "cnt": 1 },
+	{ "__id__": 2, "privId": 2, "honorPrice": 0, "famePrice": 0, "cnt": 1 },
+	{ "__id__": 3, "privId": 3, "honorPrice": 0, "famePrice": 0, "cnt": 1 },
+	{ "__id__": 4, "privId": 4, "honorPrice": 0, "famePrice": 0, "cnt": 1 },
+	{ "__id__": 5, "privId": 5, "honorPrice": 0, "famePrice": 0, "cnt": 1 },
+	{ "__id__": 6, "privId": 6, "honorPrice": 0, "famePrice": 0, "cnt": 1 },
+	{ "__id__": 7, "privId": 7, "honorPrice": 0, "famePrice": 0, "cnt": 1 },
+	{ "__id__": 8, "privId": 8, "honorPrice": 0, "famePrice": 0, "cnt": 1 },
+	{ "__id__": 9, "privId": 9, "honorPrice": 0, "famePrice": 0, "cnt": 1 }
+]

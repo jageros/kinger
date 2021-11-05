@@ -1,0 +1,20 @@
+[
+	{ "__id__": 1, "type": "card", "itemID": "110", "amount": 1, "team": 1, "pro": 166, "show": 1, "version": 1, "areas": [] },
+	{ "__id__": 2, "type": "card", "itemID": "105", "amount": 1, "team": 1, "pro": 166, "show": 1, "version": 1, "areas": [] },
+	{ "__id__": 3, "type": "card", "itemID": "102", "amount": 1, "team": 1, "pro": 166, "show": 1, "version": 1, "areas": [] },
+	{ "__id__": 4, "type": "card", "itemID": "114", "amount": 1, "team": 1, "pro": 166, "show": 1, "version": 2, "areas": [] },
+	{ "__id__": 5, "type": "card", "itemID": "115", "amount": 1, "team": 1, "pro": 166, "show": 1, "version": 2, "areas": [] },
+	{ "__id__": 6, "type": "card", "itemID": "116", "amount": 1, "team": 1, "pro": 166, "show": 1, "version": 2, "areas": [] },
+	{ "__id__": 7, "type": "card", "itemID": "85", "amount": 1, "team": 1, "pro": 166, "show": 1, "version": 3, "areas": [] },
+	{ "__id__": 8, "type": "card", "itemID": "86", "amount": 1, "team": 1, "pro": 166, "show": 1, "version": 3, "areas": [] },
+	{ "__id__": 9, "type": "card", "itemID": "87", "amount": 1, "team": 1, "pro": 166, "show": 1, "version": 3, "areas": [] },
+	{ "__id__": 10, "type": "card", "itemID": "108", "amount": 1, "team": 1, "pro": 166, "show": 1, "version": 4, "areas": [] },
+	{ "__id__": 11, "type": "card", "itemID": "78", "amount": 1, "team": 1, "pro": 166, "show": 1, "version": 4, "areas": [] },
+	{ "__id__": 12, "type": "card", "itemID": "80", "amount": 1, "team": 1, "pro": 166, "show": 1, "version": 4, "areas": [] },
+	{ "__id__": 13, "type": "card", "itemID": "101", "amount": 1, "team": 1, "pro": 166, "show": 1, "version": 5, "areas": [] },
+	{ "__id__": 14, "type": "card", "itemID": "104", "amount": 1, "team": 1, "pro": 166, "show": 1, "version": 5, "areas": [] },
+	{ "__id__": 15, "type": "card", "itemID": "107", "amount": 1, "team": 1, "pro": 166, "show": 1, "version": 5, "areas": [] },
+	{ "__id__": 16, "type": "card", "itemID": "76", "amount": 1, "team": 1, "pro": 166, "show": 1, "version": 6, "areas": [] },
+	{ "__id__": 17, "type": "card", "itemID": "77", "amount": 1, "team": 1, "pro": 166, "show": 1, "version": 6, "areas": [] },
+	{ "__id__": 18, "type": "card", "itemID": "79", "amount": 1, "team": 1, "pro": 166, "show": 1, "version": 6, "areas": [] }
+]

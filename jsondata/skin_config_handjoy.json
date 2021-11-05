@@ -1,0 +1,6 @@
+[
+	{ "__id__": "SK00801", "resource": "SK00801", "general": 8, "head": "8_1", "name": 23009, "desc": 23010, "bind": "" },
+	{ "__id__": "SK07301", "resource": "SK07301", "general": 73, "head": "73_1", "name": 23011, "desc": 23012, "bind": "SK07401" },
+	{ "__id__": "SK07401", "resource": "SK07401", "general": 74, "head": "", "name": 0, "desc": 0, "bind": "SK07301" },
+	{ "__id__": "SK07201", "resource": "SK07201", "general": 72, "head": "72_1", "name": 23003, "desc": 0, "bind": "" }
+]

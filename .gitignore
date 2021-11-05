@@ -1,0 +1,10 @@
+.DS_Store
+*.swo
+*.swp
+logs
+pids
+build
+.idea
+vendor
+gopkg.in
+config.pyc

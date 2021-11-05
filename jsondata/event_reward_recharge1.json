@@ -1,0 +1,6 @@
+[
+	{ "__id__": 1, "recharge": 50, "reward": ["gold:6888"] },
+	{ "__id__": 2, "recharge": 100, "reward": ["ticket:20"] },
+	{ "__id__": 3, "recharge": 200, "reward": ["BX7042:5"] },
+	{ "__id__": 4, "recharge": 300, "reward": ["SK01901:1"] }
+]

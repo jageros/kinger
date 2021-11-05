@@ -1,0 +1,5 @@
+[
+	{ "__id__": 1, "rank": [1, 3], "treasure": "", "gold": 0, "jade": 50, "areas": [] },
+	{ "__id__": 2, "rank": [4, 10], "treasure": "", "gold": 0, "jade": 30, "areas": [] },
+	{ "__id__": 3, "rank": [11, 50], "treasure": "", "gold": 0, "jade": 20, "areas": [] }
+]

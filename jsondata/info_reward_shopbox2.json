@@ -1,0 +1,5 @@
+[
+	{ "__id__": 1, "type": "resource", "itemID": "18", "amount": 2, "team": 1, "pro": 3000, "show": 0 },
+	{ "__id__": 2, "type": "resource", "itemID": "18", "amount": 3, "team": 1, "pro": 2000, "show": 0 },
+	{ "__id__": 3, "type": "resource", "itemID": "18", "amount": 4, "team": 1, "pro": 1000, "show": 0 }
+]

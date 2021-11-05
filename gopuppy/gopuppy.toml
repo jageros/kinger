@@ -1,0 +1,91 @@
+logLevel = "debug"
+readTimeout = 30
+writeTimeout = 30
+maxPacketSize = 2097152
+
+[Opmon]
+dumpInterval = 3600
+falconAgentPort = 1988
+
+[es]
+url = "http://134.175.13.251:9500?sniff=false"
+index = "king_war"
+
+[[gates]]
+  id = 1
+  region = 1
+  host = "localhost"
+
+  [[gates.listens]]
+  network = "ws"
+  bindIP = "0.0.0.0"
+  port = 9100
+  [[gates.listens]]
+  network = "ws"
+  certfile = "tls/cert.pem"
+  keyfile = "tls/privkey.pem"
+  bindIP = "0.0.0.0"
+  port = 9101
+
+[[gates]]
+  id = 2
+  region = 1
+  host = "localhost"
+
+  [[gates.listens]]
+  network = "ws"
+  bindIP = "0.0.0.0"
+  port = 9102
+  [[gates.listens]]
+  network = "ws"
+  certfile = "tls/cert.pem"
+  keyfile = "tls/privkey.pem"
+  bindIP = "0.0.0.0"
+  port = 9103
+
+
+[[centers]]
+  id = 1
+  region = 1
+  localHost = "127.0.0.1"
+  publicHost = "127.0.0.1"
+
+  [centers.listen]
+  network = "tcp"
+  bindIP = "127.0.0.1"
+  port = 9200
+
+[[centers]]
+  id = 2
+  region = 1
+  localHost = "127.0.0.1"
+  publicHost = "127.0.0.1"
+
+  [centers.listen]
+  network = "tcp"
+  bindIP = "127.0.0.1"
+  port = 9201
+
+
+[[logics]]
+  id = 1
+  name = "game"
+  region = 1
+[[logics]]
+  id = 2
+  name = "game"
+  region = 0
+
+[[logics]]
+  id = 1
+  name = "pvp"
+  region = 1
+
+[[logics]]
+  id = 1
+  name = "battle"
+  region = 1
+[[logics]]
+  id = 2
+  name = "battle"
+  region = 1

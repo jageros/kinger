@@ -1,0 +1,6 @@
+[
+	{ "__id__": 1, "consume": 100, "reward": ["gold:1000"] },
+	{ "__id__": 2, "consume": 200, "reward": ["gold:2000"] },
+	{ "__id__": 3, "consume": 300, "reward": ["gold:5000"] },
+	{ "__id__": 4, "consume": 400, "reward": ["gold:10000"] }
+]

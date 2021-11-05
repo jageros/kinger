@@ -1,0 +1,5 @@
+[
+	{ "__id__": "1", "treasureId": "BX7401", "jadePrice": 98, "discount": "5", "order": 1, "areas": [] },
+	{ "__id__": "2", "treasureId": "BX7402", "jadePrice": 198, "discount": "6", "order": 2, "areas": [] },
+	{ "__id__": "3", "treasureId": "BX7403", "jadePrice": 498, "discount": "7", "order": 3, "areas": [] }
+]

@@ -1,0 +1,4 @@
+[
+	{ "__id__": 1, "times": "12:13", "reward": ["ticket:2"] },
+	{ "__id__": 2, "times": "18:19", "reward": ["ticket:2"] }
+]

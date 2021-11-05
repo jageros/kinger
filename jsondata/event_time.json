@@ -1,0 +1,8 @@
+[
+	{ "__id__": 1, "type": 2, "star": "1", "end": "", "itemEndTime": "", "length": 99, "week": [] },
+	{ "__id__": 2, "type": 1, "star": "2019-05-11 00:00:00", "end": "2019-05-24 23:59:59", "itemEndTime": "", "length": 0, "week": [] },
+	{ "__id__": 3, "type": 2, "star": "1", "end": "", "itemEndTime": "", "length": 0, "week": [] },
+	{ "__id__": 4, "type": 1, "star": "2019-04-01 00:00:00", "end": "", "itemEndTime": "", "length": 0, "week": [] },
+	{ "__id__": 5, "type": 1, "star": "2018-06-01 00:00:00", "end": "2019-06-08 23:59:59", "itemEndTime": "2019-06-07 23:59:59", "length": 0, "week": [] },
+	{ "__id__": 6, "type": 1, "star": "2018-06-01 00:00:00", "end": "2019-06-08 23:59:59", "itemEndTime": "", "length": 0, "week": [] }
+]

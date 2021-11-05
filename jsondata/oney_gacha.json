@@ -1,0 +1,10 @@
+[
+	{ "__id__": 1, "type": "resource", "itemID": "11", "amount": 20, "team": 1, "pro": 1250, "showIcon": "icon:jadeIconBig", "dayCnt": 0 },
+	{ "__id__": 2, "type": "resource", "itemID": "103", "amount": 10, "team": 1, "pro": 1250, "showIcon": "icon:ticketIconBig", "dayCnt": 0 },
+	{ "__id__": 3, "type": "resource", "itemID": "18", "amount": 1, "team": 1, "pro": 1250, "showIcon": "icon:cardPieceIconBig", "dayCnt": 0 },
+	{ "__id__": 4, "type": "resource", "itemID": "4", "amount": 2000, "team": 1, "pro": 1250, "showIcon": "icon:goldIconBig", "dayCnt": 0 },
+	{ "__id__": 5, "type": "card", "itemID": "107", "amount": 1, "team": 1, "pro": 1250, "showIcon": "", "dayCnt": 0 },
+	{ "__id__": 6, "type": "skin", "itemID": "SK0901", "amount": 1, "team": 1, "pro": 1250, "showIcon": "", "dayCnt": 0 },
+	{ "__id__": 7, "type": "priv", "itemID": "-1", "amount": 1, "team": 1, "pro": 1250, "showIcon": "icon:priv1", "dayCnt": 2 },
+	{ "__id__": 8, "type": "advip", "itemID": "", "amount": 1, "team": 1, "pro": 1250, "showIcon": "icon:advip", "dayCnt": 1 }
+]

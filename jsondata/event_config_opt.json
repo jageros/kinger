@@ -1,0 +1,17 @@
+[
+	{ "__id__": 1, "type": 1, "timeType": 1, "condition": 0, "reward": "event_reward_login1", "name": 36001, "text": 37001, "test": 38001, "version": 2, "resource": "", "itemMaxDaily": 0 },
+	{ "__id__": 2, "type": 2, "timeType": 6, "condition": 0, "reward": "event_reward_recharge1", "name": 36002, "text": 37002, "test": 38002, "version": 2, "resource": "", "itemMaxDaily": 0 },
+	{ "__id__": 3, "type": 3, "timeType": 2, "condition": 0, "reward": "event_reward_online1", "name": 36003, "text": 37003, "test": 38003, "version": 1, "resource": "", "itemMaxDaily": 0 },
+	{ "__id__": 4, "type": 3, "timeType": 3, "condition": 1, "reward": "event_reward_online2", "name": 36004, "text": 37004, "test": 38004, "version": 1, "resource": "", "itemMaxDaily": 0 },
+	{ "__id__": 5, "type": 4, "timeType": 0, "condition": 0, "reward": "event_reward_fight1", "name": 36005, "text": 37005, "test": 38005, "version": 1, "resource": "", "itemMaxDaily": 0 },
+	{ "__id__": 6, "type": 5, "timeType": 6, "condition": 0, "reward": "event_reward_win1", "name": 36006, "text": 37006, "test": 38006, "version": 1, "resource": "", "itemMaxDaily": 0 },
+	{ "__id__": 7, "type": 6, "timeType": 1, "condition": 0, "reward": "event_reward_rank1", "name": 36007, "text": 37007, "test": 38007, "version": 1, "resource": "", "itemMaxDaily": 0 },
+	{ "__id__": 8, "type": 7, "timeType": 0, "condition": 0, "reward": "event_reward_consume1", "name": 36008, "text": 37008, "test": 38008, "version": 1, "resource": "", "itemMaxDaily": 0 },
+	{ "__id__": 9, "type": 8, "timeType": 0, "condition": 0, "reward": "event_reward_login_recharge1", "name": 36009, "text": 37009, "test": 38009, "version": 1, "resource": "", "itemMaxDaily": 0 },
+	{ "__id__": 10, "type": 9, "timeType": 4, "condition": 0, "reward": "event_reward_first_recharge", "name": 0, "text": 0, "test": 0, "version": 1, "resource": "", "itemMaxDaily": 0 },
+	{ "__id__": 11, "type": 10, "timeType": 0, "condition": 0, "reward": "event_reward_growplan1", "name": 36010, "text": 0, "test": 0, "version": 1, "resource": "", "itemMaxDaily": 0 },
+	{ "__id__": 12, "type": 1, "timeType": 6, "condition": 0, "reward": "event_reward_login2", "name": 36011, "text": 37010, "test": 38001, "version": 2, "resource": "", "itemMaxDaily": 0 },
+	{ "__id__": 13, "type": 11, "timeType": 6, "condition": 0, "reward": "event_reward_daily_recharge1", "name": 36012, "text": 37011, "test": 38002, "version": 1, "resource": "", "itemMaxDaily": 0 },
+	{ "__id__": 14, "type": 12, "timeType": 6, "condition": 0, "reward": "event_reward_share1", "name": 36013, "text": 37012, "test": 38034, "version": 1, "resource": "", "itemMaxDaily": 0 },
+	{ "__id__": 15, "type": 13, "timeType": 5, "condition": 0, "reward": "", "name": 36014, "text": 37013, "test": 38035, "version": 0, "resource": "eventItem1", "itemMaxDaily": 8 }
+]

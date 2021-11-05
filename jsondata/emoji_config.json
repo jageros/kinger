@@ -1,0 +1,14 @@
+[
+	{ "__id__": "emoji1", "team": 1, "name": 10701, "teamName": 96, "emojiPackIcon": "ui://society/headIcon1" },
+	{ "__id__": "emoji2", "team": 1, "name": 10702, "teamName": 96, "emojiPackIcon": "ui://society/headIcon1" },
+	{ "__id__": "emoji3", "team": 1, "name": 10703, "teamName": 96, "emojiPackIcon": "ui://society/headIcon1" },
+	{ "__id__": "emoji4", "team": 1, "name": 10704, "teamName": 96, "emojiPackIcon": "ui://society/headIcon1" },
+	{ "__id__": "emoji5", "team": 1, "name": 10705, "teamName": 96, "emojiPackIcon": "ui://society/headIcon1" },
+	{ "__id__": "emoji6", "team": 1, "name": 10706, "teamName": 96, "emojiPackIcon": "ui://society/headIcon1" },
+	{ "__id__": "emoji7", "team": 2, "name": 10707, "teamName": 281, "emojiPackIcon": "ui://common/emojiTeam2" },
+	{ "__id__": "emoji8", "team": 2, "name": 10708, "teamName": 281, "emojiPackIcon": "ui://common/emojiTeam2" },
+	{ "__id__": "emoji9", "team": 2, "name": 10709, "teamName": 281, "emojiPackIcon": "ui://common/emojiTeam2" },
+	{ "__id__": "emoji10", "team": 2, "name": 10710, "teamName": 281, "emojiPackIcon": "ui://common/emojiTeam2" },
+	{ "__id__": "emoji11", "team": 2, "name": 10711, "teamName": 281, "emojiPackIcon": "ui://common/emojiTeam2" },
+	{ "__id__": "emoji12", "team": 2, "name": 10712, "teamName": 281, "emojiPackIcon": "ui://common/emojiTeam2" }
+]

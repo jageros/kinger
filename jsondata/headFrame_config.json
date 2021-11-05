@@ -1,0 +1,23 @@
+[
+	{ "__id__": "1", "resource": 1, "name": 25001, "desc": 25002, "hide": 0 },
+	{ "__id__": "2", "resource": 2, "name": 25003, "desc": 25004, "hide": 0 },
+	{ "__id__": "3", "resource": 3, "name": 25005, "desc": 25006, "hide": 1 },
+	{ "__id__": "4", "resource": 4, "name": 25007, "desc": 25008, "hide": 1 },
+	{ "__id__": "5", "resource": 5, "name": 25009, "desc": 25010, "hide": 0 },
+	{ "__id__": "6", "resource": 6, "name": 25011, "desc": 25012, "hide": 1 },
+	{ "__id__": "7", "resource": 7, "name": 25013, "desc": 25014, "hide": 1 },
+	{ "__id__": "8", "resource": 8, "name": 25015, "desc": 25016, "hide": 1 },
+	{ "__id__": "9", "resource": 9, "name": 25017, "desc": 25018, "hide": 1 },
+	{ "__id__": "10", "resource": 10, "name": 25019, "desc": 25020, "hide": 1 },
+	{ "__id__": "11", "resource": 11, "name": 25021, "desc": 25022, "hide": 1 },
+	{ "__id__": "12", "resource": 12, "name": 25023, "desc": 25024, "hide": 1 },
+	{ "__id__": "13", "resource": 13, "name": 25025, "desc": 25026, "hide": 1 },
+	{ "__id__": "14", "resource": 14, "name": 25027, "desc": 25028, "hide": 1 },
+	{ "__id__": "15", "resource": 15, "name": 25029, "desc": 25030, "hide": 1 },
+	{ "__id__": "16", "resource": 16, "name": 25031, "desc": 25032, "hide": 1 },
+	{ "__id__": "17", "resource": 17, "name": 25033, "desc": 25034, "hide": 1 },
+	{ "__id__": "18", "resource": 18, "name": 25035, "desc": 25036, "hide": 1 },
+	{ "__id__": "19", "resource": 19, "name": 25037, "desc": 25038, "hide": 0 },
+	{ "__id__": "20", "resource": 20, "name": 25039, "desc": 25040, "hide": 0 },
+	{ "__id__": "21", "resource": 21, "name": 25041, "desc": 25042, "hide": 0 }
+]
