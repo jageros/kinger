@@ -2,12 +2,12 @@ package wxgame
 
 import (
 	"container/list"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common"
-	"kinger/gopuppy/common/timer"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/timer"
 	"kinger/proto/pb"
 	"time"
 )

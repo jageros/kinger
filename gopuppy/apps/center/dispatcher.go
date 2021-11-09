@@ -13,9 +13,9 @@ type clientDispatchInfo struct {
 	clientID     common.UUid
 	uid          common.UUid
 	gateID       uint32
-	region uint32
+	region       uint32
 	dispatchApps map[string]uint32
-	isKickout bool
+	isKickout    bool
 }
 
 func newClientDispatchInfo(clientID, uid common.UUid, gateID, gameID, region uint32) *clientDispatchInfo {
@@ -23,7 +23,7 @@ func newClientDispatchInfo(clientID, uid common.UUid, gateID, gameID, region uin
 		clientID: clientID,
 		uid:      uid,
 		gateID:   gateID,
-		region: region,
+		region:   region,
 		dispatchApps: map[string]uint32{
 			consts.AppGame: gameID,
 		},
@@ -40,7 +40,7 @@ func (cpi *clientDispatchInfo) packMsg() *pb.PlayerClient {
 		ClientID: uint64(cpi.clientID),
 		Uid:      uint64(cpi.uid),
 		GateID:   cpi.gateID,
-		Region: cpi.region,
+		Region:   cpi.region,
 	}
 }
 
@@ -138,7 +138,7 @@ func (cpi *clientDispatchInfo) notifyKickout() {
 		ClientID: uint64(cpi.clientID),
 		Uid:      uint64(cpi.uid),
 		GateID:   cpi.gateID,
-		Region: cpi.region,
+		Region:   cpi.region,
 	}
 
 	gateSes := cService.getGateSession(cpi.gateID)
@@ -165,7 +165,7 @@ func (cpi *clientDispatchInfo) notifyClose() {
 		ClientID: uint64(cpi.clientID),
 		Uid:      uint64(cpi.uid),
 		GateID:   cpi.gateID,
-		Region: cpi.region,
+		Region:   cpi.region,
 	}
 
 	for appName, appID := range cpi.dispatchApps {
@@ -184,7 +184,7 @@ func (cpi *clientDispatchInfo) notifySnetEvent(eventID int) {
 		ClientID: uint64(cpi.clientID),
 		Uid:      uint64(cpi.uid),
 		GateID:   cpi.gateID,
-		Region: cpi.region,
+		Region:   cpi.region,
 	}
 
 	appID, ok := cpi.dispatchApps[consts.AppGame]

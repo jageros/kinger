@@ -2,20 +2,20 @@ package network
 
 import (
 	"net"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
-	"strings"
 
 	"kinger/gopuppy/common/evq"
 	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/network/protoc"
 
 	"fmt"
+	"github.com/pkg/errors"
+	"github.com/xiaonanln/go-xnsyncutil/xnsyncutil"
 	"gopkg.in/eapache/queue.v1"
 	"kinger/gopuppy/common/utils"
-	"github.com/xiaonanln/go-xnsyncutil/xnsyncutil"
-	"github.com/pkg/errors"
 )
 
 type Session struct {
@@ -28,11 +28,11 @@ type Session struct {
 	endSync         sync.WaitGroup // 等待读写线程完成
 	closeNotify     chan struct{}
 	prop            map[string]interface{}
-	ip string
+	ip              string
 
 	writeQueueGuard sync.Mutex
 	writeQueue      *queue.Queue
-	syncWriteQueue *xnsyncutil.SyncQueue
+	syncWriteQueue  *xnsyncutil.SyncQueue
 
 	rpcGuard   sync.Mutex
 	rpcSeq     uint32

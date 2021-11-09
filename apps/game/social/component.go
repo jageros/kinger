@@ -6,21 +6,21 @@ import (
 	"kinger/gopuppy/common/eventhub"
 
 	//"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common/evq"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
+	"kinger/common/utils"
+	"kinger/gamedata"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
 	"kinger/proto/pb"
 	"strconv"
-	"kinger/common/utils"
-	"kinger/gopuppy/common/glog"
-	"kinger/gamedata"
-	"kinger/gopuppy/common/timer"
 	"time"
 )
 
 var (
-	_ types.ISocialComponent = &socialComponent{}
+	_ types.ISocialComponent    = &socialComponent{}
 	_ types.IHeartBeatComponent = &socialComponent{}
 )
 
@@ -46,7 +46,7 @@ func (sc *socialComponent) OnLogin(isRelogin, isRestore bool) {
 		return
 	}
 	if sc.player.IsWxgameAccount() {
-		timer.AfterFunc(5 * time.Second, func() {
+		timer.AfterFunc(5*time.Second, func() {
 			sc.loadWxInviteFriend()
 
 			for _, reward := range sc.wxInviteRewards {
@@ -100,7 +100,7 @@ func (sc *socialComponent) getAdvertProtecter() iAdvertProtecter {
 }
 
 func (sc *socialComponent) onMaxPvpLevelUpdate(maxPvpLevel int) {
-	if maxPvpLevel == advertProtectMaxPvpLevel + 1 {
+	if maxPvpLevel == advertProtectMaxPvpLevel+1 {
 		sc.advertProtecter = nil
 		module.OutStatus.DelStatus(sc.player, consts.OtAdvertProtecter)
 	}
@@ -109,7 +109,7 @@ func (sc *socialComponent) onMaxPvpLevelUpdate(maxPvpLevel int) {
 func (sc *socialComponent) OnHeartBeat() {
 	if sc.wxInviteFriendAttrMgr != nil {
 		now := time.Now()
-		if now.Sub(sc.lastSaveTime) < 4 * time.Minute {
+		if now.Sub(sc.lastSaveTime) < 4*time.Minute {
 			return
 		}
 		sc.lastSaveTime = now
@@ -159,10 +159,10 @@ func (sc *socialComponent) OnReceivePrivateChat(fromUid common.UUid, fromName, f
 					Msg:  msg,
 				},
 			},
-			PvpLevel: int32(fromPvpLevel),
-			Country: fromCountry,
-			HeadFrame: fromHeadFrame,
-			ChatPop:fromChatPop,
+			PvpLevel:    int32(fromPvpLevel),
+			Country:     fromCountry,
+			HeadFrame:   fromHeadFrame,
+			ChatPop:     fromChatPop,
 			CountryFlag: fromCountryFlag,
 		})
 	}
@@ -193,13 +193,13 @@ func (sc *socialComponent) getAndDelPrivateChat(maxID int) []*pb.PrivateChatItem
 		item, ok := chatsItem[uid]
 		if !ok {
 			item = &pb.PrivateChatItem{
-				Uid:        uint64(uid),
-				Name:       msgAttr.GetStr("fromName"),
-				HeadImgUrl: msgAttr.GetStr("fromHeadImgUrl"),
-				PvpLevel: int32(msgAttr.GetInt("pvpLevel")),
-				Country: msgAttr.GetStr("fromCountry"),
-				HeadFrame: msgAttr.GetStr("fromHeadFrame"),
-				ChatPop:msgAttr.GetStr("fromChatPop"),
+				Uid:         uint64(uid),
+				Name:        msgAttr.GetStr("fromName"),
+				HeadImgUrl:  msgAttr.GetStr("fromHeadImgUrl"),
+				PvpLevel:    int32(msgAttr.GetInt("pvpLevel")),
+				Country:     msgAttr.GetStr("fromCountry"),
+				HeadFrame:   msgAttr.GetStr("fromHeadFrame"),
+				ChatPop:     msgAttr.GetStr("fromChatPop"),
 				CountryFlag: msgAttr.GetStr("fromCountryFlag"),
 			}
 			chatsItem[uid] = item
@@ -254,12 +254,12 @@ func (sc *socialComponent) getFriendList() ([]*pb.FriendItem, *pb.FriendItem) {
 					IsOnline:       lastOppInfo.IsOnline,
 					HeadImgUrl:     lastOppInfo.HeadImgUrl,
 					IsWechatFriend: lastOppInfo.IsWechatFriend,
-					PvpCamp: lastOppInfo.PvpCamp,
-					Country: lastOppInfo.Country,
-					HeadFrame: lastOppInfo.HeadFrame,
-					RebornCnt: lastOppInfo.RebornCnt,
-					CountryFlag: lastOppInfo.CountryFlag,
-					RankScore: lastOppInfo.RankScore,
+					PvpCamp:        lastOppInfo.PvpCamp,
+					Country:        lastOppInfo.Country,
+					HeadFrame:      lastOppInfo.HeadFrame,
+					RebornCnt:      lastOppInfo.RebornCnt,
+					CountryFlag:    lastOppInfo.CountryFlag,
+					RankScore:      lastOppInfo.RankScore,
 				}
 
 				if !lastOpp.IsOnline {
@@ -335,12 +335,12 @@ func (sc *socialComponent) getFriendApplyList() []*pb.FriendApply {
 		uid := common.UUid(friendApplyAttr.GetUInt64(index))
 		player := module.Player.GetSimplePlayerInfo(uid)
 		fl = append(fl, &pb.FriendApply{
-			Uid:        uint64(player.GetUid()),
-			Name:       player.GetName(),
-			PvpScore:   int32(player.GetPvpScore()),
-			HeadImgUrl: player.GetHeadImgUrl(),
-			Country: player.GetCountry(),
-			HeadFrame: player.GetHeadFrame(),
+			Uid:         uint64(player.GetUid()),
+			Name:        player.GetName(),
+			PvpScore:    int32(player.GetPvpScore()),
+			HeadImgUrl:  player.GetHeadImgUrl(),
+			Country:     player.GetCountry(),
+			HeadFrame:   player.GetHeadFrame(),
 			CountryFlag: player.GetCountryFlag(),
 		})
 		return true
@@ -386,7 +386,7 @@ func (sc *socialComponent) replyFirendApply(uid common.UUid, isAgree bool) {
 			utils.PlayerMqPublish(targetUid, pb.RmqType_ReplyFriendApply, &pb.RmqReplyFriendApply{
 				FromUid:  uint64(sc.player.GetUid()),
 				FromName: sc.player.GetName(),
-				IsAgree: isAgree,
+				IsAgree:  isAgree,
 			})
 		}
 	}
@@ -544,7 +544,7 @@ func (sc *socialComponent) packWxInviteFriendMsg() *pb.WxInviteFriendsReply {
 		friendAttr := sc.wxInviteFriendAttr.GetMapAttr(index)
 		reply.Friends = append(reply.Friends, &pb.WxInviteFriend{
 			HeadImgUrl: friendAttr.GetStr("headImgUrl"),
-			PvpLevel: int32(friendAttr.GetInt("maxPvpLevel")),
+			PvpLevel:   int32(friendAttr.GetInt("maxPvpLevel")),
 		})
 		return true
 	})

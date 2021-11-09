@@ -1,23 +1,23 @@
 package mail
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/apps/game/module/types"
 	"kinger/apps/game/module"
-	"kinger/gopuppy/common"
+	"kinger/apps/game/module/types"
 	"kinger/common/consts"
-	"time"
 	"kinger/common/utils"
-	"kinger/proto/pb"
-	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/glog"
+	"kinger/proto/pb"
+	"time"
 )
 
 var mod *mailModule
 
 type mailModule struct {
 	wholeServerMails []*wholeServerMailSt
-	maxIDAttr *attribute.AttrMgr
+	maxIDAttr        *attribute.AttrMgr
 }
 
 func newMailModule() *mailModule {
@@ -76,7 +76,7 @@ func (m *mailModule) NewComponent(playerAttr *attribute.AttrMgr) types.IPlayerCo
 
 func (m *mailModule) getWholeServerMailMaxID() int {
 	if len(m.wholeServerMails) > 0 {
-		return m.wholeServerMails[len(m.wholeServerMails) - 1].getMailObj().getID()
+		return m.wholeServerMails[len(m.wholeServerMails)-1].getMailObj().getID()
 	}
 	return 0
 }
@@ -184,10 +184,10 @@ func (m *mailModule) sendMailToPlayer(uid common.UUid, title, content string, re
 			mailType, args)
 	} else {
 		mailMsg := &pb.Mail{
-			Title: title,
+			Title:   title,
 			Content: content,
-			Time: int32(now),
-			Arg: args,
+			Time:    int32(now),
+			Arg:     args,
 		}
 		if reward != nil {
 			mailMsg.Rewards = reward.PackMsg()

@@ -915,10 +915,12 @@ type PublishMilitaryOrderArg struct {
 	CityPath []int32           `protobuf:"varint,4,rep,packed,name=CityPath" json:"CityPath,omitempty"`
 }
 
-func (m *PublishMilitaryOrderArg) Reset()                    { *m = PublishMilitaryOrderArg{} }
-func (m *PublishMilitaryOrderArg) String() string            { return proto.CompactTextString(m) }
-func (*PublishMilitaryOrderArg) ProtoMessage()               {}
-func (*PublishMilitaryOrderArg) Descriptor() ([]byte, []int) { return fileDescriptorCampaign, []int{15} }
+func (m *PublishMilitaryOrderArg) Reset()         { *m = PublishMilitaryOrderArg{} }
+func (m *PublishMilitaryOrderArg) String() string { return proto.CompactTextString(m) }
+func (*PublishMilitaryOrderArg) ProtoMessage()    {}
+func (*PublishMilitaryOrderArg) Descriptor() ([]byte, []int) {
+	return fileDescriptorCampaign, []int{15}
+}
 
 func (m *PublishMilitaryOrderArg) GetType() MilitaryOrderType {
 	if m != nil {
@@ -2969,10 +2971,12 @@ type CampaignNotifyRedDotArg struct {
 	Type CampaignNotifyRedDotArg_RedDotType `protobuf:"varint,1,opt,name=Type,proto3,enum=pb.CampaignNotifyRedDotArg_RedDotType" json:"Type,omitempty"`
 }
 
-func (m *CampaignNotifyRedDotArg) Reset()                    { *m = CampaignNotifyRedDotArg{} }
-func (m *CampaignNotifyRedDotArg) String() string            { return proto.CompactTextString(m) }
-func (*CampaignNotifyRedDotArg) ProtoMessage()               {}
-func (*CampaignNotifyRedDotArg) Descriptor() ([]byte, []int) { return fileDescriptorCampaign, []int{75} }
+func (m *CampaignNotifyRedDotArg) Reset()         { *m = CampaignNotifyRedDotArg{} }
+func (m *CampaignNotifyRedDotArg) String() string { return proto.CompactTextString(m) }
+func (*CampaignNotifyRedDotArg) ProtoMessage()    {}
+func (*CampaignNotifyRedDotArg) Descriptor() ([]byte, []int) {
+	return fileDescriptorCampaign, []int{75}
+}
 
 func (m *CampaignNotifyRedDotArg) GetType() CampaignNotifyRedDotArg_RedDotType {
 	if m != nil {
@@ -3130,10 +3134,12 @@ type CityCapitalInjectionArg struct {
 	Gold   int32 `protobuf:"varint,2,opt,name=Gold,proto3" json:"Gold,omitempty"`
 }
 
-func (m *CityCapitalInjectionArg) Reset()                    { *m = CityCapitalInjectionArg{} }
-func (m *CityCapitalInjectionArg) String() string            { return proto.CompactTextString(m) }
-func (*CityCapitalInjectionArg) ProtoMessage()               {}
-func (*CityCapitalInjectionArg) Descriptor() ([]byte, []int) { return fileDescriptorCampaign, []int{82} }
+func (m *CityCapitalInjectionArg) Reset()         { *m = CityCapitalInjectionArg{} }
+func (m *CityCapitalInjectionArg) String() string { return proto.CompactTextString(m) }
+func (*CityCapitalInjectionArg) ProtoMessage()    {}
+func (*CityCapitalInjectionArg) Descriptor() ([]byte, []int) {
+	return fileDescriptorCampaign, []int{82}
+}
 
 func (m *CityCapitalInjectionArg) GetCityID() int32 {
 	if m != nil {
@@ -3398,10 +3404,12 @@ type CancelPublishMissionArg struct {
 	TransportTargetCity int32          `protobuf:"varint,5,opt,name=TransportTargetCity,proto3" json:"TransportTargetCity,omitempty"`
 }
 
-func (m *CancelPublishMissionArg) Reset()                    { *m = CancelPublishMissionArg{} }
-func (m *CancelPublishMissionArg) String() string            { return proto.CompactTextString(m) }
-func (*CancelPublishMissionArg) ProtoMessage()               {}
-func (*CancelPublishMissionArg) Descriptor() ([]byte, []int) { return fileDescriptorCampaign, []int{95} }
+func (m *CancelPublishMissionArg) Reset()         { *m = CancelPublishMissionArg{} }
+func (m *CancelPublishMissionArg) String() string { return proto.CompactTextString(m) }
+func (*CancelPublishMissionArg) ProtoMessage()    {}
+func (*CancelPublishMissionArg) Descriptor() ([]byte, []int) {
+	return fileDescriptorCampaign, []int{95}
+}
 
 func (m *CancelPublishMissionArg) GetType() CampaignMsType {
 	if m != nil {

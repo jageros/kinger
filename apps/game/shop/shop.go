@@ -1,18 +1,18 @@
 package shop
 
 import (
-	"kinger/apps/game/module/types"
-	"kinger/gamedata"
-	"kinger/apps/game/module"
-	"kinger/common/consts"
-	"kinger/proto/pb"
 	"fmt"
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/proto/pb"
 	"strconv"
 )
 
 // 未来可能基于此，重构游戏里的所有类似商店的东西
 type shopSt struct {
-	type_ string
+	type_    string
 	id2Goods map[int]iGoods
 }
 
@@ -116,7 +116,7 @@ func (g *pieceCardGoods) hasEnoughMoney(player types.IPlayer) bool {
 }
 
 func (g *pieceCardGoods) subMoney(player types.IPlayer) {
-	module.Player.ModifyResource(player, consts.CardPiece, - g.data.Price)
+	module.Player.ModifyResource(player, consts.CardPiece, -g.data.Price)
 }
 
 func (g *pieceCardGoods) buy(player types.IPlayer) error {
@@ -172,7 +172,7 @@ func (g *pieceSkinGoods) hasEnoughMoney(player types.IPlayer) bool {
 }
 
 func (g *pieceSkinGoods) subMoney(player types.IPlayer) {
-	module.Player.ModifyResource(player, consts.SkinPiece, - g.data.Price)
+	module.Player.ModifyResource(player, consts.SkinPiece, -g.data.Price)
 }
 
 func (g *pieceSkinGoods) buy(player types.IPlayer) error {

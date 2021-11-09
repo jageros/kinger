@@ -2,13 +2,13 @@ package shop
 
 import (
 	"fmt"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common/timer"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
 	"kinger/proto/pb"
 	"time"
 )
@@ -202,10 +202,10 @@ func (cd *cycleRewardData) getRecruitIDs(area int, tblName string) (pb.RecruitTr
 		var dayNum int
 		if int(td) > cfgDay {
 			dayNum = 7 - int(td) + cfgDay + wd
-		}else {
+		} else {
 			dayNum = cfgDay - int(td) + wd
 		}
-		tim := int64(timer.TimeDelta(cfg.Hours,cfg.Min,cfg.Sec).Seconds() + float64(dayNum * 86400))
+		tim := int64(timer.TimeDelta(cfg.Hours, cfg.Min, cfg.Sec).Seconds() + float64(dayNum*86400))
 		rwTy, ids := cycData.getIDs(tblName)
 		return rwTy, ids, tim
 	}

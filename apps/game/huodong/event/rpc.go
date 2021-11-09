@@ -1,12 +1,12 @@
 package event
 
 import (
+	htypes "kinger/apps/game/huodong/types"
+	"kinger/apps/game/module"
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/logic"
 	"kinger/proto/pb"
-	"kinger/apps/game/module"
-	"kinger/gamedata"
-	htypes "kinger/apps/game/huodong/types"
-	"kinger/common/consts"
 )
 
 func rpc_C2S_FetchHuodongDetail(agent *logic.PlayerAgent, arg interface{}) (interface{}, error) {

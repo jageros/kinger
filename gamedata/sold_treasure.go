@@ -1,24 +1,24 @@
 package gamedata
 
 import (
-	"kinger/common/consts"
-	"encoding/json"
-	"kinger/common/config"
 	"bytes"
+	"encoding/json"
 	"errors"
+	"kinger/common/config"
+	"kinger/common/consts"
 	"sort"
 )
 
 type SoldTreasure struct {
-	ID string `json:"__id__"`
-	TreasureModelID string `json:"treasureId"`
-	JadePrice int `json:"jadePrice"`
-	Team int `json:"team"`
-	PvpLevelCondition int `json:"pvpLevelCondition"`
-	BowlderPrice int `json:"bowlderPrice"`
-	Areas [][]int `json:"areas"`
-	Camp int `json:"country"`
-	Order int `json:"order"`
+	ID                string  `json:"__id__"`
+	TreasureModelID   string  `json:"treasureId"`
+	JadePrice         int     `json:"jadePrice"`
+	Team              int     `json:"team"`
+	PvpLevelCondition int     `json:"pvpLevelCondition"`
+	BowlderPrice      int     `json:"bowlderPrice"`
+	Areas             [][]int `json:"areas"`
+	Camp              int     `json:"country"`
+	Order             int     `json:"order"`
 
 	areaLimit *AreaLimitConfig
 }
@@ -36,10 +36,10 @@ type ISoldTreasureGameData interface {
 
 type SoldTreasureGameData struct {
 	baseGameData
-	areaVersion int
-	rawData []byte
-	areaToTreasures map[int]map[int]map[int][]*SoldTreasure  // map[area]map[camp]map[team][]*SoldTreasure
-	id2Treasure map[string]*SoldTreasure
+	areaVersion     int
+	rawData         []byte
+	areaToTreasures map[int]map[int]map[int][]*SoldTreasure // map[area]map[camp]map[team][]*SoldTreasure
+	id2Treasure     map[string]*SoldTreasure
 }
 
 func newSoldTreasureGameData() *SoldTreasureGameData {
@@ -108,8 +108,6 @@ func (sg *SoldTreasureGameData) GetTeam2Treasures(area int) map[int][]*SoldTreas
 	return map[int][]*SoldTreasure{}
 }
 
-
-
 func (sg *SoldTreasureGameData) GetCampTreasure(area, camp, team, idx int) *SoldTreasure {
 	if camp2Treasures, ok := sg.areaToTreasures[area]; ok {
 		if team2Treasures, ok := camp2Treasures[camp]; ok {
@@ -124,7 +122,7 @@ func (sg *SoldTreasureGameData) GetCampTreasure(area, camp, team, idx int) *Sold
 						return t
 					}
 				}
-				return ts[n - 1]
+				return ts[n-1]
 			}
 		}
 	}

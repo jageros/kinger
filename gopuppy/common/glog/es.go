@@ -1,24 +1,24 @@
 package glog
 
 import (
+	"context"
+	"fmt"
 	"github.com/olivere/elastic"
 	"github.com/olivere/elastic/config"
-	"context"
-	"go.uber.org/zap/zapcore"
-	"go.uber.org/zap"
-	"time"
-	"fmt"
-	"sync"
 	"github.com/xiaonanln/go-xnsyncutil/xnsyncutil"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+	"sync"
+	"time"
 )
 
 var (
 	closeWaitGroup sync.WaitGroup
-	isClose = false
-	_ zapcore.WriteSyncer = &esWriter{}
-	esConfig iEsConfig = nil
+	isClose                            = false
+	_              zapcore.WriteSyncer = &esWriter{}
+	esConfig       iEsConfig           = nil
 
-	bulkGuard sync.Mutex
+	bulkGuard          sync.Mutex
 	type2BulkProcessor = map[string]*esProcessor{}
 )
 
@@ -43,9 +43,9 @@ func (el *esLogger) Printf(format string, v ...interface{}) {
 }
 
 type esProcessor struct {
-	queue *xnsyncutil.SyncQueue
+	queue       *xnsyncutil.SyncQueue
 	closeNotify chan struct{}
-	processor *elastic.BulkProcessor
+	processor   *elastic.BulkProcessor
 }
 
 func (ep *esProcessor) close() {
@@ -54,7 +54,7 @@ func (ep *esProcessor) close() {
 	}
 
 	go func() {
-		<- ep.closeNotify
+		<-ep.closeNotify
 		err := ep.processor.Flush()
 		if err != nil {
 			fmt.Printf("esBulkProcessor Flush error %s\n", err)
@@ -130,8 +130,8 @@ func newBulkProcessor(type_ string) *esProcessor {
 	}
 
 	processor := &esProcessor{
-		queue: xnsyncutil.NewSyncQueue(),
-		processor: p,
+		queue:       xnsyncutil.NewSyncQueue(),
+		processor:   p,
 		closeNotify: make(chan struct{}),
 	}
 	processor.run(esConfig.GetIndex(), type_)

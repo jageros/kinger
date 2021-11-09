@@ -14,7 +14,7 @@ func hashUUid(id common.UUid) int {
 	h = h ^ (h >> 22)
 	h2 := int(h)
 	if h2 < 0 {
-		h2 = - h2
+		h2 = -h2
 	}
 	return h2
 }
@@ -28,7 +28,7 @@ func hashAppID(appID uint32) int {
 	h = h ^ (h >> 16)
 	h2 := int(h)
 	if h2 < 0 {
-		h2 = - h2
+		h2 = -h2
 	}
 	return h2
 }
@@ -39,7 +39,7 @@ func hashString(s string) int {
 		h = h*131 + int(c)
 	}
 	if h < 0 {
-		h = - h
+		h = -h
 	}
 	return h
 }

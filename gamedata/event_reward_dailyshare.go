@@ -12,12 +12,12 @@ type ActivityDailyShareReward struct {
 
 type ActivityDailyShareRewardGameData struct {
 	baseGameData
-	name_ string
+	name_                       string
 	ID2ActivityDailyShareReward map[int]*ActivityDailyShareReward
 }
 
 func newActivityDailyShareRewardGameData(name_ string) *ActivityDailyShareRewardGameData {
-	c := &ActivityDailyShareRewardGameData{name_:name_}
+	c := &ActivityDailyShareRewardGameData{name_: name_}
 	c.i = c
 	return c
 }

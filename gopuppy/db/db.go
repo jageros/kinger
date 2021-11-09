@@ -75,10 +75,10 @@ func GetOrNewDbClient(cfg IDbConfig) IDbClient {
 	}
 
 	cli := &dbClient{
-		cfg: cfg,
+		cfg:            cfg,
 		operationQueue: xnsyncutil.NewSyncQueue(),
 		shutdownNotify: make(chan struct{}),
-		shutdownOnce: sync.Once{},
+		shutdownOnce:   sync.Once{},
 	}
 
 	err := cli.assureDBEngineReady()
@@ -114,7 +114,7 @@ func (c *dbClient) Insert(attrName string, attrID interface{}, data map[string]i
 		attrName: attrName,
 		attrID:   attrID,
 		data:     data,
-		c: make(chan error, 1),
+		c:        make(chan error, 1),
 	}
 
 	c.operationQueue.Push(req)
@@ -233,7 +233,7 @@ func (c *dbClient) LoadAll(attrName string) ([]interface {
 }
 
 func (c *dbClient) ForEach(attrName string, callback func(attrID interface{}, data map[string]interface{})) {
-	req := &forEachRequest{attrName: attrName, iter: nil, c: make(chan *forEachResult, 1),}
+	req := &forEachRequest{attrName: attrName, iter: nil, c: make(chan *forEachResult, 1)}
 
 	for true {
 		c.operationQueue.Push(req)
@@ -277,7 +277,7 @@ func (c *dbClient) shutdown() {
 		}
 
 		c.operationQueue.Close()
-		<- c.shutdownNotify
+		<-c.shutdownNotify
 	})
 }
 
@@ -464,15 +464,15 @@ func (r *loadAllRequest) execute(engine iDbEngine) error {
 
 type forEachRequest struct {
 	attrName string
-	iter func() (attrID interface{}, data map[string]interface{}, hasMore bool)
+	iter     func() (attrID interface{}, data map[string]interface{}, hasMore bool)
 	c        chan *forEachResult
 }
 
 type forEachResult struct {
-	attrID interface{}
-	data map[string]interface{}
+	attrID  interface{}
+	data    map[string]interface{}
 	hasMore bool
-	err error
+	err     error
 }
 
 func (r *forEachRequest) name() string {

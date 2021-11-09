@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ S2C_READY_FIGHT    req: FightDesk
@@ -1157,4 +1157,3 @@ func (m *B2L_ON_ROBOT_BATTLE_END_Meta) DecodeReply(data []byte) (interface{}, er
 }
 
 //------------------------------------ B2L_ON_ROBOT_BATTLE_END END ----------------------------------------
-

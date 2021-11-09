@@ -1,29 +1,29 @@
 package main
 
 import (
-	"kinger/proto/pb"
-	"github.com/gogo/protobuf/proto"
-	"kinger/gopuppy/common"
-	"kinger/gopuppy/attribute"
 	"fmt"
+	"github.com/gogo/protobuf/proto"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/proto/pb"
 	//"kinger/gopuppy/common/glog"
 )
 
 type triggerResult struct {
-	cantTurnCards common.IntSet   // 不能被翻面的牌
+	cantTurnCards common.IntSet // 不能被翻面的牌
 
-	modifyValues map[int]map[int]int   //  上次改变了多少点数 map[targetID]map[objID]value
-	cantAddValTargets common.IntSet  // 哪些目标不能加点
-	cantSubValTargets common.IntSet  // 哪些目标不能减点
-	additionalAddValTargets map[int]int  // 哪些目标额外加多少点
-	additionalSubValTargets map[int]int  // 哪些目标额外减多少点
+	modifyValues            map[int]map[int]int //  上次改变了多少点数 map[targetID]map[objID]value
+	cantAddValTargets       common.IntSet       // 哪些目标不能加点
+	cantSubValTargets       common.IntSet       // 哪些目标不能减点
+	additionalAddValTargets map[int]int         // 哪些目标额外加多少点
+	additionalSubValTargets map[int]int         // 哪些目标额外减多少点
 
-	forbidAddSkills map[int][]int32  // 不能获得哪些技能
+	forbidAddSkills map[int][]int32 // 不能获得哪些技能
 
-	drawFighters map[common.UUid]*fighter  // 被改变的抓牌目标
+	drawFighters map[common.UUid]*fighter // 被改变的抓牌目标
 
-	forbidMoveCards common.IntSet  // 不能移动的卡
-	moveCards []iTarget     // 刚移动的卡
+	forbidMoveCards common.IntSet // 不能移动的卡
+	moveCards       []iTarget     // 刚移动的卡
 }
 
 func (tr *triggerResult) isCanTurn(card *fightCard) bool {
@@ -188,13 +188,13 @@ func (tr *triggerResult) addCantMoveCard(card *fightCard) {
 }
 
 type turnCaster struct {
-	c iCaster
-	preTurnSit int	 // 翻面前的sit
+	c          iCaster
+	preTurnSit int // 翻面前的sit
 }
 
 func newTurnCaster(c iCaster, sit int) *turnCaster {
 	return &turnCaster{
-		c:  c,
+		c:          c,
 		preTurnSit: sit,
 	}
 }
@@ -212,7 +212,7 @@ func (aor *attackOutcomeRecord) forEachRecord(callback func(oppObjID, bat int)) 
 		return
 	}
 	for oppObjID, bats := range aor.records {
-		callback(oppObjID, bats[len(bats) - 1])
+		callback(oppObjID, bats[len(bats)-1])
 	}
 }
 
@@ -229,7 +229,7 @@ func (aor *attackOutcomeRecord) getLastRecord(oppObjID int) int {
 		return 0
 	}
 	bats := aor.records[oppObjID]
-	return bats[len(bats) - 1]
+	return bats[len(bats)-1]
 }
 
 func (aor *attackOutcomeRecord) isOnceWin(oppObjID int) bool {
@@ -249,39 +249,39 @@ type triggerContext struct {
 	triggerType int
 	// fuck this 这个是触发技能时技能拥有者的阵营，技能结算时技能拥有者阵营会变，但技能填表时是按触发时阵营去填的
 	skillOwnerTriggerSits map[int]int
-	enterBattleCard *fightCard
+	enterBattleCard       *fightCard
 
-	attackCxt *attackContext
-	attackCard   *fightCard   // 进攻卡
-	beAttackCards []*fightCard  // 受击卡
-	attackResult map[int]map[int]int  // 比点大小结果  map[objID]map[objID]bat
+	attackCxt     *attackContext
+	attackCard    *fightCard                   // 进攻卡
+	beAttackCards []*fightCard                 // 受击卡
+	attackResult  map[int]map[int]int          // 比点大小结果  map[objID]map[objID]bat
 	attackOutcome map[int]*attackOutcomeRecord // 比点胜负结果  map[objID]*attackOutcomeRecord
 
-	turner    *turnCaster         // 翻面者
-	beTurners map[int]*turnCaster // 被翻面者
+	turner          *turnCaster         // 翻面者
+	beTurners       map[int]*turnCaster // 被翻面者
 	notPreBeTurnner common.IntSet
-	cantTurnCards []iTarget   // 不能被翻面的牌
+	cantTurnCards   []iTarget // 不能被翻面的牌
 
 	destoryer    iTarget   // 根除者
 	beDestoryers []iTarget // 被根除者
 
-	preMoveCards []iTarget  // 准备移动的卡
-	moveCards []iTarget     // 刚移动的卡
+	preMoveCards []iTarget // 准备移动的卡
+	moveCards    []iTarget // 刚移动的卡
 
-	drawCards []iTarget  // 抓上来的卡
-	preAddSkillIDs []int32  // 将要获得的技能
+	drawCards      []iTarget // 抓上来的卡
+	preAddSkillIDs []int32   // 将要获得的技能
 
-	triggerTargetSit map[int]int  // 目标在技能触发时的阵营 map[objID]sit
-	actionTargetSit map[int]int  // 目标在技能结算前的阵营  map[objID]sit
-	targetID2ActTargets map[int][]iTarget  // 这次技能触发的行为对象
+	triggerTargetSit    map[int]int       // 目标在技能触发时的阵营 map[objID]sit
+	actionTargetSit     map[int]int       // 目标在技能结算前的阵营  map[objID]sit
+	targetID2ActTargets map[int][]iTarget // 这次技能触发的行为对象
 
-	modifyValueTargets []iTarget  // 将要改变点数的target
-	modifyValue int   //  将要改变多少点数
+	modifyValueTargets []iTarget // 将要改变点数的target
+	modifyValue        int       //  将要改变多少点数
 
-	returnCards []iTarget  // 回手的牌
+	returnCards []iTarget // 回手的牌
 
-	surrenderor *fighter  // 投降者
-	beSurrenderor *fighter  // 被投降者
+	surrenderor   *fighter // 投降者
+	beSurrenderor *fighter // 被投降者
 }
 
 func (tc *triggerContext) isCanTurn(card iTarget) bool {
@@ -620,7 +620,7 @@ func (tc *triggerContext) isReturnCard(t iTarget) bool {
 }
 
 type clientAction struct {
-	actID pb.ClientAction_ActionID
+	actID  pb.ClientAction_ActionID
 	actMsg proto.Marshaler
 }
 
@@ -642,7 +642,7 @@ func (ts *triggerSkill) String() string {
 }
 
 type skillTriggerMgr struct {
-	casters []int   // 施法者objID, 按进场顺序排序
+	casters   []int // 施法者objID, 按进场顺序排序
 	situation *battleSituation
 }
 
@@ -747,7 +747,7 @@ L1:
 	for _, c := range triggerCard {
 		cacheTargets := map[int][]iTarget{}
 		sks := c.getAllIgnoreLostCanTriggerSkills()
-	    	for _, sk := range sks {
+		for _, sk := range sks {
 			for triggerType, targets := range triggerTargets {
 				if !c.canTriggerSkill(sk) {
 					continue
@@ -758,7 +758,7 @@ L1:
 
 				if can {
 					skills = append(skills, &triggerSkill{
-						skill: sk,
+						skill:       sk,
 						triggerType: triggerType,
 					})
 					break
@@ -768,8 +768,8 @@ L1:
 					// 进场时机，没成功触发进场技，删掉
 					actions = append(actions, card.delSkill(sk)...)
 					break
-				} else if isTargetTriggerTimesLimit && sk.getData().TriggerTimes > 0 && 
-					  sk.targetTriggerTimes >= sk.getData().TriggerTimes {
+				} else if isTargetTriggerTimesLimit && sk.getData().TriggerTimes > 0 &&
+					sk.targetTriggerTimes >= sk.getData().TriggerTimes {
 					// target触发次数到限制了，且这个时机还不能触发，以后没机会了
 					actions = append(actions, c.delSkill(sk)...)
 					break
@@ -840,7 +840,7 @@ func (stm *skillTriggerMgr) trigger(triggerTargets map[int][]iTarget, cxt *trigg
 		skillAct, acts, triggerTargets2[triggerType], needTalk2 = sk.trigger(triggerType, targets, cxt, result)
 		if skillAct != nil {
 			actions = append(actions, &clientAction{
-				actID: pb.ClientAction_Skill,
+				actID:  pb.ClientAction_Skill,
 				actMsg: skillAct,
 			})
 		}

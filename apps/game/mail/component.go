@@ -2,26 +2,26 @@ package mail
 
 import (
 	"kinger/apps/game/module/types"
-	"kinger/gopuppy/attribute"
 	"kinger/common/consts"
-	"time"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/timer"
 	"kinger/proto/pb"
-	"kinger/gopuppy/common/glog"
+	"time"
 )
 
 var (
-	_ types.IMailComponent = &mailComponent{}
+	_ types.IMailComponent     = &mailComponent{}
 	_ types.ICrossDayComponent = &mailComponent{}
 )
 
 type mailComponent struct {
-	player types.IPlayer
-	isNewbie bool
-	attr *attribute.MapAttr
+	player    types.IPlayer
+	isNewbie  bool
+	attr      *attribute.MapAttr
 	mailsAttr *attribute.ListAttr
-	mails []*mailSt
-	id2Mail map[int]*mailSt
+	mails     []*mailSt
+	id2Mail   map[int]*mailSt
 }
 
 func (mc *mailComponent) ComponentID() string {
@@ -69,7 +69,7 @@ func (mc *mailComponent) OnLogin(isRelogin, isRestore bool) {
 	mod.onPlayerLogin(mc, mc.isNewbie)
 	mc.isNewbie = false
 	if mc.attr.GetBool("hasNew") {
-		timer.AfterFunc(2 * time.Second, func() {
+		timer.AfterFunc(2*time.Second, func() {
 			if mc.attr.GetBool("hasNew") {
 				agent := mc.player.GetAgent()
 				if agent != nil {
@@ -138,7 +138,7 @@ func (mc *mailComponent) sendMailByID(mailID int, title, content, sender string,
 	if !mc.attr.GetBool("hasNew") {
 		mc.attr.SetBool("hasNew", true)
 
-		timer.AfterFunc(150 * time.Millisecond, func() {
+		timer.AfterFunc(150*time.Millisecond, func() {
 			agent := mc.player.GetAgent()
 			if agent != nil {
 				agent.PushClient(pb.MessageID_S2C_NOTIFY_NEW_MAIL, nil)

@@ -1,12 +1,12 @@
 package player
 
 import (
-	"kinger/gopuppy/apps/center/mq"
-	"kinger/gopuppy/common"
-	"kinger/gopuppy/common/glog"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
+	"kinger/gopuppy/apps/center/mq"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/glog"
 	"kinger/proto/pb"
 )
 
@@ -178,7 +178,7 @@ func (mc *mqConsumer) Consume(type_ int32, msg mq.IRmqMessge) {
 
 	case pb.RmqType_ForbidChat.ID():
 		msg2 := msg.(*pb.RmqForbidChat)
-		mc.player.Forbid(consts.ForbidChat, msg2.IsForbid, msg2.OverTime, "",  false)
+		mc.player.Forbid(consts.ForbidChat, msg2.IsForbid, msg2.OverTime, "", false)
 
 	case pb.RmqType_MonitorAccount.ID():
 		msg2 := msg.(*pb.RmqMonitorAccount)

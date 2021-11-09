@@ -1,13 +1,13 @@
 package rank
 
 import (
+	"kinger/apps/game/module"
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/common"
 	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/network"
-	"kinger/apps/game/module"
-	"kinger/common/consts"
-	"kinger/gamedata"
 	"kinger/proto/pb"
 )
 
@@ -38,15 +38,15 @@ func rpc_R2G_SendRankReward(_ *network.Session, arg interface{}) (interface{}, e
 			continue
 		}
 
-		if len(arg2.Uids) == 0 || len(arg2.Uids) < data.Rank[0]{
+		if len(arg2.Uids) == 0 || len(arg2.Uids) < data.Rank[0] {
 			return nil, nil
 		}
 
 		var sendUIds []uint64
-		if len(arg2.Uids) < data.Rank[1]{
+		if len(arg2.Uids) < data.Rank[1] {
 			sendUIds = arg2.Uids[data.Rank[0]-1:]
-		}else {
-			sendUIds = arg2.Uids[data.Rank[0]-1: data.Rank[1]]
+		} else {
+			sendUIds = arg2.Uids[data.Rank[0]-1 : data.Rank[1]]
 		}
 
 		for index, uid := range sendUIds {
@@ -77,7 +77,6 @@ func rpc_R2G_SendPlayerRank(_ *network.Session, arg interface{}) (interface{}, e
 	mod.setArea2Ranking(arg2)
 	return nil, nil
 }
-
 
 func registerRpc() {
 	logic.RegisterAgentRpcHandler(pb.MessageID_C2S_FETCH_RANK, rpc_C2S_FetchRank)

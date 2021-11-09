@@ -1,16 +1,16 @@
 package bag
 
 import (
-	"kinger/apps/game/module/types"
-	"kinger/gopuppy/attribute"
-	"kinger/common/consts"
 	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/consts"
 	"kinger/gamedata"
-	"kinger/proto/pb"
-	"strconv"
+	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common/eventhub"
 	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/timer"
+	"kinger/proto/pb"
+	"strconv"
 	"time"
 )
 
@@ -113,7 +113,6 @@ func (m *bagModule) AddEmoji(player types.IPlayer, emojiTeam int) {
 	}
 }
 
-
 func (m *bagModule) AddChatPop(player types.IPlayer, chatPopID string) types.IItem {
 	_, ok := gamedata.GetGameData(consts.ChatPopConfig).(*gamedata.ChatPopGameData).ID2ChatPop[chatPopID]
 	if !ok {
@@ -186,5 +185,5 @@ func Initialize() {
 	module.Bag = mod
 	eventhub.Subscribe(consts.EvFixServer1Data, onFixServer1Data)
 	gamedata.GetGameData(consts.Equip).AddReloadCallback(onEquipDataUpdate)
-	timer.AddTicker(5 * time.Minute, log.save)
+	timer.AddTicker(5*time.Minute, log.save)
 }

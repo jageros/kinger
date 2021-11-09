@@ -1,20 +1,20 @@
 package gamedata
 
 import (
-	"kinger/common/consts"
 	"encoding/json"
+	"kinger/common/consts"
 )
 
 type RebornTreausre struct {
-	Team int `json:"__id__"`
+	Team     int    `json:"__id__"`
 	Treasure string `json:"treasure"`
-	Gold int `json:"gold"`
+	Gold     int    `json:"gold"`
 }
 
 type RebornTreausreGameData struct {
 	baseGameData
 	Team2Treausre map[int]string
-	Team2Gold map[int]int
+	Team2Gold     map[int]int
 }
 
 func newRebornTreausreGameData() *RebornTreausreGameData {

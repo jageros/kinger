@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"github.com/pkg/errors"
 	"kinger/gopuppy/apps/center/api"
 	"kinger/gopuppy/common"
 	"kinger/gopuppy/common/eventhub"
@@ -9,7 +10,6 @@ import (
 	"kinger/gopuppy/network"
 	"kinger/gopuppy/network/protoc"
 	"kinger/gopuppy/proto/pb"
-	"github.com/pkg/errors"
 )
 
 var (
@@ -57,7 +57,7 @@ func CallBackendAsync(appName string, appID uint32, msgID protoc.IMessageID, arg
 			AppID:   appID,
 			MsgID:   msgID.ID(),
 			Payload: payload,
-	})
+		})
 
 	go func() {
 		result := <-resultChan
@@ -285,7 +285,7 @@ func rpc_LoadPlayer(ses *network.Session, arg interface{}) (reply interface{}, e
 	agent := GetPlayerAgent(uid)
 	if agent == nil {
 		agent = NewPlayerAgent(&pb.PlayerClient{
-			Uid: uint64(uid),
+			Uid:    uint64(uid),
 			Region: GetAgentRegion(uid),
 		})
 		agent.SetUid(uid)

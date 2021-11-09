@@ -1,12 +1,12 @@
 package firstrecharge
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/glog"
 	aTypes "kinger/apps/game/activitys/types"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/glog"
 	"kinger/proto/pb"
 	"strconv"
 )
@@ -50,7 +50,6 @@ func (c *activityCom) setActivityVersion(activityID int) {
 	}
 	attr.SetInt(aTypes.Version, activity.GetActivityVersion())
 }
-
 
 func (c *activityCom) setReceive(activityID, rewardID int) error {
 	activity := mod.IAMod.GetActivityByID(activityID)
@@ -167,7 +166,7 @@ func (c *activityCom) updateHint() {
 		}
 		potNum := 0
 		for k, _ := range rw.ID2ActivityFirstRechargeReward {
-			if rst:= c.getRewardReceiveStatus(id, k); rst == pb.ActivityReceiveStatus_CanReceive {
+			if rst := c.getRewardReceiveStatus(id, k); rst == pb.ActivityReceiveStatus_CanReceive {
 				potNum++
 			}
 		}

@@ -16,9 +16,9 @@ type TutorialBattle struct {
 	Name           int      `json:"name"`
 	OwnSide        [][]int  `json:"own_side"`
 	EnemySide      [][]int  `json:"enemy_side"`
-	Head string `json:"head"`
-	HeadFrame string `json:"headFrame"`
-	NormalAI int `json:"normalAl"`
+	Head           string   `json:"head"`
+	HeadFrame      string   `json:"headFrame"`
+	NormalAI       int      `json:"normalAl"`
 }
 
 type TutorialGameData struct {

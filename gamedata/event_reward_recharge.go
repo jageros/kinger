@@ -12,12 +12,12 @@ type ActivityRechargeReward struct {
 
 type ActivityRechargeRewardGameData struct {
 	baseGameData
-	name_ string
+	name_                     string
 	ActivityRechargeRewardMap map[int]*ActivityRechargeReward
 }
 
 func newActivityRechargeRewardGameData(name_ string) *ActivityRechargeRewardGameData {
-	c := &ActivityRechargeRewardGameData{name_:name_}
+	c := &ActivityRechargeRewardGameData{name_: name_}
 	c.i = c
 	return c
 }

@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 
 	//"kinger/gopuppy/common/glog"
-	"kinger/common/consts"
 	"fmt"
+	"kinger/common/consts"
 )
 
 type Level struct {
@@ -36,13 +36,13 @@ type Level struct {
 	RankCondition int      `json:"rankCondition"`
 	BattleRes     int      `json:"battleRes"`
 	//ChooseAmount int `json:"chooseAmount"`
-	Name int `json:"name"`
+	Name       int `json:"name"`
 	IsRecharge int `json:"isRecharge"`
 
 	IsRechargeUnlock bool
-	LevelName string
-	ownGridCards   map[int]uint32
-	enemyGridCards map[int]uint32
+	LevelName        string
+	ownGridCards     map[int]uint32
+	enemyGridCards   map[int]uint32
 }
 
 func (l *Level) init() {
@@ -92,7 +92,7 @@ type LevelGameData struct {
 	maxLevelID      int
 	unlockCardLevel map[int]uint32
 	ChapterTreasure map[int]string
-	Chapter2Levels map[int][]*Level
+	Chapter2Levels  map[int][]*Level
 }
 
 func newLevelGameData() *LevelGameData {
@@ -137,7 +137,6 @@ func (ld *LevelGameData) init(d []byte) error {
 		if lv.RewardBox != "" {
 			ld.ChapterTreasure[chapter] = lv.RewardBox
 		}
-
 
 		lvs := ld.Chapter2Levels[chapter]
 		ld.Chapter2Levels[chapter] = append(lvs, lv)

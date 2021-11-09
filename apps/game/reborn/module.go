@@ -2,9 +2,9 @@ package reborn
 
 import (
 	"kinger/apps/game/module"
-	"kinger/gopuppy/attribute"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
+	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common/eventhub"
 	"kinger/gopuppy/common/glog"
 	"math"
@@ -13,7 +13,6 @@ import (
 var mod *rebornModule
 
 type rebornModule struct {
-
 }
 
 func (m *rebornModule) NewComponent(playerAttr *attribute.AttrMgr) types.IPlayerComponent {
@@ -57,7 +56,7 @@ func onFixServer1Data(args ...interface{}) {
 	//}
 
 	privileges := rebornCpt.resetPrivileges()
-	prestige := ( len(privileges) + int( math.Ceil(float64(resCpt.GetResource(consts.Prestige)) / 20000.0) ) ) * 20000
+	prestige := (len(privileges) + int(math.Ceil(float64(resCpt.GetResource(consts.Prestige))/20000.0))) * 20000
 	if prestige > 0 {
 		resCpt.SetResource(consts.Prestige, prestige)
 	}

@@ -1,18 +1,18 @@
 package bag
 
 import (
-	"kinger/gopuppy/attribute"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
-	"strconv"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common/eventhub"
+	"strconv"
 	"time"
 )
 
 type bagComponent struct {
-	attr *attribute.MapAttr
-	player types.IPlayer
+	attr     *attribute.MapAttr
+	player   types.IPlayer
 	type2Bag map[int]*bagSt
 }
 
@@ -131,7 +131,7 @@ func (bc *bagComponent) delItem(it types.IItem) {
 	}
 }
 
-func (bc *bagComponent) patchObtainTime(){
+func (bc *bagComponent) patchObtainTime() {
 	its := bc.getAllItemsByType(consts.ItEquip)
 	for _, it := range its {
 		if et, ok := it.(*equipItem); ok {

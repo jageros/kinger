@@ -3,10 +3,19 @@ package player
 import (
 	"crypto/md5"
 	"fmt"
+	"io"
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/config"
+	"kinger/common/consts"
+	"kinger/common/utils"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/center/api"
 	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common"
+	gconfig "kinger/gopuppy/common/config"
+	gconsts "kinger/gopuppy/common/consts"
 	"kinger/gopuppy/common/eventhub"
 	"kinger/gopuppy/common/evq"
 	"kinger/gopuppy/common/glog"
@@ -14,21 +23,12 @@ import (
 	"kinger/gopuppy/common/wordfilter"
 	"kinger/gopuppy/network"
 	gpb "kinger/gopuppy/proto/pb"
-	"io"
-	"kinger/apps/game/module"
-	"kinger/apps/game/module/types"
-	"kinger/common/config"
-	"kinger/common/consts"
-	gconsts "kinger/gopuppy/common/consts"
-	"kinger/common/utils"
-	"kinger/gamedata"
 	"kinger/proto/pb"
+	"kinger/sdk"
+	"math/rand"
 	"strconv"
 	"strings"
 	"time"
-	"kinger/sdk"
-	"math/rand"
-	gconfig "kinger/gopuppy/common/config"
 )
 
 func genNewbieName(uid common.UUid) string {
@@ -175,7 +175,7 @@ func accountLoginCheckRegion(channel, loginChannel, channelID string, isTourist 
 			}
 
 			return &pb.AccountArchives{
-				Ok: false,
+				Ok:           false,
 				RedirectHost: redirectHost,
 			}
 		}
@@ -204,7 +204,7 @@ func loginCheckServerStatus(channel string, uid common.UUid) *pb.AccountArchives
 		}
 	}
 
-	return &pb.AccountArchives{ ServerSt: serverStatus }
+	return &pb.AccountArchives{ServerSt: serverStatus}
 }
 
 func rpc_C2S_AccountLogin(_ *logic.PlayerAgent, arg interface{}) (interface{}, error) {
@@ -311,7 +311,7 @@ func rpc_C2S_Login(agent *logic.PlayerAgent, arg interface{}) (interface{}, erro
 	glog.JsonInfo("login", glog.Uint64("uid", uint64(player.GetUid())), glog.String("accountType",
 		_arg.AccountType.String()), glog.String("channel", _arg.Channel), glog.String("channelID", _arg.ChannelID),
 		glog.String("loginChannel", _arg.LoginChannel), glog.Bool("isNew", isNew), glog.Int("area",
-		player.GetArea()), glog.String("ip", agent.GetIP()), glog.String("subChannel", _arg.SubChannel))
+			player.GetArea()), glog.String("ip", agent.GetIP()), glog.String("subChannel", _arg.SubChannel))
 
 	mod.playerCache.RemoveWithoutCallback(player.GetUid())
 	mod.addPlayer(player)
@@ -341,18 +341,18 @@ func rpc_C2S_Login(agent *logic.PlayerAgent, arg interface{}) (interface{}, erro
 	}
 
 	reply := &pb.LoginReply{
-		Uid:  uint64(player.GetUid()),
-		Name: player.GetName(),
+		Uid:     uint64(player.GetUid()),
+		Name:    player.GetName(),
 		HeadImg: player.GetHeadImgUrl(),
 		// for test
-		ServerID: player.GetServerID(),
+		ServerID:           player.GetServerID(),
 		SeasonPvpLimitTime: module.Huodong.GetSeasonPvpLimitTime(player),
-		HeadFrame: player.GetHeadFrame(),
-		CardSkins: module.Bag.GetAllItemIDsByType(player, consts.ItCardSkin),
-		Area: int32(player.GetArea()),
-		ChatPop:player.GetChatPop(),
-		Notice: player.getCanShowLoginNotice(),
-		CountryFlag: player.GetCountryFlag(),
+		HeadFrame:          player.GetHeadFrame(),
+		CardSkins:          module.Bag.GetAllItemIDsByType(player, consts.ItCardSkin),
+		Area:               int32(player.GetArea()),
+		ChatPop:            player.GetChatPop(),
+		Notice:             player.getCanShowLoginNotice(),
+		CountryFlag:        player.GetCountryFlag(),
 	}
 
 	cardComponent := player.GetComponent(consts.CardCpt).(types.ICardComponent)
@@ -390,7 +390,7 @@ func rpc_C2S_Login(agent *logic.PlayerAgent, arg interface{}) (interface{}, erro
 
 	player.forEachHint(func(type_ pb.HintType, count int) {
 		reply.Hints = append(reply.Hints, &pb.Hint{
-			Type: type_,
+			Type:  type_,
 			Count: int32(count),
 		})
 	})
@@ -464,7 +464,7 @@ func rpc_C2S_GmCommand(agent *logic.PlayerAgent, arg interface{}) (interface{}, 
 	}
 
 	if commandInfo[0] == "act" {
-		if len(commandInfo) <2 {
+		if len(commandInfo) < 2 {
 			return nil, gamedata.GameError(100000)
 		}
 		_, err := module.Activitys.TestARpc(agent, commandInfo)
@@ -583,7 +583,7 @@ func rpc_C2S_GmCommand(agent *logic.PlayerAgent, arg interface{}) (interface{}, 
 			module.Pvp.GM_CrossSeason(agent, commandInfo[1])
 		}
 		return nil, nil
-	}else {
+	} else {
 		return nil, gamedata.InternalErr
 	}
 }
@@ -604,8 +604,7 @@ func rpc_C2S_LoadFight(agent *logic.PlayerAgent, arg interface{}) (interface{}, 
 
 	arg2 := arg.(*pb.C2SLoadFightArg)
 	battleType := _player.GetBattleType()
-	if battleType == consts.BtLevelHelp || (
-		arg2.IsIgnorePve && (battleType == consts.BtLevel || battleType == consts.BtLevelHelp)) {
+	if battleType == consts.BtLevelHelp || (arg2.IsIgnorePve && (battleType == consts.BtLevel || battleType == consts.BtLevelHelp)) {
 
 		_player.clearBattleID()
 		return nil, gamedata.InternalErr
@@ -618,7 +617,7 @@ func rpc_C2S_LoadFight(agent *logic.PlayerAgent, arg interface{}) (interface{}, 
 		Uid:      uint64(uid),
 		GateID:   agent.GetGateID(),
 		BattleID: uint64(fightID),
-		Region: agent.GetRegion(),
+		Region:   agent.GetRegion(),
 	})
 
 	glog.Infof("rpc_C2S_LoadFight uid=%d, battleID=%d, battleAppID=%d", uid, fightID, _player.GetBattleAppID())
@@ -685,7 +684,7 @@ func rpc_C2S_ModifyName(agent *logic.PlayerAgent, arg interface{}) (interface{},
 	if _, hasDirty, _, wTy := wordfilter.ContainsDirtyWords(arg2.Name, false); hasDirty && wTy == gconsts.GeneralWords {
 		return nil, gamedata.GameError(101)
 	}
-	if mod.isNameExist(arg2.Name){
+	if mod.isNameExist(arg2.Name) {
 		return nil, gamedata.InternalErr
 	}
 	player.setName(arg2.Name)
@@ -695,7 +694,7 @@ func rpc_C2S_ModifyName(agent *logic.PlayerAgent, arg interface{}) (interface{},
 	return nil, nil
 }
 
-func rpc_C2S_UpdateName(agent *logic.PlayerAgent,arg interface{}) (interface{}, error){
+func rpc_C2S_UpdateName(agent *logic.PlayerAgent, arg interface{}) (interface{}, error) {
 	uid := agent.GetUid()
 	player := module.Player.GetPlayer(uid).(*Player)
 	if player == nil {
@@ -707,7 +706,7 @@ func rpc_C2S_UpdateName(agent *logic.PlayerAgent,arg interface{}) (interface{}, 
 		return nil, gamedata.GameError(101)
 	}
 
-	if mod.isNameExist(arg2.Name){
+	if mod.isNameExist(arg2.Name) {
 		return nil, gamedata.InternalErr
 	}
 
@@ -717,12 +716,12 @@ func rpc_C2S_UpdateName(agent *logic.PlayerAgent,arg interface{}) (interface{}, 
 	}
 
 	nameTime := player.GetModifytime()
-	if nameTime != ""{
+	if nameTime != "" {
 		int64Name, _ := strconv.ParseInt(nameTime, 10, 64)
 		isModifyDay := timer.GetDayNo(int64Name)
 		now := time.Now().Unix()
 		curDay := timer.GetDayNo(now)
-		if surplus := curDay - isModifyDay; surplus <= 0{
+		if surplus := curDay - isModifyDay; surplus <= 0 {
 			//resCpt.ModifyResource(consts.Jade, 50,true)
 			return nil, gamedata.GameError(4)
 		}
@@ -752,8 +751,8 @@ func sdkAccountAuth(arg *pb.AccountLoginArg) (*accountSt, error) {
 		}
 	}
 
-    channelUid := arg.ChannelID
-    if channelUid == "" {
+	channelUid := arg.ChannelID
+	if channelUid == "" {
 		channelUid = arg.Account
 	}
 	a, err := loadAccount(arg.Channel, arg.LoginChannel, channelUid, arg.IsTourist)
@@ -882,14 +881,14 @@ func rpc_C2S_ShareVideo(agent *logic.PlayerAgent, arg interface{}) (interface{},
 	}
 
 	arg2 := arg.(*pb.ShareVideoArg)
-	if _, hasDirty, _, wTy := wordfilter.ContainsDirtyWords(arg2.Name, false); hasDirty && wTy == gconsts.GeneralWords{
+	if _, hasDirty, _, wTy := wordfilter.ContainsDirtyWords(arg2.Name, false); hasDirty && wTy == gconsts.GeneralWords {
 		return nil, gamedata.GameError(101)
 	}
 
 	reply, err := agent.CallBackend(pb.MessageID_G2V_SHARE_VIDEO, &pb.GShareVideoArg{
 		VideoID: arg2.VideoID,
-		Name: arg2.Name,
-		Area: int32(player.GetArea()),
+		Name:    arg2.Name,
+		Area:    int32(player.GetArea()),
 	})
 	if err == nil {
 		module.Mission.OnShareVideo(player)
@@ -911,12 +910,12 @@ func rpc_C2S_CommentsVideo(agent *logic.PlayerAgent, arg interface{}) (interface
 	}
 
 	return agent.CallBackend(pb.MessageID_G2V_COMMENTS_VIDEO, &pb.GCommentsVideoArg{
-		VideoID: arg2.VideoID,
-		Content: arg2.Content,
-		Name: player.GetName(),
-		HeadImgUrl: player.GetHeadImgUrl(),
-		Country: player.GetCountry(),
-		HeadFrame: player.GetHeadFrame(),
+		VideoID:     arg2.VideoID,
+		Content:     arg2.Content,
+		Name:        player.GetName(),
+		HeadImgUrl:  player.GetHeadImgUrl(),
+		Country:     player.GetCountry(),
+		HeadFrame:   player.GetHeadFrame(),
 		CountryFlag: player.GetCountryFlag(),
 	})
 }
@@ -942,7 +941,7 @@ func rpc_C2S_TouristRegisterAccount(agent *logic.PlayerAgent, arg interface{}) (
 	glog.Infof("rpc_C2S_TouristRegisterAccount account=%s, pwd=%d, channel=%s", account, pwd, arg2.Channel)
 
 	md5Writer := md5.New()
-	io.WriteString(md5Writer, pwdPrefix + pwd)
+	io.WriteString(md5Writer, pwdPrefix+pwd)
 	md5pwd := fmt.Sprintf("%x", md5Writer.Sum(nil))
 	a.setPwd(md5HashPassword(md5pwd))
 	if err = a.save(true); err != nil {
@@ -950,7 +949,7 @@ func rpc_C2S_TouristRegisterAccount(agent *logic.PlayerAgent, arg interface{}) (
 	}
 
 	return &pb.TouristRegisterAccountRelpy{
-		Account: account,
+		Account:  account,
 		Password: pwd,
 	}, nil
 }
@@ -975,7 +974,7 @@ func rpc_C2S_TouristBindAccount(agent *logic.PlayerAgent, arg interface{}) (inte
 
 	accountPwd := touristAccount.getPwd()
 	md5Writer := md5.New()
-	io.WriteString(md5Writer, pwdPrefix + arg2.TouristPassword)
+	io.WriteString(md5Writer, pwdPrefix+arg2.TouristPassword)
 	md5pwd := fmt.Sprintf("%x", md5Writer.Sum(nil))
 	if md5HashPassword(md5pwd) != accountPwd {
 		return nil, gamedata.GameError(3)
@@ -990,7 +989,7 @@ func rpc_C2S_TouristBindAccount(agent *logic.PlayerAgent, arg interface{}) (inte
 	bindArc = attribute.NewMapAttr()
 	bindArc.AssignMap(arcData)
 	a.setArchive(arcID, bindArc)
-	glog.Infof("rpc_C2S_TouristBindAccount, channel=%s, TouristAccount=%s, TouristPwd=%s, BindLoginChannel=%s, " +
+	glog.Infof("rpc_C2S_TouristBindAccount, channel=%s, TouristAccount=%s, TouristPwd=%s, BindLoginChannel=%s, "+
 		"BindChannelID=%s, uid=%d", arg2.Channel, arg2.TouristAccount, arg2.TouristPassword, arg2.BindAccount.LoginChannel,
 		arg2.BindAccount.ChannelID, arcData["uid"])
 	return a.packMsg(), nil
@@ -1090,7 +1089,7 @@ func rpc_C2S_Fire233BindAccount(agent *logic.PlayerAgent, arg interface{}) (inte
 
 	arg2 := arg.(*pb.RegisterAccount)
 	md5Writer := md5.New()
-	io.WriteString(md5Writer, pwdPrefix + arg2.Password)
+	io.WriteString(md5Writer, pwdPrefix+arg2.Password)
 	password := fmt.Sprintf("%x", md5Writer.Sum(nil))
 	a, err := doRegistAccount(arg2.Channel, arg2.Account, password)
 	if err != nil {
@@ -1123,8 +1122,8 @@ func rpc_C2S_FetchFire233BindAccount(agent *logic.PlayerAgent, arg interface{}) 
 	}
 
 	return &pb.RegisterAccount{
-		Channel: player2.GetChannel(),
-		Account: account,
+		Channel:  player2.GetChannel(),
+		Account:  account,
 		Password: a.getRawPwd(),
 	}, nil
 }
@@ -1200,10 +1199,10 @@ func rpc_C2S_FetchAccountCodePlayerInfo(agent *logic.PlayerAgent, arg interface{
 	}
 
 	return &pb.AccountCodePlayerInfo{
-		Uid: p.Uid,
-		Name: p.Name,
-		PvpScore: p.PvpScore,
-		HeadImg: p.HeadImgUrl,
+		Uid:       p.Uid,
+		Name:      p.Name,
+		PvpScore:  p.PvpScore,
+		HeadImg:   p.HeadImgUrl,
 		HeadFrame: p.HeadFrame,
 	}, nil
 }
@@ -1333,12 +1332,12 @@ func rpc_G2G_GetOnlineInfo(_ *network.Session, arg interface{}) (interface{}, er
 	infos := mod.getOnlineInfo()
 	reply := &pb.OnlineInfo{}
 	for area, accountType2info := range infos {
-		for accountType, info := range accountType2info{
+		for accountType, info := range accountType2info {
 			reply.Infos = append(reply.Infos, &pb.AreaAccountTypeOnlineInfo{
-				AccountType: accountType,
-				PlayerAmount: int32(info.onlineAmount),
+				AccountType:     accountType,
+				PlayerAmount:    int32(info.onlineAmount),
 				TotalOnlineTime: int32(info.onlineTime),
-				Area: int32(area),
+				Area:            int32(area),
 			})
 		}
 	}

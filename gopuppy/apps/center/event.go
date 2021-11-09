@@ -1,12 +1,12 @@
 package main
 
 import (
+	"kinger/gopuppy/common/config"
 	"kinger/gopuppy/common/consts"
 	"kinger/gopuppy/common/evq"
-	"kinger/gopuppy/network"
-	"kinger/gopuppy/common/config"
-	"kinger/gopuppy/common/rpubsub"
 	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/rpubsub"
+	"kinger/gopuppy/network"
 )
 
 func sessionOnClose(ev evq.IEvent) {
@@ -32,7 +32,7 @@ func sessionOnClose(ev evq.IEvent) {
 	}
 }
 
-func onConfigUpdate(_ map[string]interface{})  {
+func onConfigUpdate(_ map[string]interface{}) {
 	err := config.ReLoadConfig()
 	glog.Infof("onConfigUpdate err=%s", err)
 }

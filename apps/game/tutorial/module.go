@@ -1,9 +1,9 @@
 package tutorial
 
 import (
-	"kinger/gopuppy/attribute"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
+	"kinger/gopuppy/attribute"
 )
 
 type tutorialModule struct {

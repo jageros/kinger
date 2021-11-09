@@ -3,28 +3,28 @@ package gamedata
 import (
 	"encoding/json"
 
+	"github.com/pkg/errors"
 	"kinger/common/consts"
+	"kinger/gopuppy/common/utils"
 	"kinger/proto/pb"
 	"time"
-	"github.com/pkg/errors"
-	"kinger/gopuppy/common/utils"
 )
 
 type Huodong struct {
-	ID              pb.HuodongTypeEnum      `json:"__id__"`
-	BeginTime     string      `json:"beginTime"`
-	EndTime     string      `json:"endTime"`
-	ExchangeEndTime string `json:"exchangeEndTime"`
-	Resource string `json:"resource"`
-	Reward string `json:"reward"`
+	ID              pb.HuodongTypeEnum `json:"__id__"`
+	BeginTime       string             `json:"beginTime"`
+	EndTime         string             `json:"endTime"`
+	ExchangeEndTime string             `json:"exchangeEndTime"`
+	Resource        string             `json:"resource"`
+	Reward          string             `json:"reward"`
 
-	StartTime time.Time
-	StopTime time.Time
+	StartTime        time.Time
+	StopTime         time.Time
 	ExchangeStopTime time.Time
 }
 
 func (h *Huodong) init() error {
-	var err  error
+	var err error
 	if h.BeginTime == "" {
 		return errors.Errorf("huodong %d no begin time", h.ID)
 	}

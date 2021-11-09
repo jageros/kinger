@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_FETCH_FRIEND_LIST    resp: FriendList
@@ -1473,4 +1473,3 @@ func (m *G2G_ON_IMPORT_DIRTY_WORDS_Meta) DecodeReply(data []byte) (interface{}, 
 }
 
 //------------------------------------ G2G_ON_IMPORT_DIRTY_WORDS END ----------------------------------------
-

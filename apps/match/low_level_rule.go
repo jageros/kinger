@@ -2,9 +2,9 @@ package main
 
 import (
 	"container/list"
-	"time"
-	"math"
 	"kinger/gopuppy/common"
+	"math"
+	"time"
 	//"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/timer"
 )
@@ -12,24 +12,24 @@ import (
 // 专家以下的匹配规则
 
 const (
-	crossMmrInterval = 2 * time.Second
-	maxMmrSectionCount   = math.MaxInt32
+	crossMmrInterval   = 2 * time.Second
+	maxMmrSectionCount = math.MaxInt32
 
-	matchStateNewPlayer         = iota     // 等待 crossMmrInterval 秒内
-	matchStateWaitPlayer                   // 等待 2 * crossMmrInterval 秒内
-	matchStateWaitLongPlayer               // 等待超过 2 * crossMmrInterval
-	matchStateTimeout                      // 等待不小于 matchTimeout
+	matchStateNewPlayer      = iota // 等待 crossMmrInterval 秒内
+	matchStateWaitPlayer            // 等待 2 * crossMmrInterval 秒内
+	matchStateWaitLongPlayer        // 等待超过 2 * crossMmrInterval
+	matchStateTimeout               // 等待不小于 matchTimeout
 
-	newbieMatchRobotInterval = 3 * time.Second    // 初级 newbieMatchRobotInterval 秒后匹配机器人
-	matchRobotInterval       = 10 * time.Second   // 中级 matchRobotInterval 秒后匹配机器人
-	matchRobotInterval2      = 18 * time.Second   // 高级 matchRobotInterval2 秒后匹配机器人
+	newbieMatchRobotInterval = 3 * time.Second  // 初级 newbieMatchRobotInterval 秒后匹配机器人
+	matchRobotInterval       = 10 * time.Second // 中级 matchRobotInterval 秒后匹配机器人
+	matchRobotInterval2      = 18 * time.Second // 高级 matchRobotInterval2 秒后匹配机器人
 )
 
 type lowLevelPlayer struct {
 	*matchPlayer
-	mmrSection int
+	mmrSection          int
 	cardStrengthSection int
-	state int
+	state               int
 }
 
 func (mp *lowLevelPlayer) getMmrSection() int {
@@ -57,7 +57,7 @@ func (mp *lowLevelPlayer) setState(state int) {
 }
 
 type cardStreCollection struct {
-	r                *lowLevelRuleSt
+	r *lowLevelRuleSt
 	// 最小卡等区间
 	minCardSection int
 	// 最大卡等区间
@@ -128,9 +128,9 @@ func (cc *cardStreCollection) newIterator(cardStreSec int) func() *list.List {
 
 			sec = cardStreSec + diff
 			if diff > 0 {
-				diff = - diff - 1
+				diff = -diff - 1
 			} else {
-				diff = - diff
+				diff = -diff
 			}
 
 			if ok {
@@ -142,11 +142,10 @@ func (cc *cardStreCollection) newIterator(cardStreSec int) func() *list.List {
 	}
 }
 
-
 type mmrCollection struct {
-	r                *lowLevelRuleSt
-	minMmrSec int
-	maxMmrSec int
+	r                   *lowLevelRuleSt
+	minMmrSec           int
+	maxMmrSec           int
 	mmrSec2CardStreColl map[int]*cardStreCollection // map[mmrSection]*cardStreCollection
 }
 
@@ -165,8 +164,8 @@ func (mc *mmrCollection) getOrNewCardStreColl(mmrSec int) *cardStreCollection {
 		return coll
 	} else {
 		coll = &cardStreCollection{
-			r: mc.r,
-			minCardSection: -1,
+			r:                mc.r,
+			minCardSection:   -1,
 			cardStreSec2list: map[int]*list.List{},
 		}
 		mc.mmrSec2CardStreColl[mmrSec] = coll
@@ -203,10 +202,10 @@ func (mc *mmrCollection) newIterator(mmrSec, crossSecCount int) func() *cardStre
 
 			sec = mmrSec + diff
 			if diff > 0 {
-				diff = - diff - 1
-				crossSecCount --
+				diff = -diff - 1
+				crossSecCount--
 			} else {
-				diff = - diff
+				diff = -diff
 			}
 
 			if ok {
@@ -220,7 +219,6 @@ func (mc *mmrCollection) newIterator(mmrSec, crossSecCount int) func() *cardStre
 	}
 }
 
-
 type lowLevelRuleMatchQueue struct {
 	r                *lowLevelRuleSt
 	pvpLevel2MmrColl map[int]*mmrCollection // map[pvpLevel]*mmrCollection
@@ -228,7 +226,7 @@ type lowLevelRuleMatchQueue struct {
 
 func newLowLevelRuleMatchQueue(r *lowLevelRuleSt) *lowLevelRuleMatchQueue {
 	return &lowLevelRuleMatchQueue{
-		r: r,
+		r:                r,
 		pvpLevel2MmrColl: map[int]*mmrCollection{},
 	}
 }
@@ -248,8 +246,8 @@ func (q *lowLevelRuleMatchQueue) getOrNewMMrColl(pvpLevel int) *mmrCollection {
 		return coll
 	} else {
 		coll = &mmrCollection{
-			r: q.r,
-			minMmrSec: -1,
+			r:                   q.r,
+			minMmrSec:           -1,
 			mmrSec2CardStreColl: map[int]*cardStreCollection{},
 		}
 		q.pvpLevel2MmrColl[pvpLevel] = coll
@@ -260,9 +258,9 @@ func (q *lowLevelRuleMatchQueue) getOrNewMMrColl(pvpLevel int) *mmrCollection {
 type lowLevelRuleSt struct {
 	allPlayers map[common.UUid]*list.Element
 
-	matchQueue1    *lowLevelRuleMatchQueue
-	matchQueue2    *lowLevelRuleMatchQueue
-	matchQueue3    *lowLevelRuleMatchQueue
+	matchQueue1 *lowLevelRuleMatchQueue
+	matchQueue2 *lowLevelRuleMatchQueue
+	matchQueue3 *lowLevelRuleMatchQueue
 
 	allMatchQueues  []*lowLevelRuleMatchQueue // crossMmrInterval 秒内的玩家，可匹配
 	canMatchQueues1 []*lowLevelRuleMatchQueue // 2 * crossMmrInterval 秒内的玩家，可匹配
@@ -297,7 +295,7 @@ func newLowLevelRule() iMatchRule {
 }
 
 func (r *lowLevelRuleSt) beginHeartBeat() {
-	timer.AddTicker(800 * time.Millisecond, func() {
+	timer.AddTicker(800*time.Millisecond, func() {
 
 		now := time.Now()
 		for _, q := range r.allMatchQueues {
@@ -360,7 +358,7 @@ func (r *lowLevelRuleSt) getPlayerState(mplayer *lowLevelPlayer, now time.Time) 
 
 	beginMatchTime := mplayer.getBeginMatchTime()
 	matchTime := now.Sub(beginMatchTime)
-	if matchTime >= 2 * crossMmrInterval {
+	if matchTime >= 2*crossMmrInterval {
 		return matchStateWaitLongPlayer
 	} else if matchTime >= crossMmrInterval {
 		return matchStateWaitPlayer
@@ -468,8 +466,8 @@ func (r *lowLevelRuleSt) addPlayer(player *matchPlayer) {
 	//glog.Infof("lowLevelRuleSt addPlayer uid=%d", mplayer.getUid())
 	mplayer := &lowLevelPlayer{state: matchStateNewPlayer}
 	mplayer.matchPlayer = player
-	mplayer.setMmrSection( r.getMmrSection(mplayer.getMmr()) )
-	mplayer.setCardStrengthSection( r.getCardStrengthSection(mplayer.getCardStrength()) )
+	mplayer.setMmrSection(r.getMmrSection(mplayer.getMmr()))
+	mplayer.setCardStrengthSection(r.getCardStrengthSection(mplayer.getCardStrength()))
 	pElem := r.matchQueue1.getOrNewMMrColl(mplayer.getPvpLevel()).getOrNewCardStreColl(mplayer.getMmrSection()).add(mplayer)
 	r.allPlayers[mplayer.getUid()] = pElem
 }

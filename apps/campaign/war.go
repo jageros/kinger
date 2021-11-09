@@ -1,15 +1,15 @@
 package main
 
 import (
-	"kinger/proto/pb"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/timer"
-	"kinger/gopuppy/common/eventhub"
-	"time"
-	"kinger/gopuppy/common"
-	"kinger/gopuppy/common/glog"
 	"fmt"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/eventhub"
 	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
+	"kinger/proto/pb"
+	"time"
 )
 
 // TODO
@@ -24,20 +24,20 @@ import (
 // C2S_ACC_DEF_CITY_LOSE_LOADING  是耗城市的粮草吗
 
 var (
-	warMgr = &warMgrSt{}
+	warMgr           = &warMgrSt{}
 	nextReadyWarTime time.Time
 	nextBeignWarTime time.Time
-	nextEndWarTime time.Time
+	nextEndWarTime   time.Time
 )
 
 type warMgrSt struct {
-	attr *attribute.AttrMgr
+	attr                *attribute.AttrMgr
 	yourMajestyRankAttr *attribute.ListAttr
-	beAttackCity common.IntSet
-	normalTicker *timer.Timer
-	readyTicker *timer.Timer
-	warTicker *timer.Timer
-	unifiedInfo []byte
+	beAttackCity        common.IntSet
+	normalTicker        *timer.Timer
+	readyTicker         *timer.Timer
+	warTicker           *timer.Timer
+	unifiedInfo         []byte
 }
 
 func (wm *warMgrSt) initialize() {
@@ -65,7 +65,7 @@ func (wm *warMgrSt) initialize() {
 	}
 
 	wm.setState(pb.CampaignState_Pause)
-	timer.AddTicker(5 * time.Minute, func() {
+	timer.AddTicker(5*time.Minute, func() {
 		wm.save(false)
 	})
 }
@@ -97,9 +97,9 @@ func (wm *warMgrSt) calcWarTime() {
 		nextDate = nextDate.Add(24 * time.Hour * time.Duration(diffDay))
 	}
 
-	nextReadyWarTime = nextDate.Add(coutryWarReadyBeginHour * time.Hour + coutryWarReadyBeginMin * time.Minute)
-	nextBeignWarTime = nextDate.Add(coutryWarBeginHour * time.Hour + coutryWarBeginMin * time.Minute)
-	nextEndWarTime = nextDate.Add(coutryWarEndHour * time.Hour + coutryWarEndMin * time.Minute)
+	nextReadyWarTime = nextDate.Add(coutryWarReadyBeginHour*time.Hour + coutryWarReadyBeginMin*time.Minute)
+	nextBeignWarTime = nextDate.Add(coutryWarBeginHour*time.Hour + coutryWarBeginMin*time.Minute)
+	nextEndWarTime = nextDate.Add(coutryWarEndHour*time.Hour + coutryWarEndMin*time.Minute)
 
 	now = time.Now()
 	if wm.normalTicker != nil {
@@ -127,7 +127,7 @@ func (wm *warMgrSt) calcWarTime() {
 		nextBeignWarTime, nextEndWarTime)
 }
 
-func (wm *warMgrSt) initializeTimer()  {
+func (wm *warMgrSt) initializeTimer() {
 	state := wm.getState()
 	glog.Infof("war initializeTimer state=%s", state)
 	if state == pb.CampaignState_Unified {
@@ -135,37 +135,37 @@ func (wm *warMgrSt) initializeTimer()  {
 	}
 
 	/*
-	now := time.Now()
-	switch state {
-	case pb.CampaignState_Normal:
-		beginTime := time.Date(now.Year(), now.Month(), now.Day(), coutryWarReadyBeginHour, coutryWarReadyBeginMin, 0, 0,
-			now.Location())
-		if now.Before(beginTime) {
-			break
-		}
-		wm.onWarReady()
-		fallthrough
+		now := time.Now()
+		switch state {
+		case pb.CampaignState_Normal:
+			beginTime := time.Date(now.Year(), now.Month(), now.Day(), coutryWarReadyBeginHour, coutryWarReadyBeginMin, 0, 0,
+				now.Location())
+			if now.Before(beginTime) {
+				break
+			}
+			wm.onWarReady()
+			fallthrough
 
-	case pb.CampaignState_ReadyWar:
-		beginTime := time.Date(now.Year(), now.Month(), now.Day(), coutryWarBeginHour, coutryWarBeginMin, 0, 0,
-			now.Location())
-		if now.Before(beginTime) {
-			break
-		}
-		wm.onWarBegin()
-		fallthrough
+		case pb.CampaignState_ReadyWar:
+			beginTime := time.Date(now.Year(), now.Month(), now.Day(), coutryWarBeginHour, coutryWarBeginMin, 0, 0,
+				now.Location())
+			if now.Before(beginTime) {
+				break
+			}
+			wm.onWarBegin()
+			fallthrough
 
-	case pb.CampaignState_InWar:
-		beginTime := time.Date(now.Year(), now.Month(), now.Day(), coutryWarEndHour, coutryWarEndMin, 0, 0,
-			now.Location())
-		if now.Before(beginTime) {
-			break
-		}
-		wm.onWarEnd()
+		case pb.CampaignState_InWar:
+			beginTime := time.Date(now.Year(), now.Month(), now.Day(), coutryWarEndHour, coutryWarEndMin, 0, 0,
+				now.Location())
+			if now.Before(beginTime) {
+				break
+			}
+			wm.onWarEnd()
 
-	case pb.CampaignState_Unified:
-		return
-	}
+		case pb.CampaignState_Unified:
+			return
+		}
 	*/
 
 	wm.calcWarTime()
@@ -234,7 +234,7 @@ func (wm *warMgrSt) onUnified(cry *country) {
 
 	evq.CallLater(func() {
 		unifiedMsg := &pb.CaStateUnifiedArg{
-			CountryID: cry.getID(),
+			CountryID:           cry.getID(),
 			CountryPlayerAmount: int32(cry.getPlayerAmount()),
 		}
 		p := cry.getYourMajesty()
@@ -251,7 +251,7 @@ func (wm *warMgrSt) onUnified(cry *country) {
 		wm.yourMajestyRankAttr.ForEachIndex(func(index int) bool {
 			uid := common.UUid(wm.yourMajestyRankAttr.GetUInt64(index))
 			uid2Rank[uid] = rankLen + 1
-			rankLen --
+			rankLen--
 			return true
 		})
 		playerMgr.onUnified(uid2Rank, unifiedMsg.YourMajestyName, cry.getName())
@@ -285,7 +285,7 @@ func (wm *warMgrSt) syncCityDefense() {
 		cty := cityMgr.getCity(cityID)
 		if cty != nil {
 			msg.CityDefenses = append(msg.CityDefenses, &pb.CityDefense{
-				CityID: int32(cityID),
+				CityID:  int32(cityID),
 				Defense: int32(cty.getResource(resDefense)),
 			})
 		}

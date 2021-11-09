@@ -1,14 +1,14 @@
 package main
 
 import (
-	"kinger/gopuppy/apps/logic"
-	"kinger/gopuppy/common/app"
-	"kinger/gopuppy/common/timer"
 	"kinger/common/config"
 	"kinger/common/consts"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/common/app"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/timer"
 	_ "kinger/meta"
 	"time"
-	"kinger/gopuppy/common/evq"
 )
 
 var cService *chatService
@@ -31,7 +31,7 @@ func (cs *chatService) Start(appID uint16) {
 		cs.ReportRpcHandlers()
 		close(c)
 	})
-	<- c
+	<-c
 }
 
 func (cs *chatService) Stop() {
@@ -40,7 +40,7 @@ func (cs *chatService) Stop() {
 		cs.ReportOnStop()
 		close(c)
 	})
-	<- c
+	<-c
 	cs.OnStop()
 }
 

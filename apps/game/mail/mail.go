@@ -1,11 +1,11 @@
 package mail
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/apps/game/module/types"
-	"kinger/proto/pb"
-	"kinger/gamedata"
 	"fmt"
+	"kinger/apps/game/module/types"
+	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/proto/pb"
 	"time"
 )
 
@@ -14,14 +14,14 @@ const mailTimeout = 7 * 24 * 60 * 60
 var _ types.IMailReward = &mailReward{}
 
 type mailSt struct {
-	attr *attribute.MapAttr
+	attr   *attribute.MapAttr
 	player types.IPlayer
 	reward *mailReward
 }
 
 func newMailByAttr(player types.IPlayer, attr *attribute.MapAttr) *mailSt {
 	m := &mailSt{
-		attr: attr,
+		attr:   attr,
 		player: player,
 	}
 	rewardsAttr := attr.GetListAttr("rewards")
@@ -36,14 +36,14 @@ func newMail(player types.IPlayer, id int) *mailSt {
 	attr := attribute.NewMapAttr()
 	attr.SetInt("id", id)
 	return &mailSt{
-		attr: attr,
+		attr:   attr,
 		player: player,
 	}
 }
 
 func newMailByMsg(msg *pb.Mail) *mailSt {
 	m := newMail(nil, int(msg.ID))
-	m.setReward( newMailRewardByMsg(msg.Rewards) )
+	m.setReward(newMailRewardByMsg(msg.Rewards))
 	m.setArgs(msg.MailType, msg.Arg)
 	m.setTime(int(msg.Time))
 	m.setTitle(msg.Title)
@@ -84,7 +84,7 @@ func (m *mailSt) setTime(t int) {
 }
 
 func (m *mailSt) isTimeout(now int) bool {
-	return m.getTime() + mailTimeout <= now
+	return m.getTime()+mailTimeout <= now
 }
 
 func (m *mailSt) getTitle() string {
@@ -134,15 +134,15 @@ func (m *mailSt) setReward(reward *mailReward) {
 
 func (m *mailSt) packMsg() *pb.Mail {
 	msg := &pb.Mail{
-		ID: int32(m.getID()),
-		Title: m.getTitle(),
-		Content: m.getContent(),
-		Time: int32(m.getTime()),
-		IsReward: m.isReward(),
+		ID:         int32(m.getID()),
+		Title:      m.getTitle(),
+		Content:    m.getContent(),
+		Time:       int32(m.getTime()),
+		IsReward:   m.isReward(),
 		SenderName: m.getSender(),
-		IsRead: m.isRead(),
-		MailType: pb.MailTypeEnum(m.attr.GetInt("mailType")),
-		Arg: m.getArgs(),
+		IsRead:     m.isRead(),
+		MailType:   pb.MailTypeEnum(m.attr.GetInt("mailType")),
+		Arg:        m.getArgs(),
 	}
 	if m.reward != nil {
 		msg.Rewards = m.reward.PackMsg()
@@ -173,7 +173,7 @@ func (m *mailSt) getReward() (err error, amountRewards []*pb.MailRewardAmountArg
 
 type wholeServerMailSt struct {
 	attr *attribute.AttrMgr
-	m *mailSt
+	m    *mailSt
 }
 
 func newWholeServerMail(title, content string, reward types.IMailReward, accountType pb.AccountTypeEnum,
@@ -196,7 +196,7 @@ func newWholeServerMail(title, content string, reward types.IMailReward, account
 	attr.Save(true)
 	return &wholeServerMailSt{
 		attr: attr,
-		m: ml,
+		m:    ml,
 	}
 }
 
@@ -204,7 +204,7 @@ func newWholeServerMailByAttr(attr *attribute.AttrMgr) *wholeServerMailSt {
 	mattr := attr.GetMapAttr("mailData")
 	return &wholeServerMailSt{
 		attr: attr,
-		m: newMailByAttr(nil, mattr),
+		m:    newMailByAttr(nil, mattr),
 	}
 }
 
@@ -223,10 +223,10 @@ func newWholeServerMailByMsg(msg *pb.WholeServerMail) *wholeServerMailSt {
 
 func (wm *wholeServerMailSt) packMsg() *pb.WholeServerMail {
 	return &pb.WholeServerMail{
-		MailData: wm.m.packMsg(),
-		AccountType: wm.getAccountType(),
+		MailData:       wm.m.packMsg(),
+		AccountType:    wm.getAccountType(),
 		NewbieDeadLine: wm.getNewbieDeadLine(),
-		Area: int32(wm.getArea()),
+		Area:           int32(wm.getArea()),
 	}
 }
 

@@ -1,8 +1,8 @@
 package types
 
 import (
-	"kinger/proto/pb"
 	"kinger/gopuppy/common"
+	"kinger/proto/pb"
 )
 
 type ILevelComponent interface {

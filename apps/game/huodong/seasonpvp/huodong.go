@@ -1,27 +1,27 @@
 package seasonpvp
 
 import (
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/attribute"
 	"fmt"
-	"time"
-	"kinger/gopuppy/apps/logic"
-	"kinger/gamedata"
-	"kinger/gopuppy/common/evq"
+	htypes "kinger/apps/game/huodong/types"
 	"kinger/apps/game/module"
-	"kinger/common/consts"
-	"kinger/proto/pb"
-	"kinger/gopuppy/common/timer"
 	"kinger/apps/game/module/types"
 	"kinger/common/config"
-	htypes "kinger/apps/game/huodong/types"
+	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common/eventhub"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
+	"kinger/proto/pb"
+	"time"
 )
 
 type seasonPvpHd struct {
 	htypes.BaseHuodong
-	area int
-	sessionDatas map[int]*seasonPvpHdSessionData
+	area               int
+	sessionDatas       map[int]*seasonPvpHdSessionData
 	loadingSessionData map[int]chan struct{}
 }
 
@@ -36,7 +36,7 @@ func (hd *seasonPvpHd) loadSessionData(session int) *seasonPvpHdSessionData {
 		loading, ok2 := hd.loadingSessionData[session]
 		if ok2 {
 			evq.Await(func() {
-				<- loading
+				<-loading
 			})
 			return hd.sessionDatas[session]
 		} else {
@@ -116,7 +116,7 @@ func (hd *seasonPvpHd) OnStop() {
 	})
 
 	if module.Service.GetAppID() == 1 {
-		timer.AfterFunc(3 * time.Second, func() {
+		timer.AfterFunc(3*time.Second, func() {
 			var data interface{} = nil
 			gdata := gamedata.GetSeasonPvpGameData().GetSeasonData(hd.area)
 			if gdata != nil {
@@ -126,8 +126,8 @@ func (hd *seasonPvpHd) OnStop() {
 			if hd.Refresh(data) {
 				logic.BroadcastBackend(pb.MessageID_G2G_ON_HUODONG_EVENT, &pb.HuodongEvent{
 					HdType: pb.HuodongTypeEnum_HSeasonPvp,
-					Event: pb.HuodongEventType_HetRefresh,
-					Areas: []int32{ int32(hd.area) },
+					Event:  pb.HuodongEventType_HetRefresh,
+					Areas:  []int32{int32(hd.area)},
 				})
 			}
 		})
@@ -317,26 +317,26 @@ func (hd *seasonPvpHd) beginSession(player types.IPlayer, hdData *seasonPvpHdPla
 
 	if config.GetConfig().IsMultiLan {
 		/*
-		if curLevel >= 31 {
-			resetLevel = 21
-		} else if curLevel >= 28 {
-			resetLevel = 20
-		} else if curLevel >= 25 {
-			resetLevel = 19
-		} else if curLevel >= 22 {
-			resetLevel = 18
-		} else if curLevel >= 19 {
-			resetLevel = 17
-		} else {
-			resetLevel = 16
-		}
+			if curLevel >= 31 {
+				resetLevel = 21
+			} else if curLevel >= 28 {
+				resetLevel = 20
+			} else if curLevel >= 25 {
+				resetLevel = 19
+			} else if curLevel >= 22 {
+				resetLevel = 18
+			} else if curLevel >= 19 {
+				resetLevel = 17
+			} else {
+				resetLevel = 16
+			}
 		*/
 		resetLevel = 16
 		resetScore := module.Pvp.GetMinStarByPvpLevel(resetLevel)
 		resCpt := player.GetComponent(consts.ResourceCpt).(types.IResourceComponent)
 		modifyScore := resCpt.GetResource(consts.Score) - resetScore
 		if modifyScore > 0 {
-			resCpt.ModifyResource(consts.Score, - modifyScore)
+			resCpt.ModifyResource(consts.Score, -modifyScore)
 		}
 	}
 
@@ -358,7 +358,6 @@ func (hd *seasonPvpHd) beginSession(player types.IPlayer, hdData *seasonPvpHdPla
 		})
 	}
 }
-
 
 func InitializeSeasonPvpHd() {
 	registerRpc()
@@ -405,7 +404,7 @@ func InitializeSeasonPvpHd() {
 
 		playerData := player.GetComponent(consts.HuodongCpt).(htypes.IHuodongComponent).GetOrNewHdData(
 			pb.HuodongTypeEnum_HSeasonPvp).(*seasonPvpHdPlayerData)
-		limitPvpTeam :=  gdata.GetLimitPvpTeam()
+		limitPvpTeam := gdata.GetLimitPvpTeam()
 		if curTeam >= limitPvpTeam && oldTeam < limitPvpTeam {
 			evq.CallLater(func() {
 				seasonHd.OnPlayerLogin(player, playerData)

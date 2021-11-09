@@ -1,17 +1,17 @@
 package player
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/eventhub"
-	"kinger/gopuppy/common/glog"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/eventhub"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
 	"kinger/proto/pb"
 	"strconv"
-	"kinger/gopuppy/common/timer"
 	"time"
-	"kinger/gopuppy/common/evq"
 )
 
 var needLogRes = map[int]string{}
@@ -51,13 +51,13 @@ func (rc *ResourceComponent) OnCrossDay(dayno int) {
 
 	now := time.Now()
 	for lastDayno < dayno {
-		if now.Weekday() == time.Monday{
+		if now.Weekday() == time.Monday {
 			rc.SetResource(consts.CrossAreaHonor, 0)
 			return
 		}
 
 		lastDayno += 1
-		now = now.Add(- 24 * time.Hour)
+		now = now.Add(-24 * time.Hour)
 	}
 }
 
@@ -87,14 +87,14 @@ func (rc *ResourceComponent) OnInit(player types.IPlayer) {
 func (rc *ResourceComponent) packMsg() []*pb.Resource {
 	return []*pb.Resource{
 		{int32(consts.Gold), int32(rc.attr.GetInt(strconv.Itoa(consts.Gold)))},
-//		{int32(consts.Forage), int32(rc.attr.GetInt(strconv.Itoa(consts.Forage)))},
-//		{int32(consts.Weap), int32(rc.attr.GetInt(strconv.Itoa(consts.Weap)))},
-//		{int32(consts.Horse), int32(rc.attr.GetInt(strconv.Itoa(consts.Horse)))},
-//		{int32(consts.Mat), int32(rc.attr.GetInt(strconv.Itoa(consts.Mat)))},
-//		{int32(consts.Med), int32(rc.attr.GetInt(strconv.Itoa(consts.Med)))},
-//		{int32(consts.Ban), int32(rc.attr.GetInt(strconv.Itoa(consts.Ban)))},
-//		{int32(consts.Wine), int32(rc.attr.GetInt(strconv.Itoa(consts.Wine)))},
-//		{int32(consts.Book), int32(rc.attr.GetInt(strconv.Itoa(consts.Book)))},
+		//		{int32(consts.Forage), int32(rc.attr.GetInt(strconv.Itoa(consts.Forage)))},
+		//		{int32(consts.Weap), int32(rc.attr.GetInt(strconv.Itoa(consts.Weap)))},
+		//		{int32(consts.Horse), int32(rc.attr.GetInt(strconv.Itoa(consts.Horse)))},
+		//		{int32(consts.Mat), int32(rc.attr.GetInt(strconv.Itoa(consts.Mat)))},
+		//		{int32(consts.Med), int32(rc.attr.GetInt(strconv.Itoa(consts.Med)))},
+		//		{int32(consts.Ban), int32(rc.attr.GetInt(strconv.Itoa(consts.Ban)))},
+		//		{int32(consts.Wine), int32(rc.attr.GetInt(strconv.Itoa(consts.Wine)))},
+		//		{int32(consts.Book), int32(rc.attr.GetInt(strconv.Itoa(consts.Book)))},
 		{int32(consts.Score), int32(rc.attr.GetInt(strconv.Itoa(consts.Score)))},
 		{int32(consts.GuidePro), int32(rc.attr.GetInt(strconv.Itoa(consts.GuidePro)))},
 		{int32(consts.MaxScore), int32(rc.attr.GetInt(strconv.Itoa(consts.MaxScore)))},
@@ -155,7 +155,7 @@ func (rc *ResourceComponent) _modifyResource(resType, amount int, reason string)
 			}
 			glog.JsonInfo("resource", glog.Int("oldAmount", oldAmount), glog.Int("newAmount", curAmount),
 				glog.Int("modify", amount), glog.String("name", name), glog.Int("type", resType), glog.Uint64(
-				"uid", uint64(rc.player.GetUid())), glog.String("accountType", rc.player.GetLogAccountType().String()),
+					"uid", uint64(rc.player.GetUid())), glog.String("accountType", rc.player.GetLogAccountType().String()),
 				glog.String("channel", rc.player.GetChannel()), glog.Int("area", rc.player.GetArea()),
 				glog.String("reason", reason), glog.String("subChannel", rc.player.GetSubChannel()))
 

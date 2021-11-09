@@ -2,11 +2,11 @@ package outstatus
 
 import (
 	"fmt"
-	"kinger/gopuppy/common"
-	"kinger/gopuppy/common/evq"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/evq"
 	"kinger/proto/pb"
 	"math"
 	"math/rand"
@@ -156,16 +156,13 @@ func (b *baseBuff) buffDayTreasureGlod(oldAmount float64, buffEffect []int) floa
 	return oldAmount
 }
 
-func (b *baseBuff) buffDoubleRewardOfVip(oldAmount float64, buffEffect[]int) float64 {
+func (b *baseBuff) buffDoubleRewardOfVip(oldAmount float64, buffEffect []int) float64 {
 	return oldAmount
 }
 
-func (b *baseBuff) buffAddCardOfVip(oldAmount float64, buffEffect[]int) float64 {
+func (b *baseBuff) buffAddCardOfVip(oldAmount float64, buffEffect []int) float64 {
 	return oldAmount
 }
-
-
-
 
 type treasureCardBuff struct {
 	baseBuff
@@ -194,7 +191,7 @@ func (b *treasureCntBuff) onLogin() {
 		return
 	}
 	remainTime := float64(b.GetRemainTime())
-	jadeNum := math.Ceil(remainTime/86400.0)*10
+	jadeNum := math.Ceil(remainTime/86400.0) * 10
 	buffIDStr := fmt.Sprintf("%s%d", consts.OtBuffPrefix, b.buffID)
 	b.player.GetComponent(consts.OutStatusCpt).(*outstatusComponent).delStatus(buffIDStr)
 	sender := module.Mail.NewMailSender(common.UUid(b.player.GetUid()))
@@ -263,7 +260,7 @@ func (b *addPvpGoldBuff) onLogin() {
 		return
 	}
 	remainTime := float64(b.GetRemainTime())
-	jadeNum := math.Ceil(remainTime/86400.0)*10
+	jadeNum := math.Ceil(remainTime/86400.0) * 10
 	buffIDStr := fmt.Sprintf("%s%d", consts.OtBuffPrefix, b.buffID)
 	b.player.GetComponent(consts.OutStatusCpt).(*outstatusComponent).delStatus(buffIDStr)
 
@@ -317,16 +314,15 @@ type VipDoubleRewardBuff struct {
 	baseBuff
 }
 
-func (b *VipDoubleRewardBuff) buffDoubleRewardOfVip(oldAmount float64, buffEffect[]int) float64 {
+func (b *VipDoubleRewardBuff) buffDoubleRewardOfVip(oldAmount float64, buffEffect []int) float64 {
 	return calculateNewAmount(oldAmount, buffEffect)
 }
-
 
 type VipAddCardBuff struct {
 	baseBuff
 }
 
-func (b *VipAddCardBuff) buffAddCardOfVip(oldAmount float64, buffEffect[]int) float64 {
+func (b *VipAddCardBuff) buffAddCardOfVip(oldAmount float64, buffEffect []int) float64 {
 	return calculateNewAmount(oldAmount, buffEffect)
 }
 
@@ -344,5 +340,3 @@ func calculateNewAmount(oldAmount float64, buffEffect []int) float64 {
 	}
 	return oldAmount
 }
-
-

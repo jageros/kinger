@@ -1,8 +1,8 @@
 package main
 
 import (
-	"kinger/proto/pb"
 	"kinger/gopuppy/common/glog"
+	"kinger/proto/pb"
 	"math/rand"
 	"time"
 )
@@ -12,15 +12,15 @@ const (
 )
 
 type battle struct {
-	r *robot
+	r       *robot
 	oppHand []int
-	hand []int
-	grid []int
+	hand    []int
+	grid    []int
 }
 
 func newBattle(r *robot, msg *pb.LevelBattle) *battle {
 	b := &battle{
-		r: r,
+		r:    r,
 		grid: []int{0, 0, 0, 0, 0, 0, 0, 0, 0},
 	}
 

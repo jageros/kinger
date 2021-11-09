@@ -2,28 +2,28 @@ package mission
 
 import (
 	"fmt"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/eventhub"
-	"kinger/gopuppy/common/timer"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/eventhub"
+	"kinger/gopuppy/common/timer"
 	"kinger/proto/pb"
 	//"kinger/gopuppy/common/glog"
 )
 
 var (
-	_ types.IPlayerComponent = &missionComponent{}
+	_ types.IPlayerComponent   = &missionComponent{}
 	_ types.ICrossDayComponent = &missionComponent{}
 )
 
 type missionComponent struct {
-	attr *attribute.MapAttr
-	player types.IPlayer
-	mgdata *gamedata.MissionGameData
-	mtgdata *gamedata.MissionTreasureGameData
-	missions []*missionSt
+	attr        *attribute.MapAttr
+	player      types.IPlayer
+	mgdata      *gamedata.MissionGameData
+	mtgdata     *gamedata.MissionTreasureGameData
+	missions    []*missionSt
 	treasureObj *treasure
 }
 
@@ -61,13 +61,13 @@ func (mc *missionComponent) OnInit(player types.IPlayer) {
 	mc.OnCrossDay(curDayno)
 
 	/*
-	if config.GetConfig().IsXfServer() {
-		for _, mo := range mc.missions {
-			if mo.isReward() {
-				mc.refreshMission(mo.getID(), true)
+		if config.GetConfig().IsXfServer() {
+			for _, mo := range mc.missions {
+				if mo.isReward() {
+					mc.refreshMission(mo.getID(), true)
+				}
 			}
 		}
-	}
 	*/
 }
 
@@ -136,7 +136,7 @@ func (mc *missionComponent) newbieInit() {
 	maxPvpLevel := mc.player.GetComponent(consts.PvpCpt).(types.IPvpComponent).GetMaxPvpLevel()
 	fightCamp := mc.player.GetComponent(consts.CardCpt).(types.ICardComponent).GetFightCamp()
 
-	for missionGid := 1; missionGid <= maxMissionAmount; missionGid ++ {
+	for missionGid := 1; missionGid <= maxMissionAmount; missionGid++ {
 		ms := mc.mgdata.GetCanAcceptMission(maxPvpLevel, mc.getMissionFightCampType(missionGid), fightCamp, []int{})
 		for _, mdata2 := range ms {
 			mdata := mdata2.(*gamedata.Mission)
@@ -201,7 +201,7 @@ func (mc *missionComponent) OnCrossDay(curDayno int) {
 			m := newMission(mdata, missionGid)
 			missionsAttr.SetMapAttr(i, m.attr)
 			mc.missions[i] = m
-			module.Player.LogMission(mc.player, fmt.Sprintf("doMission_%d",  m.getMissionID()), 1)
+			module.Player.LogMission(mc.player, fmt.Sprintf("doMission_%d", m.getMissionID()), 1)
 			break
 		}
 	}
@@ -240,7 +240,7 @@ func (mc *missionComponent) refreshMissionAfterNewbieSelectCamp() {
 			m := newMission(mdata, missionGid)
 			missionsAttr.SetMapAttr(i, m.attr)
 			mc.missions[i] = m
-			module.Player.LogMission(mc.player, fmt.Sprintf("doMission_%d",  m.getMissionID()), 1)
+			module.Player.LogMission(mc.player, fmt.Sprintf("doMission_%d", m.getMissionID()), 1)
 			break
 		}
 	}
@@ -253,8 +253,8 @@ func (mc *missionComponent) refreshMissionAfterNewbieSelectCamp() {
 
 func (mc *missionComponent) packMsg() *pb.MissionInfo {
 	msg := &pb.MissionInfo{
-		Treasure: mc.treasureObj.packMsg(),
-		CanRefresh: mc.attr.GetBool("canRefresh"),
+		Treasure:          mc.treasureObj.packMsg(),
+		CanRefresh:        mc.attr.GetBool("canRefresh"),
 		RefreshRemainTime: int32(timer.TimeDelta(0, 0, 0).Seconds()),
 	}
 
@@ -305,7 +305,7 @@ func (mc *missionComponent) refreshMission(missionGID int, force bool) (*mission
 			mc.attr.SetBool("canRefresh", false)
 		}
 
-		module.Player.LogMission(mc.player, fmt.Sprintf("doMission_%d",  mdata.ID), 1)
+		module.Player.LogMission(mc.player, fmt.Sprintf("doMission_%d", mdata.ID), 1)
 
 		return m, nil
 	}
@@ -325,12 +325,12 @@ func (mc *missionComponent) getMissionReward(missionGID int) (jade, gold, bowlde
 	jade, gold, bowlder, err = mo.getReward(mc.player)
 
 	/*
-	if err == nil && config.GetConfig().IsXfServer() {
-		nextMo, _ := mc.refreshMission(mo.getID(), true)
-		if nextMo != nil {
-			nextMission = nextMo.packMsg()
+		if err == nil && config.GetConfig().IsXfServer() {
+			nextMo, _ := mc.refreshMission(mo.getID(), true)
+			if nextMo != nil {
+				nextMission = nextMo.packMsg()
+			}
 		}
-	}
 	*/
 
 	eventhub.Publish(consts.EvGetMissionReward, mc.player)

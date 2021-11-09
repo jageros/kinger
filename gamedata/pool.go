@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	"encoding/json"
+	"kinger/common/consts"
 	"kinger/gopuppy/common"
 	"kinger/gopuppy/common/glog"
-	"kinger/common/consts"
 	"kinger/proto/pb"
 	"sort"
 )
@@ -46,20 +46,20 @@ type Card struct {
 	RobotRate      [][]int `json:"robotRate"`
 	CardType       int     `json:"cardType"`
 	Rare           int     `json:"rare"`
-	Name int `json:"name"`
-	CardOrder int `json:"cardOrder"`
-	Version int `json:"version"`
-	ResetLevel int `json:"resetLevel"`
-	Strength int `json:"value"`
-	Icon int `json:"icon"`
-	Politics float64 `json:"politics"`
-	Intelligence float64 `json:"intelligence"`
-	Force float64 `json:"force"`
-	Command float64 `json:"command"`
-	ConsumeBook int `json:"consumeBook"`
-	LevelLimit int `json:"levelLimit"`
+	Name           int     `json:"name"`
+	CardOrder      int     `json:"cardOrder"`
+	Version        int     `json:"version"`
+	ResetLevel     int     `json:"resetLevel"`
+	Strength       int     `json:"value"`
+	Icon           int     `json:"icon"`
+	Politics       float64 `json:"politics"`
+	Intelligence   float64 `json:"intelligence"`
+	Force          float64 `json:"force"`
+	Command        float64 `json:"command"`
+	ConsumeBook    int     `json:"consumeBook"`
+	LevelLimit     int     `json:"levelLimit"`
 
-	Head string
+	Head     string
 	skillIds []int32
 }
 
@@ -253,8 +253,8 @@ type PoolGameData struct {
 	allCardList          []*Card
 	pvpRobotCardMap      map[int]*pvpRobotCardList // map[pvpLevel]*pvpRobotCardList
 	campaignCardLevelMap map[uint32]map[int]*Card  // map[cardId]map[level]*Card
-	level2Cards map[int][]*Card
-	maxRobotPvpLevel int
+	level2Cards          map[int][]*Card
+	maxRobotPvpLevel     int
 }
 
 func newPoolGameData() *PoolGameData {
@@ -276,14 +276,14 @@ func (pd *PoolGameData) init(data []byte) error {
 	pd.campaignCardLevelMap = make(map[uint32]map[int]*Card)
 	pd.maxRobotPvpLevel = 10
 	pd.pvpRobotCardMap = map[int]*pvpRobotCardList{
-		2: &pvpRobotCardList{pvpLevel: 2},
-		3: &pvpRobotCardList{pvpLevel: 3},
-		4: &pvpRobotCardList{pvpLevel: 4},
-		5: &pvpRobotCardList{pvpLevel: 5},
-		6: &pvpRobotCardList{pvpLevel: 6},
-		7: &pvpRobotCardList{pvpLevel: 7},
-		8: &pvpRobotCardList{pvpLevel: 8},
-		9: &pvpRobotCardList{pvpLevel: 9},
+		2:  &pvpRobotCardList{pvpLevel: 2},
+		3:  &pvpRobotCardList{pvpLevel: 3},
+		4:  &pvpRobotCardList{pvpLevel: 4},
+		5:  &pvpRobotCardList{pvpLevel: 5},
+		6:  &pvpRobotCardList{pvpLevel: 6},
+		7:  &pvpRobotCardList{pvpLevel: 7},
+		8:  &pvpRobotCardList{pvpLevel: 8},
+		9:  &pvpRobotCardList{pvpLevel: 9},
 		10: &pvpRobotCardList{pvpLevel: 10},
 	}
 

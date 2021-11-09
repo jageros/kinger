@@ -14,7 +14,6 @@ import (
 	"strconv"
 )
 
-
 // 招募宝箱
 type iRecruitTreasure interface {
 	packMsg() *pb.RecruitTreasureData
@@ -52,7 +51,7 @@ func newRecruitTreasure(cptAttr *attribute.MapAttr, player types.IPlayer) iRecru
 
 		t := &oldRecruitTreasureSt{
 			cptAttr: cptAttr,
-			team: player.GetComponent(consts.PvpCpt).(types.IPvpComponent).GetMaxPvpTeam(),
+			team:    player.GetComponent(consts.PvpCpt).(types.IPvpComponent).GetMaxPvpTeam(),
 		}
 		t.player = player
 		t.attr = attr
@@ -63,9 +62,9 @@ func newRecruitTreasure(cptAttr *attribute.MapAttr, player types.IPlayer) iRecru
 }
 
 type baseRecruitTreasureSt struct {
-	attr *attribute.MapAttr
+	attr   *attribute.MapAttr
 	player types.IPlayer
-	i iRecruitTreasure
+	i      iRecruitTreasure
 }
 
 func (rt *baseRecruitTreasureSt) getBuyCnt() int {
@@ -75,6 +74,7 @@ func (rt *baseRecruitTreasureSt) getBuyCnt() int {
 func (rt *baseRecruitTreasureSt) setBuyCnt(cnt int) {
 	rt.attr.SetInt("buyCnt", cnt)
 }
+
 //func (rt *baseRecruitTreasureSt) caclRecruitHintByVersion(isFetch bool) {
 //	key := "recruitRewardVer"
 //	verAttr := rt.attr.GetMapAttr(key)
@@ -125,7 +125,7 @@ func (rt *baseRecruitTreasureSt) getTreasureData() *gamedata.RecruitTreasure {
 		}
 	}
 
-	if treasure, ok :=  treasures[sw]; ok {
+	if treasure, ok := treasures[sw]; ok {
 		//glog.Infof("baseRecruitTreasureSt getTreasureData %v", treasure)
 		return treasure
 	}
@@ -186,7 +186,7 @@ func (rt *baseRecruitTreasureSt) caclRecruitHintByVersion(tbName string) {
 	var rwTypeKey string
 	if tbName == consts.RecruitTreausreCardRewardTbl {
 		rwTypeKey = "card"
-	}else {
+	} else {
 		rwTypeKey = "skin"
 	}
 	key := fmt.Sprintf("recruit_sp_sk_ver_%s", rwTypeKey)
@@ -213,7 +213,7 @@ func (rt *baseRecruitTreasureSt) caclRecruitHintByVersion(tbName string) {
 type oldRecruitTreasureSt struct {
 	baseRecruitTreasureSt
 	cptAttr *attribute.MapAttr
-	team int
+	team    int
 }
 
 func (rt *oldRecruitTreasureSt) getTeam() int {
@@ -251,10 +251,10 @@ func (rt *oldRecruitTreasureSt) packMsg() *pb.RecruitTreasureData {
 	funcPrice := gamedata.GetGameData(consts.FunctionPrice).(*gamedata.FunctionPriceGameData)
 	msg := &pb.RecruitTreasureData{
 		TreasureModelID: treasure.TreasureID,
-		BuyTimes: int32(buyCnt),
-		Discount: int32(rt.getDiscount() * 100),
-		MaxBuyTimes: int32(funcPrice.ShopTreasureMaxBuyCnt),
-		NeedJade: int32(treasure.JadePrice),
+		BuyTimes:        int32(buyCnt),
+		Discount:        int32(rt.getDiscount() * 100),
+		MaxBuyTimes:     int32(funcPrice.ShopTreasureMaxBuyCnt),
+		NeedJade:        int32(treasure.JadePrice),
 	}
 
 	if buyCnt > funcPrice.ShopTreasureMaxBuyCnt {
@@ -293,7 +293,7 @@ func (rt *oldRecruitTreasureSt) buy(_ int) (*pb.BuyRecruitTreasureReply, error) 
 		if !resCpt.HasResource(consts.Jade, price) {
 			return nil, gamedata.GameError(3)
 		}
-		resCpt.ModifyResource(consts.Jade, - price, consts.RmrRecruitTreasure)
+		resCpt.ModifyResource(consts.Jade, -price, consts.RmrRecruitTreasure)
 	}
 
 	treasureReward := rt.player.GetComponent(consts.TreasureCpt).(types.ITreasureComponent).OpenTreasureByModelID(
@@ -304,7 +304,7 @@ func (rt *oldRecruitTreasureSt) buy(_ int) (*pb.BuyRecruitTreasureReply, error) 
 	mod.LogShopBuyItem(rt.player, fmt.Sprintf("recruitTreasure_%s", treasure.TreasureID),
 		fmt.Sprintf("招募宝箱_%s", treasure.TreasureID), 1, "shop",
 		strconv.Itoa(resType), module.Player.GetResourceName(resType), price,
-		fmt.Sprintf("discount=%f, buyCnt=%d", discount, buyCnt + 1))
+		fmt.Sprintf("discount=%f, buyCnt=%d", discount, buyCnt+1))
 
 	var nextRemainTime int32
 	if buyCnt > funcPrice.ShopTreasureMaxBuyCnt {
@@ -314,7 +314,7 @@ func (rt *oldRecruitTreasureSt) buy(_ int) (*pb.BuyRecruitTreasureReply, error) 
 	rt.caclHint(false)
 	return &pb.BuyRecruitTreasureReply{
 		TreasureReward: treasureReward,
-		Discount: int32(rt.getDiscount() * 100),
+		Discount:       int32(rt.getDiscount() * 100),
 		NextRemainTime: nextRemainTime,
 	}, nil
 }
@@ -341,11 +341,11 @@ func (rt *xfRecruitTreasureSt) packMsg() *pb.RecruitTreasureData {
 	rwType, rids, tim := crd.getRecruitIDs(area, tbName)
 	rd := &pb.RecruitTreasureData{
 		TreasureModelID: treasure.TreasureID,
-		NeedJade: int32(treasure.JadePrice),
-		NexRemainTime: int32(treasure.GetNextOpenRemainTime()),
-		Discount: int32(rt.getDiscount() * 100),
-		Rid: rids,
-		RwType: rwType,
+		NeedJade:        int32(treasure.JadePrice),
+		NexRemainTime:   int32(treasure.GetNextOpenRemainTime()),
+		Discount:        int32(rt.getDiscount() * 100),
+		Rid:             rids,
+		RwType:          rwType,
 		NextRefreshTime: tim,
 	}
 	//glog.Infof("xf packMsg RecruitTreasureData %v", rd)
@@ -362,12 +362,12 @@ func (rt *xfRecruitTreasureSt) getDiscount() float64 {
 
 func (rt *xfRecruitTreasureSt) buy(buyCnt int) (*pb.BuyRecruitTreasureReply, error) {
 	/*
-	if rt.player.GetArea() != 3 && time.Now().Unix() <= 1559232005 {
-		timer.AfterFunc(time.Second, func() {
-			rt.player.Tellme("招募正在维护中，请0点后再试！", 0)
-		})
-		return nil, gamedata.GameError(10)
-	}
+		if rt.player.GetArea() != 3 && time.Now().Unix() <= 1559232005 {
+			timer.AfterFunc(time.Second, func() {
+				rt.player.Tellme("招募正在维护中，请0点后再试！", 0)
+			})
+			return nil, gamedata.GameError(10)
+		}
 	*/
 
 	if rt.player.IsMultiRpcForbid(consts.FmcRecruit) {
@@ -403,7 +403,7 @@ func (rt *xfRecruitTreasureSt) buy(buyCnt int) (*pb.BuyRecruitTreasureReply, err
 		if !resCpt.HasResource(consts.Jade, price) {
 			return nil, gamedata.GameError(3)
 		}
-		resCpt.ModifyResource(consts.Jade, - price, consts.RmrRecruitTreasure)
+		resCpt.ModifyResource(consts.Jade, -price, consts.RmrRecruitTreasure)
 	}
 
 	reply := &pb.BuyRecruitTreasureReply{}
@@ -485,4 +485,5 @@ func (rt *xfRecruitTreasureSt) syncToClient() {
 }
 
 func (rt *xfRecruitTreasureSt) onMaxPvpLevelUpdate() {}
+
 // ------------------------- xf end ----------------------------

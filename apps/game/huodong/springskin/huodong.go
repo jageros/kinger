@@ -1,11 +1,11 @@
 package springskin
 
 import (
+	"github.com/gogo/protobuf/proto"
+	"kinger/apps/game/huodong/event"
 	htypes "kinger/apps/game/huodong/types"
 	"kinger/apps/game/module/types"
 	"kinger/gopuppy/attribute"
-	"kinger/apps/game/huodong/event"
-	"github.com/gogo/protobuf/proto"
 	"kinger/proto/pb"
 )
 

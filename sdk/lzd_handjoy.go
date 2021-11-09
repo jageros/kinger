@@ -1,34 +1,34 @@
 package sdk
 
 import (
-	"net/http"
-	"io/ioutil"
-	"kinger/gopuppy/common/glog"
-	"github.com/pkg/errors"
 	"encoding/json"
 	"fmt"
+	"github.com/pkg/errors"
+	"io/ioutil"
+	"kinger/gopuppy/common/glog"
+	"net/http"
 )
 
 type facebookLoginReply struct {
-	Data struct{
-		AppID string `json:"app_id"`
-		ExpiresAt int64 `json:"expires_at"`
-		IsValid bool `json:"is_valid"`
-		IssuedAt int64 `json:"issued_at"`
-		Scopes []string `json:"scopes"`
-		UserID string `json:"user_id"`
+	Data struct {
+		AppID     string   `json:"app_id"`
+		ExpiresAt int64    `json:"expires_at"`
+		IsValid   bool     `json:"is_valid"`
+		IssuedAt  int64    `json:"issued_at"`
+		Scopes    []string `json:"scopes"`
+		UserID    string   `json:"user_id"`
 	} `json:"data"`
 }
 
 type handJoy struct {
-	appID string
-	appSecret string
+	appID       string
+	appSecret   string
 	accessToken string
 }
 
 func newHandJoy() *handJoy {
-	s := &handJoy {
-		appID: "740714252962921",
+	s := &handJoy{
+		appID:     "740714252962921",
 		appSecret: "df65cff17b0ee0542dec4af08ed768af",
 	}
 	s.accessToken = fmt.Sprintf("%s|%s", s.appID, s.appSecret)

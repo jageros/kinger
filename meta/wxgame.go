@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_WX_INVITE_BATTLE    resp: ok or err
@@ -953,4 +953,3 @@ func (m *C2S_IOS_SHARE_Meta) DecodeReply(data []byte) (interface{}, error) {
 }
 
 //------------------------------------ C2S_IOS_SHARE END ----------------------------------------
-

@@ -1,20 +1,20 @@
 package pvp
 
 import (
-	"github.com/gogo/protobuf/proto"
-	"kinger/apps/game/module/types"
-	"kinger/proto/pb"
-	"kinger/common/consts"
 	"fmt"
+	"github.com/gogo/protobuf/proto"
 	"kinger/apps/game/module"
-	"kinger/gamedata"
+	"kinger/apps/game/module/types"
 	"kinger/common/aicardpool"
+	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/proto/pb"
 )
 
 var (
-	guideMatchStrategy iMatchStrategy = &guideMatchStrategySt{}
+	guideMatchStrategy     iMatchStrategy = &guideMatchStrategySt{}
 	newbiePvpMatchStrategy iMatchStrategy = &newbiePvpMatchStrategySt{}
-	pvpMatchStrategy iMatchStrategy = &pvpMatchStrategySt{}
+	pvpMatchStrategy       iMatchStrategy = &pvpMatchStrategySt{}
 )
 
 type iMatchStrategy interface {
@@ -24,7 +24,6 @@ type iMatchStrategy interface {
 
 // 新手的5场战斗
 type guideMatchStrategySt struct {
-
 }
 
 func (ms *guideMatchStrategySt) getMatchMessageID() pb.MessageID {
@@ -43,7 +42,6 @@ type iPvpMatchStrategy interface {
 }
 
 type basePvpMatchStrategySt struct {
-
 }
 
 func (ms *basePvpMatchStrategySt) getDrawCards(player types.IPlayer) []*pb.SkinGCard {
@@ -53,7 +51,7 @@ func (ms *basePvpMatchStrategySt) getDrawCards(player types.IPlayer) []*pb.SkinG
 		drawCards = append(drawCards, &pb.SkinGCard{
 			GCardID: card.GetCardGameData().GCardID,
 			Skin:    card.GetSkin(),
-			Equip: card.GetEquip(),
+			Equip:   card.GetEquip(),
 		})
 	}
 	return drawCards
@@ -63,7 +61,7 @@ func (ms *basePvpMatchStrategySt) getWinRate(player types.IPlayer) int32 {
 	var winRate int32 = 100
 	totalBattleCnt := player.GetFirstHandAmount() + player.GetBackHandAmount()
 	if totalBattleCnt > 0 {
-		winRate = int32( float64(player.GetFirstHandWinAmount() + player.GetBackHandWinAmount()) / float64(totalBattleCnt) * 100 )
+		winRate = int32(float64(player.GetFirstHandWinAmount()+player.GetBackHandWinAmount()) / float64(totalBattleCnt) * 100)
 	}
 	return winRate
 }
@@ -125,9 +123,9 @@ func (ms *newbiePvpMatchStrategySt) packMatchArgAndReply(player types.IPlayer, c
 		IsFirstBattle: isFirstPvpBattle,
 		HeadImgUrl:    player.GetHeadImgUrl(),
 		HeadFrame:     player.GetHeadFrame(),
-		WinRate: ms.getWinRate(player),
-		Area: int32(player.GetArea()),
-		CountryFlag: player.GetCountryFlag(),
+		WinRate:       ms.getWinRate(player),
+		Area:          int32(player.GetArea()),
+		CountryFlag:   player.GetCountryFlag(),
 	}, &pb.MatchReply{}, nil
 }
 
@@ -157,7 +155,7 @@ func (ms *pvpMatchStrategySt) packMatchArgAndReply(player types.IPlayer, camp in
 			// 锦标赛还没选牌
 			return nil, &pb.MatchReply{
 				NeedChooseCamp: true,
-				LastCamp: int32(seasonPvpCamp),
+				LastCamp:       int32(seasonPvpCamp),
 				ChooseCardData: chooseCardData,
 			}, nil
 		}
@@ -187,24 +185,24 @@ func (ms *pvpMatchStrategySt) packMatchArgAndReply(player types.IPlayer, camp in
 
 	pvpCpt := player.GetComponent(consts.PvpCpt).(*pvpComponent)
 	return &pb.BeginMatchArg{
-		Name:             player.GetName(),
-		Camp:             int32(camp),
-		PvpScore:         int32(player.GetPvpScore()),
-		Mmr:              int32(module.Player.GetResource(player, consts.Mmr)),
-		StreakLoseCnt:    int32(pvpCpt.getStreakLoseCnt()),
-		HandCards:        handCards,
-		DrawCards:        ms.getDrawCards(player),
-		CardStrength:     int32(cardStrength),
-		HeadImgUrl:       player.GetHeadImgUrl(),
-		HeadFrame:        player.GetHeadFrame(),
-		SeasonDataID: int32(seasonDataID),
-		RebornCnt: int32(module.Reborn.GetRebornCnt(player)),
-		WinRate: ms.getWinRate(player),
-		Area: int32(player.GetArea()),
-		StreakWinCnt: int32(pvpCpt.getStreakWinCnt()),
-		LastOppUid: uint64(player.GetLastOpponent()),
+		Name:               player.GetName(),
+		Camp:               int32(camp),
+		PvpScore:           int32(player.GetPvpScore()),
+		Mmr:                int32(module.Player.GetResource(player, consts.Mmr)),
+		StreakLoseCnt:      int32(pvpCpt.getStreakLoseCnt()),
+		HandCards:          handCards,
+		DrawCards:          ms.getDrawCards(player),
+		CardStrength:       int32(cardStrength),
+		HeadImgUrl:         player.GetHeadImgUrl(),
+		HeadFrame:          player.GetHeadFrame(),
+		SeasonDataID:       int32(seasonDataID),
+		RebornCnt:          int32(module.Reborn.GetRebornCnt(player)),
+		WinRate:            ms.getWinRate(player),
+		Area:               int32(player.GetArea()),
+		StreakWinCnt:       int32(pvpCpt.getStreakWinCnt()),
+		LastOppUid:         uint64(player.GetLastOpponent()),
 		RechargeMatchIndex: int32(pvpCpt.getRechargeMatchIndex()),
-		CountryFlag: player.GetCountryFlag(),
-		MatchScore: int32(module.Player.GetResource(player, consts.MatchScore)),
+		CountryFlag:        player.GetCountryFlag(),
+		MatchScore:         int32(module.Player.GetResource(player, consts.MatchScore)),
 	}, &pb.MatchReply{}, nil
 }

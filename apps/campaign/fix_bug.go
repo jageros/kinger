@@ -57,7 +57,7 @@ func fixBug190104() {
 			continue
 		}
 
-		cty.surrender( cty.getPrefect(), myCty, true )
+		cty.surrender(cty.getPrefect(), myCty, true)
 	}
 }
 

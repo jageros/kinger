@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_GET_CAMP_ID    req: GetCampIDArg    resp: GetCampIDReply
@@ -226,4 +226,3 @@ func (m *S2C_TUTORIAL_FIGHT_END_Meta) DecodeReply(data []byte) (interface{}, err
 }
 
 //------------------------------------ S2C_TUTORIAL_FIGHT_END END ----------------------------------------
-

@@ -1,19 +1,19 @@
 package mail
 
 import (
-	"kinger/gopuppy/attribute"
-	"strings"
 	"fmt"
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/consts"
+	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common/glog"
 	"kinger/proto/pb"
-	"kinger/common/consts"
-	"kinger/apps/game/module/types"
-	"kinger/apps/game/module"
+	"strings"
 )
 
 type mailReward struct {
 	mailID int
-	attrs *attribute.ListAttr
+	attrs  *attribute.ListAttr
 }
 
 func newMailReward() *mailReward {
@@ -121,7 +121,7 @@ func (mr *mailReward) AddGold(amount int) {
 		mr.attrs.AppendMapAttr(attr)
 	}
 
-	attr.SetInt("amount", attr.GetInt("amount") + amount)
+	attr.SetInt("amount", attr.GetInt("amount")+amount)
 }
 
 func (mr *mailReward) AddJade(amount int) {
@@ -141,7 +141,7 @@ func (mr *mailReward) AddJade(amount int) {
 		mr.attrs.AppendMapAttr(attr)
 	}
 
-	attr.SetInt("amount", attr.GetInt("amount") + amount)
+	attr.SetInt("amount", attr.GetInt("amount")+amount)
 }
 
 func (mr *mailReward) AddAmountByType(rewardType pb.MailRewardType, amount int) {
@@ -161,7 +161,7 @@ func (mr *mailReward) AddAmountByType(rewardType pb.MailRewardType, amount int) 
 		mr.attrs.AppendMapAttr(attr)
 	}
 
-	attr.SetInt("amount", attr.GetInt("amount") + amount)
+	attr.SetInt("amount", attr.GetInt("amount")+amount)
 }
 
 func (mr *mailReward) AddCard(cardID uint32, amount int) {
@@ -183,7 +183,7 @@ func (mr *mailReward) AddCard(cardID uint32, amount int) {
 		mr.attrs.AppendMapAttr(attr)
 	}
 
-	attr.SetInt("amount", attr.GetInt("amount") + amount)
+	attr.SetInt("amount", attr.GetInt("amount")+amount)
 }
 
 func (mr *mailReward) AddEmoji(emojiTeam int) {
@@ -206,7 +206,7 @@ func (mr *mailReward) AddEmoji(emojiTeam int) {
 		mr.attrs.AppendMapAttr(attr)
 	}
 
-	attr.SetInt("amount", attr.GetInt("amount") + 1)
+	attr.SetInt("amount", attr.GetInt("amount")+1)
 }
 
 func (mr *mailReward) AddItem(rewardType pb.MailRewardType, itemID string, amount int) {
@@ -228,7 +228,7 @@ func (mr *mailReward) AddItem(rewardType pb.MailRewardType, itemID string, amoun
 		mr.attrs.AppendMapAttr(attr)
 	}
 
-	attr.SetInt("amount", attr.GetInt("amount") + amount)
+	attr.SetInt("amount", attr.GetInt("amount")+amount)
 }
 
 func (mr *mailReward) getReward(player types.IPlayer) (amountRewards []*pb.MailRewardAmountArg, treasureRewards []*pb.OpenTreasureReply,
@@ -275,21 +275,21 @@ func (mr *mailReward) getReward(player types.IPlayer) (amountRewards []*pb.MailR
 			skinID := attr.GetStr("itemID")
 			module.Bag.AddCardSkin(player, skinID)
 			itemRewards = append(itemRewards, &pb.MailRewardItemArg{
-				Type: pb.MailRewardType_MrtCardSkin,
+				Type:   pb.MailRewardType_MrtCardSkin,
 				ItemID: skinID,
 			})
 		case pb.MailRewardType_MrtHeadFrame:
 			headFrameID := attr.GetStr("itemID")
 			module.Bag.AddHeadFrame(player, headFrameID)
 			itemRewards = append(itemRewards, &pb.MailRewardItemArg{
-				Type: pb.MailRewardType_MrtHeadFrame,
+				Type:   pb.MailRewardType_MrtHeadFrame,
 				ItemID: headFrameID,
 			})
 		case pb.MailRewardType_MrtEquip:
 			equipID := attr.GetStr("itemID")
 			module.Bag.AddEquip(player, equipID)
 			itemRewards = append(itemRewards, &pb.MailRewardItemArg{
-				Type: pb.MailRewardType_MrtEquip,
+				Type:   pb.MailRewardType_MrtEquip,
 				ItemID: equipID,
 			})
 		case pb.MailRewardType_MrtTreasure:
@@ -339,7 +339,7 @@ func (mr *mailReward) getReward(player types.IPlayer) (amountRewards []*pb.MailR
 			}
 
 			amountRewards = append(amountRewards, &pb.MailRewardAmountArg{
-				Type: type_,
+				Type:   type_,
 				Amount: int32(amount),
 			})
 		}
@@ -356,7 +356,7 @@ func (mr *mailReward) getReward(player types.IPlayer) (amountRewards []*pb.MailR
 	if contribution > 0 {
 		module.Campaign.ModifyContribution(player, contribution)
 		amountRewards = append(amountRewards, &pb.MailRewardAmountArg{
-			Type: pb.MailRewardType_MrtContribution,
+			Type:   pb.MailRewardType_MrtContribution,
 			Amount: int32(contribution),
 		})
 	}

@@ -7,17 +7,17 @@ import (
 	"strconv"
 
 	"encoding/json"
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/config"
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common"
 	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/utils"
-	"kinger/apps/game/module/types"
-	"kinger/common/consts"
-	"kinger/gamedata"
 	"kinger/proto/pb"
 	"sort"
-	"kinger/apps/game/module"
-	"kinger/common/config"
 )
 
 const compensateVersion = 1
@@ -200,7 +200,7 @@ func (cc *cardComponent) GetCollectCard(cardId uint32) types.ICollectCard {
 func (cc *cardComponent) GetCollectCardNumByLevel(lvl int) int {
 	var counts int
 	for _, card := range cc.collectCardMap {
-		if lvl == 0 || lvl == card.GetLevel(){
+		if lvl == 0 || lvl == card.GetLevel() {
 			counts++
 		}
 	}
@@ -382,8 +382,8 @@ func (cc *cardComponent) CreatePvpHandCards(camp int) []*pb.SkinGCard {
 	for _, card := range cardPool {
 		handCards = append(handCards, &pb.SkinGCard{
 			GCardID: card.GetCardGameData().GetGCardID(),
-			Skin: card.GetSkin(),
-			Equip: card.GetEquip(),
+			Skin:    card.GetSkin(),
+			Equip:   card.GetEquip(),
 		})
 	}
 	return handCards
@@ -451,7 +451,6 @@ func (cc *cardComponent) updatePvpFightCardPool(pools []*pb.FightPool, fightCamp
 		}
 	}
 
-
 	cc.attr.SetInt("fightCamp", fightCamp)
 }
 
@@ -508,7 +507,7 @@ func (cc *cardComponent) uplevelCard(cardId uint32, isConsumeJade, isNeedJade bo
 	}
 
 	curLevel := card.GetLevel()
-	nextLevelCardData := cc.poolGData.GetCard(cardId, curLevel + 1)
+	nextLevelCardData := cc.poolGData.GetCard(cardId, curLevel+1)
 	if nextLevelCardData == nil {
 		err = gamedata.GameError(3)
 		return
@@ -540,9 +539,9 @@ func (cc *cardComponent) uplevelCard(cardId uint32, isConsumeJade, isNeedJade bo
 			newAmount -= cardData.LevelupNum
 		}
 		jade := gold / 80
-		
+
 		if newAmount < 0 {
-			amount := - newAmount
+			amount := -newAmount
 			newAmount = 0
 
 			jadePrice, err := cc.getOneCardJadePrice(rare)
@@ -557,7 +556,7 @@ func (cc *cardComponent) uplevelCard(cardId uint32, isConsumeJade, isNeedJade bo
 			err = gamedata.GameError(7)
 			return
 		}
-		needRes[consts.Jade] = - jade
+		needRes[consts.Jade] = -jade
 
 		module.Shop.LogShopBuyItem(cc.player, "upLevelCard", "宝玉升级卡", 1, "gameplay",
 			strconv.Itoa(consts.Jade), module.Player.GetResourceName(consts.Jade), jade, "")
@@ -569,19 +568,19 @@ func (cc *cardComponent) uplevelCard(cardId uint32, isConsumeJade, isNeedJade bo
 				if isNeedJade {
 					var needJade int
 					hasGood := resComponent.GetResource(consts.Gold)
-					subGold :=  levelupGold - hasGood
+					subGold := levelupGold - hasGood
 					needJade = int(math.Ceil(float64(subGold) / float64(funcData.JadeToGold)))
-					if !resComponent.HasResource(consts.Jade, needJade){
+					if !resComponent.HasResource(consts.Jade, needJade) {
 						err = gamedata.GameError(8)
 						return
 					}
-					needRes[consts.Jade] = - needJade
-					needRes[consts.Gold] = - hasGood
-				}else {
+					needRes[consts.Jade] = -needJade
+					needRes[consts.Gold] = -hasGood
+				} else {
 					err = gamedata.GameError(8)
 					return
 				}
-			}else {
+			} else {
 				needRes[consts.Gold] = -levelupGold
 			}
 		}
@@ -623,7 +622,7 @@ func (cc *cardComponent) uplevelCard(cardId uint32, isConsumeJade, isNeedJade bo
 
 	if card.GetLevel() == 4 {
 		module.Televise.SendNotice(pb.TeleviseEnum_CardLevelupPurple, cc.player.GetName(), cardId)
-	}else if card.GetLevel() == 5 {
+	} else if card.GetLevel() == 5 {
 		module.Televise.SendNotice(pb.TeleviseEnum_CardLevelupOrange, cc.player.GetName(), cardId)
 	}
 
@@ -799,7 +798,7 @@ func (cc *cardComponent) ModifyCollectCards(cardsChange map[uint32]*pb.CardInfo)
 				card = nil
 
 				if log != nil {
-					log.modifyCardAmount(cardId, - oldAmount)
+					log.modifyCardAmount(cardId, -oldAmount)
 				}
 			} else {
 				card.setLevel(level)
@@ -1041,8 +1040,8 @@ func (cc *cardComponent) GetLastFightCards() []*pb.SkinGCard {
 			if c != nil {
 				cards = append(cards, &pb.SkinGCard{
 					GCardID: gcardID,
-					Skin: c.GetSkin(),
-					Equip: c.GetEquip(),
+					Skin:    c.GetSkin(),
+					Equip:   c.GetEquip(),
 				})
 			}
 			return true
@@ -1066,8 +1065,8 @@ func (cc *cardComponent) GetFavoriteCards() []*pb.SkinGCard {
 		}
 		cards = append(cards, &pb.SkinGCard{
 			GCardID: cardData.GetGCardID(),
-			Skin: c.GetSkin(),
-			Equip: c.GetEquip(),
+			Skin:    c.GetSkin(),
+			Equip:   c.GetEquip(),
 		})
 	}
 	return cards
@@ -1114,6 +1113,6 @@ func (cc *cardComponent) onEquipDel(equipID string) {
 	}
 }
 
-func (cc *cardComponent) GetPvpCampFightPool(camp int){
+func (cc *cardComponent) GetPvpCampFightPool(camp int) {
 
 }

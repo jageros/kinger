@@ -1,8 +1,6 @@
 package activitys
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/glog"
 	"kinger/apps/game/activitys/consume"
 	"kinger/apps/game/activitys/dailyrecharge"
 	"kinger/apps/game/activitys/dailyshare"
@@ -14,13 +12,15 @@ import (
 	"kinger/apps/game/activitys/online"
 	"kinger/apps/game/activitys/rank"
 	"kinger/apps/game/activitys/recharge"
+	"kinger/apps/game/activitys/spring"
 	aTypes "kinger/apps/game/activitys/types"
 	"kinger/apps/game/activitys/win"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
-	"kinger/apps/game/activitys/spring"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/glog"
 )
 
 var mod *activityModule
@@ -37,7 +37,7 @@ type activity struct {
 }
 
 type activityModule struct {
-	id2Activity map[int]*activity
+	id2Activity    map[int]*activity
 	type2Activitys map[int][]*activity
 }
 
@@ -161,7 +161,7 @@ func (m *activityModule) getActivityIdListByType(ty int) []int {
 
 func (m *activityModule) InitDataByType(t int) aTypes.IActivityMod {
 	am := &activityModule{
-		id2Activity: map[int]*activity{},
+		id2Activity:    map[int]*activity{},
 		type2Activitys: map[int][]*activity{},
 	}
 	for k, a := range m.id2Activity {
@@ -235,7 +235,7 @@ func Initialize() {
 	registerRpc()
 }
 
-func updateTagListAfterReloadConfig(){
+func updateTagListAfterReloadConfig() {
 	module.Player.ForEachOnlinePlayer(func(player types.IPlayer) {
 		p := player.GetComponent(consts.ActivityCpt).(*activityComponent)
 		p.initTagList(true)
@@ -257,7 +257,7 @@ func initializeEvent() {
 	dailyshare.AddEvent()
 }
 
-func initializeActivityDataAfterAddCallBack(m *activityModule){
+func initializeActivityDataAfterAddCallBack(m *activityModule) {
 	aTypes.IMod = m
 	login.Initialize()
 	recharge.Initialize()

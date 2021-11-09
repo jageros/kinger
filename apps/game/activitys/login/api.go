@@ -1,10 +1,10 @@
 package login
 
 import (
-	"kinger/gopuppy/common/timer"
 	aTypes "kinger/apps/game/activitys/types"
 	"kinger/apps/game/module/types"
 	"kinger/gamedata"
+	"kinger/gopuppy/common/timer"
 	"kinger/proto/pb"
 	"strconv"
 )

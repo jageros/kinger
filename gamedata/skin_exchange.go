@@ -1,15 +1,15 @@
 package gamedata
 
 import (
-	"kinger/common/consts"
 	"encoding/json"
+	"kinger/common/consts"
 )
 
 type PieceSkinGoods struct {
-	ID int `json:"__id__"`
-	SkinID string `json:"skinId"`
-	Price int `json:"piece"`
-	Areas [][]int `json:"areas"`
+	ID     int     `json:"__id__"`
+	SkinID string  `json:"skinId"`
+	Price  int     `json:"piece"`
+	Areas  [][]int `json:"areas"`
 
 	AreaLimit *AreaLimitConfig
 }

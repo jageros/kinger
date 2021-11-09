@@ -3,10 +3,10 @@ package cardpool
 import (
 	"math/rand"
 
-	"kinger/gopuppy/attribute"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
 	"kinger/proto/pb"
 )
 

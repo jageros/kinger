@@ -14,9 +14,9 @@ import (
 	_ "kinger/gopuppy/meta"
 	"kinger/gopuppy/network"
 	//"kinger/gopuppy/network/snet"
+	"kinger/gopuppy/apps/center/mq"
 	"kinger/gopuppy/proto/pb"
 	"time"
-	"kinger/gopuppy/apps/center/mq"
 )
 
 var (
@@ -26,7 +26,7 @@ var (
 
 type centerService struct {
 	appID                  uint32
-	region uint32
+	region                 uint32
 	gates                  map[uint32]*network.Session
 	games                  []*network.Session
 	logics                 map[string]*logicSessionMgr

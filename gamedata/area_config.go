@@ -1,18 +1,18 @@
 package gamedata
 
 import (
-	"encoding/json"
-	"kinger/common/consts"
-	"time"
-	"kinger/gopuppy/common/utils"
-	"errors"
-	"kinger/gopuppy/common"
-	"sort"
 	"bytes"
+	"encoding/json"
+	"errors"
+	"kinger/common/consts"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/utils"
+	"sort"
+	"time"
 )
 
 type AreaConfig struct {
-	Area int `json:"__id__"`
+	Area     int    `json:"__id__"`
 	OpenTime string `json:"openTime"`
 
 	openTime time.Time
@@ -29,12 +29,12 @@ func (ac *AreaConfig) IsOpen() bool {
 
 type AreaConfigGameData struct {
 	baseGameData
-	rawData []byte
-	Version int
+	rawData      []byte
+	Version      int
 	AreaToConfig map[int]*AreaConfig
-	Areas []*AreaConfig
-	curArea *AreaConfig
-	MaxArea *AreaConfig
+	Areas        []*AreaConfig
+	curArea      *AreaConfig
+	MaxArea      *AreaConfig
 }
 
 func newAreaConfigGameData() *AreaConfigGameData {
@@ -92,7 +92,7 @@ func (gd *AreaConfigGameData) GetCurArea() *AreaConfig {
 		return gd.curArea
 	}
 
-	for a := gd.MaxArea.Area; a > gd.curArea.Area; a ++ {
+	for a := gd.MaxArea.Area; a > gd.curArea.Area; a++ {
 		if area, ok := gd.AreaToConfig[a]; !ok || !area.IsOpen() {
 			continue
 		} else {
@@ -112,7 +112,7 @@ func (gd *AreaConfigGameData) ForEachOpenedArea(callback func(config *AreaConfig
 }
 
 type AreaLimitConfig struct {
-	effectiveAreas common.IntSet  // 有效的区，为nil时，所有区都有效
+	effectiveAreas common.IntSet // 有效的区，为nil时，所有区都有效
 }
 
 func newAreaLimitConfig(areasInfo [][]int) *AreaLimitConfig {
@@ -129,7 +129,7 @@ func newAreaLimitConfig(areasInfo [][]int) *AreaLimitConfig {
 
 		sort.Ints(areaSec)
 		minArea := areaSec[0]
-		maxArea := areaSec[len(areaSec) - 1]
+		maxArea := areaSec[len(areaSec)-1]
 
 		for area := minArea; area <= maxArea; area++ {
 			if area <= 0 {

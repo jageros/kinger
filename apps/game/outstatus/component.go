@@ -2,10 +2,10 @@ package outstatus
 
 import (
 	"fmt"
-	"kinger/gopuppy/attribute"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
 )
 
 var _ types.IPlayerComponent = &outstatusComponent{}
@@ -139,7 +139,7 @@ func (oc *outstatusComponent) getBuffLevel() int {
 
 	for _, priv := range privGameData.Privileges {
 		ot := mod.GetBuff(oc.player, priv.ID)
-		if ot != nil && ot.GetID() != vipBuffId12 && ot.GetID() != vipBuffId13 && ot.GetID() != vipBuffId14{
+		if ot != nil && ot.GetID() != vipBuffId12 && ot.GetID() != vipBuffId13 && ot.GetID() != vipBuffId14 {
 			count++
 		}
 	}
@@ -160,7 +160,7 @@ func (oc *outstatusComponent) hasAllPriv() bool {
 	for _, priv := range privGameData.Privileges {
 		if priv.ID != consts.PrivTreasureCnt && priv.ID != consts.PrivAddPvpGold && priv.ID != consts.PrivDoubleRewardOfVip &&
 			priv.ID != consts.PrivAddCardOfVip && priv.ID != consts.PrivAutoOpenTreasureOfVip {
-				count++
+			count++
 		}
 	}
 	cur_num := lv2Num[oc.getBuffLevel()]

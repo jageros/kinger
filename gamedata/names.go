@@ -2,10 +2,10 @@ package gamedata
 
 import (
 	"encoding/json"
-	"kinger/common/consts"
-	"math/rand"
 	"fmt"
 	"kinger/common/config"
+	"kinger/common/consts"
+	"math/rand"
 )
 
 type iNameGameData interface {
@@ -14,15 +14,15 @@ type iNameGameData interface {
 }
 
 var (
-	name1  = newNameGameData1()
-	name2  = newNameGameData2()
-	name3  = newNameGameData3()
-	name4  = newNameGameData4()
-	name5  = newNameGameData5()
-	nameEn1  = newNameEnGameData1()
-	nameEn2  = newNameEnGameData2()
-	names1 = []iNameGameData{name1, name2, name3}
-	names2 = []iNameGameData{name3, name4, name5}
+	name1   = newNameGameData1()
+	name2   = newNameGameData2()
+	name3   = newNameGameData3()
+	name4   = newNameGameData4()
+	name5   = newNameGameData5()
+	nameEn1 = newNameEnGameData1()
+	nameEn2 = newNameEnGameData2()
+	names1  = []iNameGameData{name1, name2, name3}
+	names2  = []iNameGameData{name3, name4, name5}
 	namesEn = []iNameGameData{nameEn1, nameEn2}
 )
 

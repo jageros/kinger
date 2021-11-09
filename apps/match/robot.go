@@ -1,25 +1,25 @@
 package main
 
 import (
+	"container/list"
+	"fmt"
+	"kinger/common/aicardpool"
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common"
-	"kinger/gamedata"
-	"kinger/common/consts"
-	"fmt"
-	"math/rand"
-	"container/list"
-	"kinger/gopuppy/common/timer"
-	"time"
 	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
 	"kinger/gopuppy/common/utils"
 	"kinger/proto/pb"
-	"kinger/common/aicardpool"
+	"math/rand"
+	"time"
 )
 
 var (
-	robotMgr = newMatchRobotMgr()
-	_ iMatchRobot = &matchRobot{}
-	_ iMatchRobot = &popularMatchRobot{}
+	robotMgr             = newMatchRobotMgr()
+	_        iMatchRobot = &matchRobot{}
+	_        iMatchRobot = &popularMatchRobot{}
 )
 
 type iMatchRobot interface {
@@ -34,15 +34,15 @@ type iMatchRobot interface {
 }
 
 type matchRobot struct {
-	id common.UUid
-	attr *attribute.AttrMgr
-	pvpLevel int
+	id        common.UUid
+	attr      *attribute.AttrMgr
+	pvpLevel  int
 	gridCards []*pb.InGridCard
 }
 
 func newRobotByAttr(id common.UUid, attr *attribute.AttrMgr) *matchRobot {
 	return &matchRobot{
-		id: id,
+		id:   id,
 		attr: attr,
 	}
 }
@@ -64,8 +64,8 @@ func newRobotByPvpLevel(pvpLevel int) *matchRobot {
 	glog.Infof("newRobotByPvpLevel id=%d, pvpLevel=%d, cards=%s", id, pvpLevel, cardsAttr)
 
 	return &matchRobot{
-		id: id,
-		attr: attr,
+		id:       id,
+		attr:     attr,
 		pvpLevel: pvpLevel,
 	}
 }
@@ -99,8 +99,8 @@ func newNewbiePvpRobot(camp, pvpScore, pvpLevel int, isFirstBattle bool) *matchR
 	}
 
 	return &matchRobot{
-		attr: attr,
-		pvpLevel: pvpLevel,
+		attr:      attr,
+		pvpLevel:  pvpLevel,
 		gridCards: robotGridCards,
 	}
 }
@@ -178,12 +178,11 @@ func (r *matchRobot) getPvpLevel() int {
 	return r.pvpLevel
 }
 
-
 type popularMatchRobot struct {
-	camp int
+	camp      int
 	handCards []*pb.SkinGCard
-	pvpLevel int
-	pvpScore int
+	pvpLevel  int
+	pvpScore  int
 }
 
 func newPopularMatchRobot(pvpScore, pvpLevel, playerCamp int, playerHandCards []*pb.SkinGCard) iMatchRobot {
@@ -193,10 +192,10 @@ func newPopularMatchRobot(pvpScore, pvpLevel, playerCamp int, playerHandCards []
 	}
 
 	return &popularMatchRobot{
-		camp: camp,
+		camp:      camp,
 		handCards: handCards,
-		pvpLevel: pvpLevel,
-		pvpScore: pvpScore,
+		pvpLevel:  pvpLevel,
+		pvpScore:  pvpScore,
 	}
 }
 
@@ -240,7 +239,7 @@ func (r *popularMatchRobot) getHeadFrame() string {
 
 type pvpLevelRobots struct {
 	curRobot *list.Element
-	robots *list.List
+	robots   *list.List
 }
 
 func newPvpLevelRobots() *pvpLevelRobots {
@@ -297,13 +296,13 @@ func (plr *pvpLevelRobots) getRobot() *matchRobot {
 }
 
 type robotMgrSt struct {
-	id2Robot map[common.UUid]*list.Element
+	id2Robot        map[common.UUid]*list.Element
 	pvpLevel2Robots map[int]*pvpLevelRobots
 }
 
 func newMatchRobotMgr() *robotMgrSt {
 	return &robotMgrSt{
-		id2Robot: make(map[common.UUid]*list.Element),
+		id2Robot:        make(map[common.UUid]*list.Element),
 		pvpLevel2Robots: make(map[int]*pvpLevelRobots),
 	}
 }
@@ -414,5 +413,5 @@ func (rm *robotMgrSt) loadRobot() {
 		rm.addRobotToList(robot)
 	}
 
-	timer.AddTicker(10* time.Minute, rm.saveRobot)
+	timer.AddTicker(10*time.Minute, rm.saveRobot)
 }

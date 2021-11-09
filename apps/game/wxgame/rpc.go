@@ -1,21 +1,21 @@
 package wxgame
 
 import (
-	"kinger/gopuppy/apps/logic"
-	"kinger/gopuppy/common"
-	"kinger/gopuppy/common/eventhub"
-	"kinger/gopuppy/common/timer"
-	"kinger/gopuppy/network"
-	gpb "kinger/gopuppy/proto/pb"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/config"
 	"kinger/common/consts"
+	"kinger/common/utils"
 	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/eventhub"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
+	"kinger/gopuppy/network"
+	gpb "kinger/gopuppy/proto/pb"
 	"kinger/proto/pb"
 	"time"
-	"kinger/gopuppy/common/glog"
-	"kinger/common/utils"
 )
 
 func onBeginBattle(args ...interface{}) {
@@ -74,7 +74,7 @@ func rpc_C2S_WxReplyInviteBattle(agent *logic.PlayerAgent, arg interface{}) (int
 		}
 	} else {
 		targetAgent := logic.NewPlayerAgent(&gpb.PlayerClient{
-			Uid: arg2.Uid,
+			Uid:    arg2.Uid,
 			Region: logic.GetAgentRegion(common.UUid(arg2.Uid)),
 		})
 		_, err := targetAgent.CallBackend(pb.MessageID_G2G_WX_REPLY_INVITE_BATTLE, &pb.G2GReplyWxInviteBattleArg{
@@ -354,9 +354,9 @@ func rpc_C2S_ClickWxgameShare(agent *logic.PlayerAgent, arg interface{}) (interf
 	if arg2.ShareType == stDailyShare {
 
 		msg := &pb.GWxDailyShare{
-			Uid: uint64(uid),
+			Uid:     uint64(uid),
 			HeadImg: player.GetHeadImgUrl(),
-			Name: player.GetName(),
+			Name:    player.GetName(),
 		}
 		data, _ = msg.Marshal()
 
@@ -366,10 +366,10 @@ func rpc_C2S_ClickWxgameShare(agent *logic.PlayerAgent, arg interface{}) (interf
 		shareArg.Unmarshal(data)
 
 		msg := &pb.GWxDailyTreasureShare{
-			HelperUid: uint64(uid),
+			HelperUid:     uint64(uid),
 			HelperHeadImg: player.GetHeadImgUrl(),
-			HelperName:  player.GetName(),
-			TreasureID: shareArg.TreasureID,
+			HelperName:    player.GetName(),
+			TreasureID:    shareArg.TreasureID,
 		}
 		data, _ = msg.Marshal()
 	}
@@ -382,7 +382,7 @@ func rpc_C2S_ClickWxgameShare(agent *logic.PlayerAgent, arg interface{}) (interf
 		utils.PlayerMqPublish(common.UUid(arg2.ShareUid), pb.RmqType_WxShareBeHelp, &pb.RmqWxShareBeHelp{
 			ShareType: arg2.ShareType,
 			ShareTime: int64(arg2.ShareTime),
-			Data: data,
+			Data:      data,
 		})
 	}
 
@@ -429,9 +429,9 @@ func rpc_C2S_IosShare(agent *logic.PlayerAgent, arg interface{}) (interface{}, e
 
 	eventhub.Publish(consts.EvShare, player)
 	return &pb.DailyShareReward{
-		Jade: int32(jade),
+		Jade:    int32(jade),
 		Bowlder: int32(bowlder),
-		Ticket: int32(ticket),
+		Ticket:  int32(ticket),
 	}, nil
 }
 
@@ -469,9 +469,9 @@ func rpc_C2S_GetDailyShareReward(agent *logic.PlayerAgent, arg interface{}) (int
 	}
 
 	return &pb.DailyShareReward{
-		Jade: int32(jade),
+		Jade:    int32(jade),
 		Bowlder: int32(bowlder),
-		Ticket: int32(ticket),
+		Ticket:  int32(ticket),
 	}, nil
 }
 

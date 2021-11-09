@@ -2,15 +2,15 @@ package social
 
 import (
 	"fmt"
-	"kinger/gopuppy/apps/logic"
-	"kinger/gopuppy/common"
-	"kinger/gopuppy/common/evq"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/eventhub"
+	"kinger/gopuppy/common/evq"
 	"kinger/proto/pb"
 	"time"
-	"kinger/gopuppy/common/eventhub"
 )
 
 type inviteRoom struct {

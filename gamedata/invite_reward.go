@@ -13,7 +13,7 @@ type WxInviteReward struct {
 	GoldReward   int      `json:"goldReward"`
 	JadeReward   int      `json:"jadeReward"`
 	CardReward   []uint32 `json:"cardReward"`
-	TicketReward int `json:"ticketReward"`
+	TicketReward int      `json:"ticketReward"`
 }
 
 type WxInviteRewardList []*WxInviteReward

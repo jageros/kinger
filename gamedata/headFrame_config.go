@@ -6,8 +6,8 @@ import (
 )
 
 type HeadFrame struct {
-	ID         string    `json:"__id__"`
-	Name int `json:"name"`
+	ID   string `json:"__id__"`
+	Name int    `json:"name"`
 }
 
 func (f *HeadFrame) GetName() string {
@@ -16,7 +16,7 @@ func (f *HeadFrame) GetName() string {
 
 type HeadFrameGameData struct {
 	baseGameData
-	HeadFrames []*HeadFrame
+	HeadFrames   []*HeadFrame
 	ID2HeadFrame map[string]*HeadFrame
 }
 

@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_DAILY_TREASURE_READ_ADS    req: DailyTreasureReadAdsArg    resp: ok or err
@@ -411,4 +411,3 @@ func (m *S2C_TRIGGER_SHOP_ADD_GOLD_ADS_Meta) DecodeReply(data []byte) (interface
 }
 
 //------------------------------------ S2C_TRIGGER_SHOP_ADD_GOLD_ADS END ----------------------------------------
-

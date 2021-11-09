@@ -1,21 +1,21 @@
 package gamedata
 
 import (
-	"kinger/common/consts"
 	"encoding/json"
-	"sort"
 	"kinger/common/config"
+	"kinger/common/consts"
+	"sort"
 )
 
 type SeasonReward struct {
-	ID int `json:"__id__"`
-	Team int `json:"team"`
-	Ranking int `json:"ranking"`
-	CardSkin string `json:"skin"`
-	HeadFrame string `json:"headFrame"`
-	Treasure string `json:"treasure"`
-	WinAmount int `json:"winFlag"`
-	Areas [][]int `json:"areas"`
+	ID        int     `json:"__id__"`
+	Team      int     `json:"team"`
+	Ranking   int     `json:"ranking"`
+	CardSkin  string  `json:"skin"`
+	HeadFrame string  `json:"headFrame"`
+	Treasure  string  `json:"treasure"`
+	WinAmount int     `json:"winFlag"`
+	Areas     [][]int `json:"areas"`
 
 	areaLimit *AreaLimitConfig
 }
@@ -24,24 +24,24 @@ func (sr *SeasonReward) init() {
 	sr.areaLimit = newAreaLimitConfig(sr.Areas)
 
 	/*
-	sr.areaLimit = newAreaLimitConfig(sr.Areas)
-	if sr.CardSkin != "" {
-		if _, ok := GetGameData(consts.CardSkin).(*CardSkinGameData).ID2CardSkin[sr.CardSkin]; !ok {
-			sr.CardSkin = ""
+		sr.areaLimit = newAreaLimitConfig(sr.Areas)
+		if sr.CardSkin != "" {
+			if _, ok := GetGameData(consts.CardSkin).(*CardSkinGameData).ID2CardSkin[sr.CardSkin]; !ok {
+				sr.CardSkin = ""
+			}
 		}
-	}
 
-	if sr.HeadFrame != "" {
-		if _, ok := GetGameData(consts.HeadFrame).(*HeadFrameGameData).ID2HeadFrame[sr.HeadFrame]; !ok {
-			sr.HeadFrame = ""
+		if sr.HeadFrame != "" {
+			if _, ok := GetGameData(consts.HeadFrame).(*HeadFrameGameData).ID2HeadFrame[sr.HeadFrame]; !ok {
+				sr.HeadFrame = ""
+			}
 		}
-	}
 
-	if sr.Treasure != "" {
-		if _, ok := GetGameData(consts.Treasure).(*TreasureGameData).Treasures[sr.Treasure]; !ok {
-			sr.Treasure = ""
+		if sr.Treasure != "" {
+			if _, ok := GetGameData(consts.Treasure).(*TreasureGameData).Treasures[sr.Treasure]; !ok {
+				sr.Treasure = ""
+			}
 		}
-	}
 	*/
 }
 

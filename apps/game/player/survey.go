@@ -1,10 +1,10 @@
 package player
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/glog"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/glog"
 	"kinger/proto/pb"
 )
 

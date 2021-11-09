@@ -1,8 +1,8 @@
 package outstatus
 
 import (
-	"kinger/common/consts"
 	"kinger/apps/game/module"
+	"kinger/common/consts"
 	"kinger/gamedata"
 )
 
@@ -30,21 +30,20 @@ func (st *vipCardSt) onAdd(args ...interface{}) {
 	}
 
 	/*
-	agent := st.player.GetAgent()
-	if agent != nil {
-		msgID := pb.MessageID_S2C_ADD_VIP
-		if isNewbie {
-			msgID = pb.MessageID_S2C_ADD_NEWBIE_VIP
+		agent := st.player.GetAgent()
+		if agent != nil {
+			msgID := pb.MessageID_S2C_ADD_VIP
+			if isNewbie {
+				msgID = pb.MessageID_S2C_ADD_NEWBIE_VIP
+			}
+			agent.PushClient(msgID, &pb.VipRemainTime{
+				RemainTime: int32(st.GetRemainTime()),
+			})
 		}
-		agent.PushClient(msgID, &pb.VipRemainTime{
-			RemainTime: int32(st.GetRemainTime()),
-		})
-	}
 	*/
 
 	if needTicket {
-		module.Player.ModifyResource(st.player, consts.AccTreasureCnt, gamedata.GetGameData(consts.FunctionPrice).(
-			*gamedata.FunctionPriceGameData).VipAccTicket)
+		module.Player.ModifyResource(st.player, consts.AccTreasureCnt, gamedata.GetGameData(consts.FunctionPrice).(*gamedata.FunctionPriceGameData).VipAccTicket)
 	}
 	module.OutStatus.AddVipBuff(st.player)
 }
@@ -56,17 +55,17 @@ func (st *vipCardSt) onDel() {
 	st.clientStatus.onDel()
 
 	/*
-	msgID := pb.MessageID_S2C_VIP_TIMEOUT
-	if st.attr.GetBool("isNewbie") {
-		msgID = pb.MessageID_S2C_NEWBIE_VIP_TIMEOUT
-	}
-
-	timer.AfterFunc(2 * time.Second, func() {
-		agent := st.player.GetAgent()
-		if agent != nil {
-			agent.PushClient(msgID, nil)
+		msgID := pb.MessageID_S2C_VIP_TIMEOUT
+		if st.attr.GetBool("isNewbie") {
+			msgID = pb.MessageID_S2C_NEWBIE_VIP_TIMEOUT
 		}
-	})
+
+		timer.AfterFunc(2 * time.Second, func() {
+			agent := st.player.GetAgent()
+			if agent != nil {
+				agent.PushClient(msgID, nil)
+			}
+		})
 	*/
 }
 

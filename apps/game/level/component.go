@@ -1,18 +1,18 @@
 package level
 
 import (
-	"kinger/gopuppy/apps/logic"
-	"kinger/gopuppy/attribute"
+	"fmt"
+	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
-	"kinger/gamedata"
-	"kinger/proto/pb"
-	"kinger/gopuppy/common"
-	"kinger/apps/game/module"
-	"strconv"
 	"kinger/common/utils"
-	"fmt"
+	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
 	"kinger/gopuppy/common/glog"
+	"kinger/proto/pb"
+	"strconv"
 )
 
 var _ types.ILevelComponent = &levelComponent{}
@@ -21,8 +21,8 @@ type levelComponent struct {
 	player types.IPlayer
 	gdata  *gamedata.LevelGameData
 	attr   *attribute.MapAttr
-	log *levelLog
-	help *helpRecord
+	log    *levelLog
+	help   *helpRecord
 }
 
 func (lc *levelComponent) ComponentID() string {
@@ -103,14 +103,14 @@ func (lc *levelComponent) beginHelpBattle(levelID int, beHelpUid common.UUid) er
 		ClientID: uint64(agent.GetClientID()),
 		GateID:   agent.GetGateID(),
 		IsRobot:  false,
-		Region: agent.GetRegion(),
+		Region:   agent.GetRegion(),
 	}
 	allCollectCards := lc.player.GetComponent(consts.CardCpt).(types.ICardComponent).GetAllCollectCards()
 	for _, card := range allCollectCards {
 		fighterData.DrawCardPool = append(fighterData.DrawCardPool, &pb.SkinGCard{
 			GCardID: card.GetCardGameData().GCardID,
-			Skin: card.GetSkin(),
-			Equip: card.GetEquip(),
+			Skin:    card.GetSkin(),
+			Equip:   card.GetEquip(),
 		})
 	}
 	_, err := logic.CallBackend("", 0, pb.MessageID_L2B_BEGIN_LEVEL_HELP_BATTLE, &pb.BeginLevelBattleArg{
@@ -122,7 +122,7 @@ func (lc *levelComponent) beginHelpBattle(levelID int, beHelpUid common.UUid) er
 
 func (lc *levelComponent) isRechargeLock() bool {
 	//if !config.GetConfig().IsXfServer() {
-		return false
+	return false
 	//}
 	//return !lc.attr.GetBool("rechargeUnLock")
 }
@@ -160,14 +160,14 @@ func (lc *levelComponent) beginBattle(levelID int) (interface{}, error) {
 		ClientID: uint64(agent.GetClientID()),
 		GateID:   agent.GetGateID(),
 		IsRobot:  false,
-		Region: agent.GetRegion(),
+		Region:   agent.GetRegion(),
 	}
 	allCollectCards := lc.player.GetComponent(consts.CardCpt).(types.ICardComponent).GetAllCollectCards()
 	for _, card := range allCollectCards {
 		fighterData.DrawCardPool = append(fighterData.DrawCardPool, &pb.SkinGCard{
 			GCardID: card.GetCardGameData().GCardID,
-			Skin: card.GetSkin(),
-			Equip: card.GetEquip(),
+			Skin:    card.GetSkin(),
+			Equip:   card.GetEquip(),
 		})
 	}
 
@@ -199,8 +199,8 @@ func (lc *levelComponent) getOpenedTreasureChapters() *attribute.ListAttr {
 func (lc *levelComponent) packMsg() *pb.LevelInfo {
 	openedTreasureChaptersAttr := lc.getOpenedTreasureChapters()
 	msg := &pb.LevelInfo{
-		CurLevel: int32(lc.GetCurLevel()),
-		AskHelpLevels: lc.getHelpRecord().packNeedAskHelpLevels(),
+		CurLevel:       int32(lc.GetCurLevel()),
+		AskHelpLevels:  lc.getHelpRecord().packNeedAskHelpLevels(),
 		IsRechargeLock: lc.isRechargeLock(),
 	}
 
@@ -255,7 +255,7 @@ func (lc *levelComponent) doLevelReward(levelData *gamedata.Level) ([]*pb.Change
 		//consts.Horse:  levelData.RewardHor,
 		//consts.Mat:    levelData.RewardMat,
 		//consts.Forage: levelData.RewardFor,
-		consts.Gold:   levelData.RewardGold,
+		consts.Gold: levelData.RewardGold,
 		//consts.Med:    levelData.RewardMed,
 		//consts.Ban:    levelData.RewardBan,
 	}, consts.RmrClearLevel)
@@ -355,10 +355,10 @@ func (lc *levelComponent) OnHelpBattleEnd(isWin bool, battleID common.UUid) {
 			levelID, battleID)
 	} else {
 		utils.PlayerMqPublish(helpUid, pb.RmqType_HelpLevel, &pb.RmqHelpLevel{
-			HelperUid: uint64(lc.player.GetUid()),
+			HelperUid:  uint64(lc.player.GetUid()),
 			HelperName: lc.player.GetName(),
-			LevelID: int32(levelID),
-			BattleID: uint64(battleID),
+			LevelID:    int32(levelID),
+			BattleID:   uint64(battleID),
 		})
 	}
 }
@@ -379,7 +379,7 @@ func (lc *levelComponent) OnBeHelpBattle(helperUid common.UUid, helperName strin
 		lc.unlockLevel(levelID + 1)
 		lc.player.GetAgent().PushClient(pb.MessageID_S2C_LEVEL_BE_HELP, &pb.LevelBeHelpArg{
 			HelperName: helperName,
-			LevelID: int32(levelID),
+			LevelID:    int32(levelID),
 		})
 	}
 }
@@ -401,7 +401,7 @@ func (lc *levelComponent) clearChapter() error {
 	if !resCpt.HasResource(consts.Jade, needJade) {
 		return gamedata.GameError(2)
 	}
-	resCpt.ModifyResource(consts.Jade, - needJade, consts.RmrClearChapter)
+	resCpt.ModifyResource(consts.Jade, -needJade, consts.RmrClearChapter)
 
 	glog.Infof("clearChapter uid=%d, curLevel=%d, jade=%d", lc.player.GetUid(), curLevel, needJade)
 

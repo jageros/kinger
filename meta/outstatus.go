@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ S2C_ADD_OUT_STATUS    req: OutStatus
@@ -95,4 +95,3 @@ func (m *S2C_DEL_OUT_STATUS_Meta) DecodeReply(data []byte) (interface{}, error) 
 }
 
 //------------------------------------ S2C_DEL_OUT_STATUS END ----------------------------------------
-

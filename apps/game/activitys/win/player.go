@@ -1,11 +1,11 @@
 package win
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/glog"
 	aTypes "kinger/apps/game/activitys/types"
 	"kinger/apps/game/module/types"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/glog"
 	"kinger/proto/pb"
 	"strconv"
 )
@@ -339,7 +339,7 @@ func (c *activityCom) pushFinshNum(aid, camp, newNum int) {
 		minNum := c.getFinshNum(aid, rid)
 		if minNum == newNum {
 			c.ipc.PushFinshNum(aid, rid, newNum)
-		}else if minNum > newNum{
+		} else if minNum > newNum {
 			c.ipc.PushFinshNum(aid, rid, minNum)
 		}
 	}

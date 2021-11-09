@@ -6,9 +6,9 @@ import (
 )
 
 type CardSkin struct {
-	ID         string    `json:"__id__"`
-	Name int `json:"name"`
-	Bind string `json:"bind"`
+	ID     string `json:"__id__"`
+	Name   int    `json:"name"`
+	Bind   string `json:"bind"`
 	CardID uint32 `json:"general"`
 }
 
@@ -18,7 +18,7 @@ func (ck *CardSkin) GetName() string {
 
 type CardSkinGameData struct {
 	baseGameData
-	CardSkins []*CardSkin
+	CardSkins   []*CardSkin
 	ID2CardSkin map[string]*CardSkin
 }
 

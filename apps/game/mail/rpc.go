@@ -1,12 +1,12 @@
 package mail
 
 import (
-	"kinger/gopuppy/apps/logic"
-	"kinger/proto/pb"
 	"kinger/apps/game/module"
-	"kinger/gamedata"
 	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/network"
+	"kinger/proto/pb"
 )
 
 func rpc_C2S_FetchMailList(agent *logic.PlayerAgent, arg interface{}) (interface{}, error) {
@@ -55,11 +55,11 @@ func rpc_C2S_GetMailReward(agent *logic.PlayerAgent, arg interface{}) (interface
 		return nil, err
 	}
 	return &pb.MailRewardReply{
-		AmountRewards: amountRewards,
+		AmountRewards:   amountRewards,
 		TreasureRewards: treasureRewards,
-		Cards: cards,
-		ItemRewards: itemRewards,
-		EmojiTeams: emojis,
+		Cards:           cards,
+		ItemRewards:     itemRewards,
+		EmojiTeams:      emojis,
 	}, err
 }
 
@@ -96,7 +96,8 @@ func rpc_C2S_GetAllReward(agent *logic.PlayerAgent, arg interface{}) (interface{
 			reply.EmojiTeams = append(reply.EmojiTeams, emojis...)
 			reply.ItemRewards = append(reply.ItemRewards, itemRewards...)
 
-L1:			for _, r2 := range amountRewards {
+		L1:
+			for _, r2 := range amountRewards {
 				for _, r := range reply.AmountRewards {
 					if r.Type == r2.Type {
 						r.Amount += r2.Amount
@@ -106,7 +107,8 @@ L1:			for _, r2 := range amountRewards {
 				reply.AmountRewards = append(reply.AmountRewards, r2)
 			}
 
-L2:			for _, c2 := range cards {
+		L2:
+			for _, c2 := range cards {
 				for _, c := range reply.Cards {
 					if c.CardID == c2.CardID {
 						c.Amount += c2.Amount

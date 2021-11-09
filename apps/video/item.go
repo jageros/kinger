@@ -1,20 +1,20 @@
 package main
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
 	"kinger/proto/pb"
 	"sort"
-	"time"
 	"strconv"
+	"time"
 )
 
 type baseVideoItemList struct {
-	attrMgr           *attribute.AttrMgr
-	itemsAttr         *attribute.ListAttr
-	itemsSet          common.UInt64Set
+	attrMgr   *attribute.AttrMgr
+	itemsAttr *attribute.ListAttr
+	itemsSet  common.UInt64Set
 }
 
 func (vl *baseVideoItemList) initAttr() {
@@ -111,7 +111,7 @@ func (tl *topVideoItemList) Len() int {
 }
 
 func (tl *topVideoItemList) Swap(i, j int) {
-	tl.hotChangeItems[i], tl.hotChangeItems[j] =  tl.hotChangeItems[j], tl.hotChangeItems[i]
+	tl.hotChangeItems[i], tl.hotChangeItems[j] = tl.hotChangeItems[j], tl.hotChangeItems[i]
 }
 
 func (tl *topVideoItemList) Less(i, j int) bool {
@@ -153,7 +153,7 @@ func (tl *topVideoItemList) sort() {
 
 		} else if needAmount > 0 {
 			// 最新高热度的录像不够，用之前高热度的录像补
-			needAmount --
+			needAmount--
 			newItemsAttr.AppendUInt64(uint64(battleID))
 			newItemSet.Add(uint64(battleID))
 		} else {
@@ -189,7 +189,7 @@ func (tl *topVideoItemList) getLastItem() *videoItem {
 	if n <= 0 {
 		return nil
 	}
-	return videoMgr.loadVideoItem(common.UUid(tl.itemsAttr.GetUInt64(n - 1)), true)
+	return videoMgr.loadVideoItem(common.UUid(tl.itemsAttr.GetUInt64(n-1)), true)
 }
 
 type newVideoItemList struct {
@@ -212,7 +212,7 @@ func (nl *newVideoItemList) checkNewTimeout() {
 	nl.itemsAttr.ForEachIndex(func(index int) bool {
 		battleID := nl.itemsAttr.GetUInt64(index)
 		vi := videoMgr.loadVideoItem(common.UUid(battleID), true)
-		if vi != nil && now - int64(vi.getTime()) < newVideoLimitTime {
+		if vi != nil && now-int64(vi.getTime()) < newVideoLimitTime {
 			if index > 0 {
 				nl.itemsAttr.DelBySection(0, index)
 			}
@@ -233,20 +233,20 @@ func (nl *newVideoItemList) checkNewTimeout() {
 }
 
 type videoItem struct {
-	attr     *attribute.AttrMgr
-	battleID common.UUid
+	attr         *attribute.AttrMgr
+	battleID     common.UUid
 	commentsAttr *attribute.ListAttr
-	topComments *topCommentsList
-	newComments *newCommentsList
-	hot int
-	ref int
+	topComments  *topCommentsList
+	newComments  *newCommentsList
+	hot          int
+	ref          int
 }
 
 func newVideoItemByAttr(battleID common.UUid, attr *attribute.AttrMgr) *videoItem {
 	vi := &videoItem{
 		attr:     attr,
 		battleID: battleID,
-		hot: -1,
+		hot:      -1,
 	}
 	vi.commentsAttr = attr.GetListAttr("comments2")
 	if vi.commentsAttr == nil {
@@ -355,20 +355,20 @@ func (vi *videoItem) packMsg(uid common.UUid) *pb.VideoItem {
 			Name:       vi.getFighter1Name(),
 			Uid:        uint64(vi.getFighter1Uid()),
 			FightCards: vi.getFighterCards(true),
-			NameText: int32(vi.getFighter1NameText()),
+			NameText:   int32(vi.getFighter1NameText()),
 		},
 		Fighter2: &pb.VideoFighter{
 			Name:       vi.getFighter2Name(),
 			Uid:        uint64(vi.getFighter2Uid()),
 			FightCards: vi.getFighterCards(false),
-			NameText: int32(vi.getFighter2NameText()),
+			NameText:   int32(vi.getFighter2NameText()),
 		},
-		WinnerUid:  uint64(vi.getWinner()),
-		WatchTimes: int32(vi.getWatchTimes()),
-		Like:       int32(vi.getLikeAmount()),
-		Time:       int32(vi.getTime()),
-		IsLike:     vi.isLike(uid),
-		Name: vi.getName(),
+		WinnerUid:      uint64(vi.getWinner()),
+		WatchTimes:     int32(vi.getWatchTimes()),
+		Like:           int32(vi.getLikeAmount()),
+		Time:           int32(vi.getTime()),
+		IsLike:         vi.isLike(uid),
+		Name:           vi.getName(),
 		CommentsAmount: int32(vi.getCommentsAmount()),
 	}
 
@@ -449,8 +449,8 @@ func (vi *videoItem) getFighterCards(isFighter1 bool) []*pb.SkinGCard {
 		cAttr := cardsAttr.GetMapAttr(index)
 		cards[index] = &pb.SkinGCard{
 			GCardID: cAttr.GetUInt32("gcardID"),
-			Skin: cAttr.GetStr("skin"),
-			Equip: cAttr.GetStr("equip"),
+			Skin:    cAttr.GetStr("skin"),
+			Equip:   cAttr.GetStr("equip"),
 		}
 		return true
 	})
@@ -574,11 +574,11 @@ func (vi *videoItem) genCommentsID() int {
 	if maxID <= 0 {
 		maxID = 1
 	}
-	vi.attr.SetInt("maxCommentsID", maxID + 1)
+	vi.attr.SetInt("maxCommentsID", maxID+1)
 	return maxID
 }
 
-func (vi *videoItem) comments(uid common.UUid, name, content, headImgUrl, country, headFrame, countryFlag string) *comments  {
+func (vi *videoItem) comments(uid common.UUid, name, content, headImgUrl, country, headFrame, countryFlag string) *comments {
 	vi.loadComments()
 	id := vi.genCommentsID()
 	c := vi.newComments.newComments(id, uid, name, content, headImgUrl, country, headFrame, countryFlag)
@@ -606,7 +606,7 @@ func (vi *videoItem) getComments(uid common.UUid, curAmount int) ([]*pb.VideoCom
 	var l []*pb.VideoComments
 	newLen := vi.newComments.size()
 	topLen := vi.topComments.Len()
-	if curAmount >= newLen + topLen {
+	if curAmount >= newLen+topLen {
 		return l, false
 	}
 
@@ -626,5 +626,5 @@ func (vi *videoItem) getComments(uid common.UUid, curAmount int) ([]*pb.VideoCom
 		l = append(l, l2...)
 	}
 
-	return l, totalAmount < newLen + topLen
+	return l, totalAmount < newLen+topLen
 }

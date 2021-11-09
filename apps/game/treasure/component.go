@@ -5,18 +5,18 @@ import (
 	"math/rand"
 	"time"
 
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/config"
+	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common"
 	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/timer"
 	"kinger/gopuppy/common/utils"
-	"kinger/apps/game/module/types"
-	"kinger/common/config"
-	"kinger/common/consts"
-	"kinger/gamedata"
 	"kinger/proto/pb"
-	"kinger/apps/game/module"
-	"kinger/gopuppy/apps/logic"
 	"strconv"
 )
 
@@ -28,14 +28,14 @@ type treasureComponent struct {
 	gdataRewardFake *gamedata.TreasureRewardFakeGameData
 	gdataDailyFake  *gamedata.TreasureDailyFakeGameData
 
-	attr            *attribute.MapAttr
+	attr          *attribute.MapAttr
 	treasuresAttr *attribute.ListAttr
 
-	treasures []*treasureSt
+	treasures     []*treasureSt
 	dailyTreasure *dailyTreasureSt
 
 	addCardEvent *addCardEventSt
-	upRareEvent *upRareEventSt
+	upRareEvent  *upRareEventSt
 }
 
 func (tc *treasureComponent) ComponentID() string {
@@ -117,7 +117,7 @@ func (tc *treasureComponent) setUpRareTreasureModelID(modelID string) {
 
 func (tc *treasureComponent) getNextTreasureID() int32 {
 	id := tc.attr.GetInt32("nextTreasureID")
-	tc.attr.SetInt32("nextTreasureID", id + 1)
+	tc.attr.SetInt32("nextTreasureID", id+1)
 	return id
 }
 
@@ -250,7 +250,7 @@ func (tc *treasureComponent) checkTreasuresOfflineTime() {
 		}
 
 		var remainTime int
-		unlockTime := module.OutStatus.BuffTreasureTime(tc.player,data.RewardUnlockTime)
+		unlockTime := module.OutStatus.BuffTreasureTime(tc.player, data.RewardUnlockTime)
 		if unlockTime >= offlineTime {
 			remainTime = unlockTime - offlineTime
 			offlineTime = 0
@@ -524,17 +524,17 @@ func (tc *treasureComponent) onXfAddDailyTreasure(isReset bool) bool {
 	}
 
 	/*
-	totalDailyTreasureCount := tc.getTotalDailyTreasureCount()
-	var t *gamedata.Treasure = nil
+		totalDailyTreasureCount := tc.getTotalDailyTreasureCount()
+		var t *gamedata.Treasure = nil
 
-	if rare, ok := tc.gdataDailyFake.Cnt2TreaureRare[int(totalDailyTreasureCount)]; ok {
-		for _, t2 := range ts {
-			if t2.Rare == rare {
-				t = t2
-				break
+		if rare, ok := tc.gdataDailyFake.Cnt2TreaureRare[int(totalDailyTreasureCount)]; ok {
+			for _, t2 := range ts {
+				if t2.Rare == rare {
+					t = t2
+					break
+				}
 			}
 		}
-	}
 	*/
 
 	if idx >= 3 {
@@ -542,7 +542,7 @@ func (tc *treasureComponent) onXfAddDailyTreasure(isReset bool) bool {
 		return false
 	}
 
-	if len(ts) < idx + 1 {
+	if len(ts) < idx+1 {
 		return false
 	}
 	t := ts[idx]
@@ -599,9 +599,8 @@ func (tc *treasureComponent) treasureGetUnlockCards(data *gamedata.Treasure) (un
 	unlockCardsSet := common.UInt32Set{}
 	rare2UnlockCardSet = map[int]common.UInt32Set{}
 
-
 	unlockCards = append(unlockCards, gamedata.GetGameData(
-		consts.EventFirstRechargeReward).(*gamedata.ActivityFirstRechargeRewardGameData).UnlockCards ...)
+		consts.EventFirstRechargeReward).(*gamedata.ActivityFirstRechargeRewardGameData).UnlockCards...)
 
 	var _getUnlockCard = func(cardIDs []uint32) {
 		for _, cardID := range cardIDs {
@@ -877,7 +876,7 @@ func (tc *treasureComponent) treasureRandomCards(data *gamedata.Treasure, isDobu
 
 func (tc *treasureComponent) caclTreasureResource(data *gamedata.Treasure, isDobule bool, type_ int) map[int]int {
 	gold := data.GoldMin
-	goldRand := data.GoldMax - data.GoldMin+1
+	goldRand := data.GoldMax - data.GoldMin + 1
 	if goldRand > 0 {
 		gold += rand.Intn(goldRand)
 	}
@@ -946,7 +945,8 @@ func (tc *treasureComponent) caclTreasureRewardTbl(data *gamedata.Treasure, msg 
 	msg.Headframes = append(msg.Headframes, rr.GetHeadFrames()...)
 
 	resources := rr.GetResources()
-L1:	for resType, amount := range resources {
+L1:
+	for resType, amount := range resources {
 		resType2 := int32(resType)
 		for _, resMsg := range msg.Resources {
 			if resMsg.Type == resType2 {
@@ -956,7 +956,7 @@ L1:	for resType, amount := range resources {
 		}
 
 		msg.Resources = append(msg.Resources, &pb.Resource{
-			Type: resType2,
+			Type:   resType2,
 			Amount: int32(amount),
 		})
 	}
@@ -974,7 +974,8 @@ L1:	for resType, amount := range resources {
 	}
 
 	resources = rr.GetConvertResources()
-L2:	for resType, amount := range resources {
+L2:
+	for resType, amount := range resources {
 		resType2 := int32(resType)
 		for _, resMsg := range msg.ConvertResources {
 			if resMsg.Type == resType2 {
@@ -984,7 +985,7 @@ L2:	for resType, amount := range resources {
 		}
 
 		msg.ConvertResources = append(msg.ConvertResources, &pb.Resource{
-			Type: resType2,
+			Type:   resType2,
 			Amount: int32(amount),
 		})
 	}
@@ -1010,7 +1011,7 @@ func (tc *treasureComponent) openTreasureWithType(modelID string, isDobule bool,
 	if len(resources) > 0 {
 		resComponent := tc.player.GetComponent(consts.ResourceCpt).(types.IResourceComponent)
 		oldPvpLevel := tc.player.GetPvpLevel()
-		resComponent.BatchModifyResource(resources, consts.RmrTreasure + modelID)
+		resComponent.BatchModifyResource(resources, consts.RmrTreasure+modelID)
 		newPvpLevel := tc.player.GetPvpLevel()
 
 		if resources[consts.Score] > 0 {
@@ -1043,14 +1044,14 @@ func (tc *treasureComponent) openTreasureWithType(modelID string, isDobule bool,
 	reply.CardSkins = append(reply.CardSkins, hdSkins...)
 	if eventItem > 0 {
 		reply.ConvertResources = append(reply.ConvertResources, &pb.Resource{
-			Type: int32(consts.EventItem1),
+			Type:   int32(consts.EventItem1),
 			Amount: int32(eventItem),
 		})
 	}
 
 	for resType, amount := range resources {
 		reply.Resources = append(reply.Resources, &pb.Resource{
-			Type: int32(resType),
+			Type:   int32(resType),
 			Amount: int32(amount),
 		})
 	}
@@ -1204,17 +1205,17 @@ func (tc *treasureComponent) AccTreasure(treasureID uint32, isConsumeJade bool) 
 
 	var needJade int
 	/*
-	if isConsumeJade {
-		if config.GetConfig().IsMultiLan && tc.player.IsVip() {
+		if isConsumeJade {
+			if config.GetConfig().IsMultiLan && tc.player.IsVip() {
 
-		} else {
-			needJade = tc.player.GetSkipAdsNeedJade()
-			if !tc.player.HasBowlder(needJade) {
-				return 0, gamedata.GameError(2)
+			} else {
+				needJade = tc.player.GetSkipAdsNeedJade()
+				if !tc.player.HasBowlder(needJade) {
+					return 0, gamedata.GameError(2)
+				}
+				tc.player.SubBowlder(needJade)
 			}
-			tc.player.SubBowlder(needJade)
 		}
-	}
 	*/
 
 	glog.Infof("AccTreasure uid=%d, treasureID=%d, isConsumeJade=%v, needJade=%d", tc.player.GetUid(), treasureID,

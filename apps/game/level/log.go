@@ -30,10 +30,10 @@ func (l *levelLog) getAttrByID(levelID int) *attribute.MapAttr {
 
 func (l *levelLog) onLevelBegin(levelID int) {
 	attr := l.getAttrByID(levelID)
-	attr.SetInt("cnt", attr.GetInt("cnt") + 1)
+	attr.SetInt("cnt", attr.GetInt("cnt")+1)
 }
 
 func (l *levelLog) onLevelWin(levelID int) {
 	attr := l.getAttrByID(levelID)
-	attr.SetInt("winCnt", attr.GetInt("winCnt") + 1)
+	attr.SetInt("winCnt", attr.GetInt("winCnt")+1)
 }

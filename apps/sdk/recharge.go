@@ -1,15 +1,15 @@
 package main
 
 import (
+	"kinger/common/utils"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
+	gutils "kinger/gopuppy/common/utils"
+	"kinger/proto/pb"
+	"kinger/sdk"
 	"net/http"
 	"strings"
-	"kinger/sdk"
-	"kinger/gopuppy/common/evq"
-	"kinger/common/utils"
-	"kinger/proto/pb"
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common"
-	gutils "kinger/gopuppy/common/utils"
 )
 
 func wrapHttpHandler(handler func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
@@ -42,19 +42,19 @@ func rechargeHandler(writer http.ResponseWriter, request *http.Request) {
 	writer.Write(reply)
 
 	if ok {
-		glog.Infof("RechargeAuthSign sign ok, channel=%s, uid=%d, channelUid=%s, cpOrderID=%s, channelOrderID=%s, " +
+		glog.Infof("RechargeAuthSign sign ok, channel=%s, uid=%d, channelUid=%s, cpOrderID=%s, channelOrderID=%s, "+
 			"paymentAmount=%d", channel, uid, channelUid, cpOrderID, channelOrderID, paymentAmount)
 		evq.CallLater(func() {
 			utils.PlayerMqPublish(common.UUid(uid), pb.RmqType_SdkRecharge, &pb.RmqSdkRecharge{
-				ChannelUid: channelUid,
-				CpOrderID: cpOrderID,
+				ChannelUid:     channelUid,
+				CpOrderID:      cpOrderID,
 				ChannelOrderID: channelOrderID,
-				PaymentAmount: int32(paymentAmount),
+				PaymentAmount:  int32(paymentAmount),
 				NeedCheckMoney: needCheckMoney,
 			})
 		})
 	} else {
-		glog.Errorf("RechargeAuthSign sign error, channel=%s, uid=%d, channelUid=%s, cpOrderID=%s, channelOrderID=%s, " +
+		glog.Errorf("RechargeAuthSign sign error, channel=%s, uid=%d, channelUid=%s, cpOrderID=%s, channelOrderID=%s, "+
 			"paymentAmount=%d, reply=%s", channel, uid, channelUid, cpOrderID, channelOrderID, paymentAmount, reply)
 	}
 }

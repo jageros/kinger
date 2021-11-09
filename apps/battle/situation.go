@@ -1,20 +1,20 @@
 package main
 
 import (
-	"kinger/proto/pb"
 	"kinger/common/consts"
-	"kinger/gopuppy/common"
-	"math/rand"
-	"kinger/gopuppy/common/utils"
-	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/utils"
+	"kinger/proto/pb"
+	"math/rand"
 	//"kinger/gopuppy/common/glog"
 	"kinger/gamedata"
 )
 
 type playInHandCard struct {
 	objID int
-	sit int
+	sit   int
 }
 
 func (c *playInHandCard) copy() *playInHandCard {
@@ -35,7 +35,7 @@ func (c *playInHandCard) restoredFromAttr(attr *attribute.MapAttr) {
 }
 
 type tauntBuff struct {
-	skillID int32
+	skillID           int32
 	tauntFighterObjID int
 	ownerObjID        int
 	grids             []int
@@ -110,33 +110,33 @@ func (t *tauntBuff) canPlayCard(f *fighter, gridID int, situation *battleSituati
 }
 
 type battleSituation struct {
-	maxObjID int
-	state int
-	grids []int  // []objID
-	curBout int
-	scale int
-	battleRes int
+	maxObjID          int
+	state             int
+	grids             []int // []objID
+	curBout           int
+	scale             int
+	battleRes         int
 	maxHandCardAmount int
-	gridColumn int
-	gridsAmount int
-	aiThinking bool
-	playCardQueue []*playInHandCard  // 出牌队列
-	taunts []*tauntBuff
-	bonusObj *bonus
-	isWonderful1 bool
-	isWonderful2 bool
-	battleType int
+	gridColumn        int
+	gridsAmount       int
+	aiThinking        bool
+	playCardQueue     []*playInHandCard // 出牌队列
+	taunts            []*tauntBuff
+	bonusObj          *bonus
+	isWonderful1      bool
+	isWonderful2      bool
+	battleType        int
 
-	fighter1       *fighter
-	fighter2       *fighter
-	curBoutFighter *fighter
-	nextBoutFighter    *fighter
+	fighter1        *fighter
+	fighter2        *fighter
+	curBoutFighter  *fighter
+	nextBoutFighter *fighter
 	doActionFighter *fighter
 
 	fort1 *fortCaster
 	fort2 *fortCaster
 
-	targetMgr *skillTargetMgr
+	targetMgr  *skillTargetMgr
 	triggerMgr *skillTriggerMgr
 }
 
@@ -144,8 +144,8 @@ func newBattleSituation(fighterData1, fighterData2 *pb.FighterData, battleID com
 	battleRes int, needFortifications bool, battleType int, seasonData *gamedata.SeasonPvp) *battleSituation {
 
 	situation := &battleSituation{
-		battleRes: battleRes,
-		state: bsCreate,
+		battleRes:  battleRes,
+		state:      bsCreate,
 		battleType: battleType,
 	}
 
@@ -243,7 +243,7 @@ func (bs *battleSituation) createFighter(battleID common.UUid, fighterData1, fig
 func (bs *battleSituation) genFortifications(seasonData *gamedata.SeasonPvp) []*pb.InGridCard {
 	var cardInfos [][]int
 	if seasonData == nil || len(seasonData.Fortifications) == 0 {
-		cardInfos = [][]int{ []int{1, 293}, []int{2, 294}, []int{3, 295} }
+		cardInfos = [][]int{[]int{1, 293}, []int{2, 294}, []int{3, 295}}
 	} else {
 		cardInfos = seasonData.Fortifications
 	}
@@ -307,7 +307,7 @@ func (bs *battleSituation) createGridCards(fighterData1, fighterData2 *pb.Fighte
 
 }
 
-func (bs *battleSituation) createFort(fighterData1, fighterData2 *pb.FighterData, seasonData *gamedata.SeasonPvp)  {
+func (bs *battleSituation) createFort(fighterData1, fighterData2 *pb.FighterData, seasonData *gamedata.SeasonPvp) {
 	// 双方城防
 	fighterDatas := []*pb.FighterData{fighterData1, fighterData2}
 	if seasonData != nil {
@@ -647,12 +647,12 @@ func (bs *battleSituation) getPosTargetByGrid(gridID, pos, n int) iTarget {
 	gridID2 := -1
 	switch pos {
 	case consts.UP:
-		gridID2 = gridID - n * bs.gridColumn
+		gridID2 = gridID - n*bs.gridColumn
 		if gridID2 < 0 || gridID2 >= bs.gridsAmount {
 			gridID2 = -1
 		}
 	case consts.DOWN:
-		gridID2 = gridID + n * bs.gridColumn
+		gridID2 = gridID + n*bs.gridColumn
 		if gridID2 < 0 || gridID2 >= bs.gridsAmount {
 			gridID2 = -1
 		}
@@ -749,26 +749,26 @@ func (bs *battleSituation) drawnGame() []*clientAction {
 	}
 
 	acts = append(acts, &clientAction{
-		actID: pb.ClientAction_Skill,
+		actID:  pb.ClientAction_Skill,
 		actMsg: skillAct1,
 	})
 	acts = append(acts, acts1...)
 
 	/*
-	skillActs2, acts2, _, _, _ := drawnGameAction.invoke(nil, bs.fort2, preGameEndTrigger, []iTarget{},
-		[]iTarget{bs.fighter2}, 1, &triggerContext{}, &triggerResult{}, bs)
+		skillActs2, acts2, _, _, _ := drawnGameAction.invoke(nil, bs.fort2, preGameEndTrigger, []iTarget{},
+			[]iTarget{bs.fighter2}, 1, &triggerContext{}, &triggerResult{}, bs)
 
-	skillAct2 := &pb.SkillAct{Owner: int32(bs.fort2.getObjID())}
-	for _, cliAct := range skillActs2 {
-		actData := cliAct.packMsg()
-		skillAct2.Actions = append(skillAct2.Actions, actData)
-	}
+		skillAct2 := &pb.SkillAct{Owner: int32(bs.fort2.getObjID())}
+		for _, cliAct := range skillActs2 {
+			actData := cliAct.packMsg()
+			skillAct2.Actions = append(skillAct2.Actions, actData)
+		}
 
-	acts = append(acts, &clientAction{
-		actID: pb.ClientAction_Skill,
-		actMsg: skillAct2,
-	})
-	acts = append(acts, acts2...)
+		acts = append(acts, &clientAction{
+			actID: pb.ClientAction_Skill,
+			actMsg: skillAct2,
+		})
+		acts = append(acts, acts2...)
 	*/
 
 	return acts
@@ -807,12 +807,12 @@ func (bs *battleSituation) doAction(f *fighter, useCardObjID, gridID int) (*pb.F
 
 	winUid, isDrawn := bs.checkResult()
 	reply := &pb.FightBoutResult{
-		BoutUid: uint64(f.getUid()),
-		UseCardObjID: int32(useCardObjID),
-		TargetGridId: int32(gridID),
-		CardNeedTalk: needTalk,
-		WinUid: uint64(winUid),
-		IsUseCardInFog: isInFog,
+		BoutUid:              uint64(f.getUid()),
+		UseCardObjID:         int32(useCardObjID),
+		TargetGridId:         int32(gridID),
+		CardNeedTalk:         needTalk,
+		WinUid:               uint64(winUid),
+		IsUseCardInFog:       isInFog,
 		IsUseCardPublicEnemy: isPublicEnemy,
 		//BattleID: uint64(f.getBattle().getBattleID()),
 	}
@@ -932,8 +932,8 @@ func (bs *battleSituation) tryUseCard(f *fighter, useCardObjID, gridID int) (act
 
 // if oldCard != nil   reEnterDesk
 func (bs *battleSituation) addPlayInHandCard(card *fightCard, oldCard *fightCard, f *fighter) {
-	ic := &playInHandCard {
-		objID:       card.getObjID(),
+	ic := &playInHandCard{
+		objID: card.getObjID(),
 	}
 
 	if oldCard != nil {
@@ -1097,12 +1097,12 @@ func (bs *battleSituation) attack(card *fightCard, attackCxt *attackContext, isC
 	if attackCxt == nil {
 		attackCxt = &attackContext{}
 	}
-// ------------------ 找攻击目标 ------------------
+	// ------------------ 找攻击目标 ------------------
 	//var triggerRs *triggerResult
 	actions, _, _ = bs.triggerMgr.trigger(map[int][]iTarget{findAttackTargetTrigger: []iTarget{card}}, &triggerContext{
 		triggerType: findAttackTargetTrigger,
-		attackCxt: attackCxt,
-		attackCard: card,
+		attackCxt:   attackCxt,
+		attackCard:  card,
 	})
 
 	//glog.Infof("attack 2222222222222222222 card=%s", card)
@@ -1115,14 +1115,14 @@ func (bs *battleSituation) attack(card *fightCard, attackCxt *attackContext, isC
 
 	beAttackCards := attackCxt.findAttackTarget(bs, card)
 	triggerCxt := &triggerContext{
-		attackCard: card,
+		attackCard:    card,
 		beAttackCards: beAttackCards,
-		attackCxt: attackCxt,
+		attackCxt:     attackCxt,
 	}
 
 	//glog.Infof("attack 33333333333333333 card=%s, beAttackCards=%v", card, beAttackCards)
 
-// ----------------- 攻击前 ------------------
+	// ----------------- 攻击前 ------------------
 	triggerCxt.triggerType = attackTrigger
 	acts, _, _ := bs.triggerMgr.trigger(map[int][]iTarget{attackTrigger: []iTarget{card}}, triggerCxt)
 	actions = append(actions, acts...)
@@ -1144,8 +1144,8 @@ func (bs *battleSituation) attack(card *fightCard, attackCxt *attackContext, isC
 	attackAct := &pb.AttackAct{
 		Attacker: int32(card.getObjID()),
 	}
-	act := &clientAction {
-		actID: pb.ClientAction_Attack,
+	act := &clientAction{
+		actID:  pb.ClientAction_Attack,
 		actMsg: attackAct,
 	}
 	actions = append(actions, act)
@@ -1154,7 +1154,7 @@ func (bs *battleSituation) attack(card *fightCard, attackCxt *attackContext, isC
 		attackAct.IsArrow = true
 	}
 
-// --------------------- 比点 ------------------
+	// --------------------- 比点 ------------------
 	var beAttackTargets []iTarget
 	for _, c := range beAttackCards {
 		if !c.isInBattle() {
@@ -1182,8 +1182,8 @@ func (bs *battleSituation) attack(card *fightCard, attackCxt *attackContext, isC
 
 		attackAct.WinActs = append(attackAct.WinActs, &pb.AttackWinAct{
 			BeAttacker: int32(c.getObjID()),
-			WinPos: int32(atkPos),
-			LosePos: int32(defPos),
+			WinPos:     int32(atkPos),
+			LosePos:    int32(defPos),
 		})
 	}
 	triggerCxt.attackCxt = nil
@@ -1194,7 +1194,7 @@ func (bs *battleSituation) attack(card *fightCard, attackCxt *attackContext, isC
 		preTurnSit[t.getObjID()] = t.getSit()
 	}
 
-// -------------- 比点后 ------------------
+	// -------------- 比点后 ------------------
 	triggerCxt.triggerType = afterAttackTrigger
 	acts, _, _ = bs.triggerMgr.trigger(map[int][]iTarget{afterAttackTrigger: []iTarget{card},
 		beAttackTrigger: beAttackTargets}, triggerCxt)
@@ -1221,7 +1221,7 @@ func (bs *battleSituation) attack(card *fightCard, attackCxt *attackContext, isC
 		return actions, len(attackAct.WinActs) > 0
 	}
 
-// ----------------------- 翻面前 ------------------
+	// ----------------------- 翻面前 ------------------
 	var preTurnTargets []iTarget
 	for _, t := range beAttackTargets {
 		c := t.(*fightCard)
@@ -1266,10 +1266,10 @@ func (bs *battleSituation) attack(card *fightCard, attackCxt *attackContext, isC
 		}
 	}
 
-// ----------------------- 翻面 ------------------
+	// ----------------------- 翻面 ------------------
 	turnOverAct := &pb.TurnOverAct{}
 	actions = append(actions, &clientAction{
-		actID: pb.ClientAction_TurnOver,
+		actID:  pb.ClientAction_TurnOver,
 		actMsg: turnOverAct,
 	})
 	for _, t := range preTurnTargets {
@@ -1310,7 +1310,7 @@ func (bs *battleSituation) attack(card *fightCard, attackCxt *attackContext, isC
 	}
 
 	// 被翻面时机，尝试触发技能
-	acts, _, _ = bs.triggerMgr.trigger(map[int][]iTarget{turnTrigger:turnTriggerObj, beTurnTrigger:beTurnTargets}, triggerCxt)
+	acts, _, _ = bs.triggerMgr.trigger(map[int][]iTarget{turnTrigger: turnTriggerObj, beTurnTrigger: beTurnTargets}, triggerCxt)
 	actions = append(actions, acts...)
 
 	return actions, len(attackAct.WinActs) > 0
@@ -1318,12 +1318,12 @@ func (bs *battleSituation) attack(card *fightCard, attackCxt *attackContext, isC
 
 func (bs *battleSituation) addTaunt(sk *skill, caster iCaster, f *fighter, grids []int) {
 	t := &tauntBuff{
-		skillID: sk.getID(),
+		skillID:           sk.getID(),
 		tauntFighterObjID: f.getObjID(),
-		ownerObjID: caster.getObjID(),
-		grids: grids,
+		ownerObjID:        caster.getObjID(),
+		grids:             grids,
 	}
-	bs.taunts = append(bs.taunts , t)
+	bs.taunts = append(bs.taunts, t)
 }
 
 func (bs *battleSituation) delTaunt(casterObjID int, skillID int32) {
@@ -1339,7 +1339,7 @@ func (bs *battleSituation) getLeft(grid int) (*fightCard, bool) {
 	if grid == 0 || grid == bs.gridColumn || grid == 2*bs.gridColumn {
 		return nil, false
 	} else {
-		c := bs.targetMgr.getTargetCard(bs.grids[grid - 1])
+		c := bs.targetMgr.getTargetCard(bs.grids[grid-1])
 		if c != nil {
 			return c, false
 		} else {
@@ -1365,7 +1365,7 @@ func (bs *battleSituation) getUp(grid int) (*fightCard, bool) {
 	if grid >= 0 && grid < bs.gridColumn {
 		return nil, false
 	} else {
-		c := bs.targetMgr.getTargetCard(bs.grids[grid - bs.gridColumn])
+		c := bs.targetMgr.getTargetCard(bs.grids[grid-bs.gridColumn])
 		if c != nil {
 			return c, false
 		} else {
@@ -1378,7 +1378,7 @@ func (bs *battleSituation) getDown(grid int) (*fightCard, bool) {
 	if grid >= 2*bs.gridColumn && grid < 3*bs.gridColumn {
 		return nil, false
 	} else {
-		c := bs.targetMgr.getTargetCard(bs.grids[grid + bs.gridColumn])
+		c := bs.targetMgr.getTargetCard(bs.grids[grid+bs.gridColumn])
 		if c != nil {
 			return c, false
 		} else {
@@ -1451,7 +1451,7 @@ func (bs *battleSituation) evaluateAiValue() float32 {
 		if p1 > p2 {
 			return infinityValue
 		} else {
-			return - infinityValue
+			return -infinityValue
 		}
 	}
 
@@ -1470,7 +1470,7 @@ func (bs *battleSituation) genAllActions() []*battleAction {
 			if bs.canPlayCard(bs.curBoutFighter, gridID) {
 				acts = append(acts, &battleAction{
 					cardObjID: cardObjID,
-					gridID: gridID,
+					gridID:    gridID,
 				})
 			}
 		}

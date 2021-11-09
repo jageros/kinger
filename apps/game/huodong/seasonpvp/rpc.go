@@ -1,12 +1,12 @@
 package seasonpvp
 
 import (
+	htypes "kinger/apps/game/huodong/types"
+	"kinger/apps/game/module"
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/logic"
 	"kinger/proto/pb"
-	"kinger/apps/game/module"
-	"kinger/gamedata"
-	"kinger/common/consts"
-	htypes "kinger/apps/game/huodong/types"
 )
 
 func rpc_C2S_FetchSeasonPvpLimitTime(agent *logic.PlayerAgent, arg interface{}) (interface{}, error) {

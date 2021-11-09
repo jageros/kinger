@@ -3,8 +3,8 @@ package gamedata
 import (
 	"encoding/json"
 
-	"kinger/gopuppy/common/glog"
 	"kinger/common/consts"
+	"kinger/gopuppy/common/glog"
 )
 
 type Robber struct {

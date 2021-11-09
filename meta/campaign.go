@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_FETCH_CAMPAIGN_INFO    resp: CampaignInfo
@@ -4450,4 +4450,3 @@ func (m *G2CA_MODIFY_CONTRIBUTION_Meta) DecodeReply(data []byte) (interface{}, e
 }
 
 //------------------------------------ G2CA_MODIFY_CONTRIBUTION END ----------------------------------------
-

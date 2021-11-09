@@ -1,30 +1,30 @@
 package main
 
 import (
+	"fmt"
+	"kinger/common/consts"
+	"kinger/common/utils"
+	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common"
-	"kinger/gopuppy/common/evq"
-	"kinger/proto/pb"
-	"kinger/gamedata"
-	"sort"
-	"kinger/gopuppy/apps/logic"
-	"fmt"
-	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/eventhub"
-	"kinger/common/consts"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/timer"
-	"time"
-	"math/rand"
-	"kinger/common/utils"
 	gpb "kinger/gopuppy/proto/pb"
+	"kinger/proto/pb"
+	"math/rand"
+	"sort"
+	"time"
 )
 
 var playerMgr = &playerMgrSt{}
 
 type playerMgrSt struct {
-	allPlayers map[common.UUid]*player
-	loadingPlayer map[common.UUid]chan struct{}
-	onlinePlayers map[common.UUid]*player
+	allPlayers     map[common.UUid]*player
+	loadingPlayer  map[common.UUid]chan struct{}
+	onlinePlayers  map[common.UUid]*player
 	kickOutPlayers map[common.UUid]*player
 }
 
@@ -101,7 +101,7 @@ func (pm *playerMgrSt) initialize() {
 	eventhub.Subscribe(logic.PLAYER_KICK_OUT_EV, pm.onPlayerLogout)
 	eventhub.Subscribe(logic.RESTORE_AGENT_EV, pm.onRestoreAgent)
 
-	timer.AddTicker(time.Duration(rand.Intn(20) + 290) * time.Second, func() {
+	timer.AddTicker(time.Duration(rand.Intn(20)+290)*time.Second, func() {
 		pm.save(false)
 	})
 	timer.AddTicker(time.Minute, pm.checkKickOut)
@@ -154,10 +154,10 @@ func (pm *playerMgrSt) onUnified(uid2Rank map[common.UUid]int, yourMajestyName, 
 
 		uid := p.getUid()
 		utils.PlayerMqPublish(uid, pb.RmqType_UnifiedReward, &pb.RmqUnifiedReward{
-			Rank: int32(uid2Rank[uid]),
-			Contribution: int32(p.getMaxContribution() * 0.1),
+			Rank:            int32(uid2Rank[uid]),
+			Contribution:    int32(p.getMaxContribution() * 0.1),
 			YourMajestyName: yourMajestyName,
-			CountryName: countryName,
+			CountryName:     countryName,
 		})
 
 		if !p.isOnline() {
@@ -166,7 +166,7 @@ func (pm *playerMgrSt) onUnified(uid2Rank map[common.UUid]int, yourMajestyName, 
 
 		msg := &pb.CampaignState{
 			State: pb.CampaignState_Unified,
-			Arg: warMgr.getUnifiedInfo(),
+			Arg:   warMgr.getUnifiedInfo(),
 		}
 		p.agent.PushClient(pb.MessageID_S2C_UPDATE_CAMPAIGN_STATE, msg)
 	}
@@ -341,17 +341,17 @@ func (pm *playerMgrSt) getPlayersByPage(players []*player, page int, isCaptive b
 }
 
 type player struct {
-	uid common.UUid
+	uid  common.UUid
 	attr *attribute.AttrMgr
 
 	// 正在进行的任务
 	ms *playerMission
 	// 申请创建势力
-	ccApply       *createCountryApply
-	myTeam        *team
-	teamDisappear *pb.MyTeamDisappear
+	ccApply        *createCountryApply
+	myTeam         *team
+	teamDisappear  *pb.MyTeamDisappear
 	supportCardIDs []uint32
-	agent         *logic.PlayerAgent
+	agent          *logic.PlayerAgent
 	// 修养
 	restTimer *timer.Timer
 	// 整顿
@@ -360,7 +360,7 @@ type player struct {
 
 func newPlayerByAttr(uid common.UUid, attr *attribute.AttrMgr) *player {
 	p := &player{
-		uid: uid,
+		uid:  uid,
 		attr: attr,
 	}
 
@@ -398,27 +398,27 @@ func newPlayerByAttr(uid common.UUid, attr *attribute.AttrMgr) *player {
 		if t < 2 {
 			t = 2
 		}
-		p.restTimer = timer.AfterFunc(time.Duration(t) * time.Second, p.onRestComplete)
+		p.restTimer = timer.AfterFunc(time.Duration(t)*time.Second, p.onRestComplete)
 	} else if rectifyTimeout > 0 {
 		t := rectifyTimeout - now
 		if t < 2 {
 			t = 2
 		}
-		p.rectifyTimer = timer.AfterFunc(time.Duration(t) * time.Second, p.onRectifyComplete)
+		p.rectifyTimer = timer.AfterFunc(time.Duration(t)*time.Second, p.onRectifyComplete)
 	}
 
 	return p
 }
 
 func (p *player) beginRestState() {
-	p.attr.SetInt64("restTimeout", time.Now().Unix() + 90)
-	p.restTimer = timer.AfterFunc(90 *time.Second, p.onRestComplete)
+	p.attr.SetInt64("restTimeout", time.Now().Unix()+90)
+	p.restTimer = timer.AfterFunc(90*time.Second, p.onRestComplete)
 	if p.isOnline() {
 		arg := &pb.CampaignPlayerState{
 			State: pb.CampaignPlayerState_Rest,
 		}
 		arg.Arg, _ = (&pb.CpStateLoadingArg{
-			MaxTime: 90,
+			MaxTime:    90,
 			RemainTime: 90,
 		}).Marshal()
 		p.agent.PushClient(pb.MessageID_S2C_UPDATE_CAMPAIGN_PLAYER_STATE, arg)
@@ -426,14 +426,14 @@ func (p *player) beginRestState() {
 }
 
 func (p *player) beginRectifyState() {
-	p.attr.SetInt64("rectifyTimeout", time.Now().Unix() + 20)
-	p.rectifyTimer = timer.AfterFunc(20 *time.Second, p.onRectifyComplete)
+	p.attr.SetInt64("rectifyTimeout", time.Now().Unix()+20)
+	p.rectifyTimer = timer.AfterFunc(20*time.Second, p.onRectifyComplete)
 	if p.isOnline() {
 		arg := &pb.CampaignPlayerState{
 			State: pb.CampaignPlayerState_Rectify,
 		}
 		arg.Arg, _ = (&pb.CpStateLoadingArg{
-			MaxTime: 20,
+			MaxTime:    20,
 			RemainTime: 20,
 		}).Marshal()
 		p.agent.PushClient(pb.MessageID_S2C_UPDATE_CAMPAIGN_PLAYER_STATE, arg)
@@ -567,7 +567,7 @@ func (p *player) quitCountry(newYourMajestyUid common.UUid) error {
 	p.setJob(pb.CampaignJob_UnknowJob, pb.CampaignJob_UnknowJob, true)
 	p.setCity(0, 0, true)
 	if lastCountryID <= 0 {
-		p.subContribution(p.getMaxContribution() * 0.1, true)
+		p.subContribution(p.getMaxContribution()*0.1, true)
 	}
 
 	if job == pb.CampaignJob_YourMajesty {
@@ -696,7 +696,7 @@ func (p *player) getKickOutRemainTime() int64 {
 
 func (p *player) setKickOut(val bool) {
 	if val {
-		p.attr.SetInt64("kickOutTime", time.Now().Unix() + 24 * 60 * 60)
+		p.attr.SetInt64("kickOutTime", time.Now().Unix()+24*60*60)
 		playerMgr.addKickOutPlayer(p)
 	} else {
 		p.attr.Del("kickOutTime")
@@ -714,7 +714,7 @@ func (p *player) delCcApply(returnGold bool) {
 		p.ccApply = nil
 		if returnGold {
 			utils.PlayerMqPublish(p.getUid(), pb.RmqType_Bonus, &pb.RmqBonus{
-				ChangeRes: []*pb.Resource{ &pb.Resource{Type: int32(consts.Gold), Amount: int32(ca.getGold())} },
+				ChangeRes: []*pb.Resource{&pb.Resource{Type: int32(consts.Gold), Amount: int32(ca.getGold())}},
 			})
 		}
 	}
@@ -969,7 +969,7 @@ func (p *player) setCountryID(countryID uint32, needSync bool) {
 
 	if needSync && p.isOnline() {
 		p.agent.PushClient(pb.MessageID_S2C_UPDATE_MY_COUNTRY, &pb.UpdateMyCountryArg{
-			CountryID: countryID,
+			CountryID:     countryID,
 			LastCountryID: lastCountryID,
 		})
 	}
@@ -994,7 +994,7 @@ func (p *player) setLastCountryID(countryID uint32, needSync bool) {
 	p.attr.SetUInt32("lcountry", countryID)
 	if needSync && p.isOnline() {
 		p.agent.PushClient(pb.MessageID_S2C_UPDATE_MY_COUNTRY, &pb.UpdateMyCountryArg{
-			CountryID: p.getCountryID(),
+			CountryID:     p.getCountryID(),
 			LastCountryID: countryID,
 		})
 	}
@@ -1108,7 +1108,7 @@ func (p *player) setContribution(val float64, needLog bool) {
 
 		if p.agent != nil && int32(old) != int32(val) {
 			p.agent.PushClient(pb.MessageID_S2C_UPDATE_CONTRIBUTION, &pb.UpdateContributionArg{
-				Contribution: int32(val),
+				Contribution:    int32(val),
 				MaxContribution: int32(max),
 			})
 		}
@@ -1139,7 +1139,7 @@ func (p *player) addContribution(val float64, canPer, needLog bool) {
 		p.attr.SetFloat64("lcontribution", lcontribution)
 	}
 
-	p.setContribution( p.getContribution() + val, needLog )
+	p.setContribution(p.getContribution()+val, needLog)
 
 	if canPer {
 		cty := p.getCity()
@@ -1232,14 +1232,14 @@ func (p *player) battleThan(oth *player) bool {
 
 func (p *player) packMsg(isCaptive bool) *pb.CampaignPlayer {
 	return &pb.CampaignPlayer{
-		Uid: uint64(p.getUid()),
-		Name: p.getName(),
-		HeadImg: p.getHeadImg(),
-		HeadFrame: p.getHeadFrame(),
-		CityJob: p.getCityJob(),
-		CountryJob: p.getCountryJob(),
-		PvpScore: int32(p.getPvpScore()),
-		State: p.getOthState(isCaptive),
+		Uid:          uint64(p.getUid()),
+		Name:         p.getName(),
+		HeadImg:      p.getHeadImg(),
+		HeadFrame:    p.getHeadFrame(),
+		CityJob:      p.getCityJob(),
+		CountryJob:   p.getCountryJob(),
+		PvpScore:     int32(p.getPvpScore()),
+		State:        p.getOthState(isCaptive),
 		Contribution: int32(p.getContribution()),
 	}
 }
@@ -1270,7 +1270,7 @@ func (p *player) getMissionReward() (*pb.GGetCampaignMissionRewardReply, error) 
 	glog.Infof("getMissionReward uid=%d, ms=%s", p.getUid(), ms)
 	p.addContribution(ms.getContribution(), true, true)
 	return &pb.GGetCampaignMissionRewardReply{
-		Gold: int32(ms.getGoldReward()),
+		Gold:    int32(ms.getGoldReward()),
 		CardIDs: ms.getCards(),
 	}, nil
 }
@@ -1290,10 +1290,10 @@ func (p *player) syncInfoToGame() {
 		}
 
 		p.agent.PushBackend(pb.MessageID_CA2G_UPDATE_CAMPAIGN_PLAYER_INFO, &pb.GCampaignPlayerInfo{
-			CountryID: p.getCountryID(),
-			CityID: int32(p.getCityID()),
-			CityJob: p.getCityJob(),
-			CountryJob: p.getCountryJob(),
+			CountryID:   p.getCountryID(),
+			CityID:      int32(p.getCityID()),
+			CityJob:     p.getCityJob(),
+			CountryJob:  p.getCountryJob(),
 			CountryName: countryName,
 		})
 	}
@@ -1301,11 +1301,11 @@ func (p *player) syncInfoToGame() {
 
 func (p *player) packSimpleMsg() *pb.CampaignSimplePlayer {
 	return &pb.CampaignSimplePlayer{
-		Uid: uint64(p.getUid()),
-		Name: p.getName(),
-		HeadImg: p.getHeadImg(),
+		Uid:       uint64(p.getUid()),
+		Name:      p.getName(),
+		HeadImg:   p.getHeadImg(),
 		HeadFrame: p.getHeadFrame(),
-		PvpScore: int32(p.getPvpScore()),
+		PvpScore:  int32(p.getPvpScore()),
 	}
 }
 
@@ -1321,7 +1321,7 @@ func (p *player) fetchWarEndRecord() *pb.CaStateWarEndArg {
 	}
 
 	p.attr.SetInt("warVer", curWarVer)
-	if ver != curWarVer - 1 {
+	if ver != curWarVer-1 {
 		p.attr.Del("lcontribution")
 		return nil
 	}

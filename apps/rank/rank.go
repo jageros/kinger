@@ -13,10 +13,10 @@ import (
 )
 
 type rankBoard struct {
-	msg           *pb.RankInfo
+	msg      *pb.RankInfo
 	rankType pb.RankType
 	inSeason bool
-	area int
+	area     int
 
 	todayRankAttr *attribute.AttrMgr
 	todayRankList *rankList
@@ -27,9 +27,9 @@ type rankBoard struct {
 
 func newRankBoard(rankType pb.RankType) *rankBoard {
 	return &rankBoard{
-		rankType: rankType,
+		rankType:      rankType,
 		todayRankList: newRankList(rankType),
-		curRankList: newRankList(rankType),
+		curRankList:   newRankList(rankType),
 	}
 }
 
@@ -117,7 +117,7 @@ func (rb *rankBoard) packMsg() *pb.RankInfo {
 func (rb *rankBoard) getRankAttrName(isToday bool) string {
 	iRt := getIRankType(rb.rankType)
 	if iRt == nil {
-		return  ""
+		return ""
 	}
 	return iRt.getRankAttrName(isToday)
 }
@@ -251,19 +251,19 @@ func (rb *rankBoard) refreshTodayRankList() common.UInt64Set {
 		}
 
 		todayPlayer.update(&pb.UpdatePvpScoreArg{
-			PvpScore: int32(ri.getPvpScore()),
-			Camp: int32(ri.getCamp()),
-			HandCards: ri.getFightCards(),
-			Name: ri.getName(),
-			WinDiff: int32(ri.getSeasonWinDiff()),
-			WinCnt: int32(ri.getSeasonWinCnt()),
-			RebornCnt: int32(ri.getRebornCnt()),
+			PvpScore:       int32(ri.getPvpScore()),
+			Camp:           int32(ri.getCamp()),
+			HandCards:      ri.getFightCards(),
+			Name:           ri.getName(),
+			WinDiff:        int32(ri.getSeasonWinDiff()),
+			WinCnt:         int32(ri.getSeasonWinCnt()),
+			RebornCnt:      int32(ri.getRebornCnt()),
 			CrossAreaHonor: int32(ri.getCrossAreaHonor()),
-			RankScore: int32(ri.getRankScore()),
+			RankScore:      int32(ri.getRankScore()),
 			//CrossAreaBlotHonor: int32(ri.getCrossAreaBlotHonor()),
 		})
 
-		rb.setRankItemRank(todayPlayer, i + 1, lastRank)
+		rb.setRankItemRank(todayPlayer, i+1, lastRank)
 
 		todayPlayer.attr.Save(false)
 		nowRankList.append(todayPlayer)
@@ -301,7 +301,7 @@ func (rb *rankBoard) clear() {
 	rb.curRankAttr.Save(false)
 }
 
-func (rb *rankBoard) onRefresh () {
+func (rb *rankBoard) onRefresh() {
 	weekDay := int(time.Now().Weekday())
 	if weekDay == 1 && rb.rankType == pb.RankType_RtCrossArea {
 		updateTime := rb.todayRankAttr.GetInt32("updateTime")
@@ -309,18 +309,18 @@ func (rb *rankBoard) onRefresh () {
 		now := time.Now().Unix()
 		curDay := timer.GetDayNo(now)
 
-		if subDay := curDay - updateDay;  subDay > 0 {
+		if subDay := curDay - updateDay; subDay > 0 {
 			rb.seedReward()
 			rb.clear()
 		}
 	}
 }
 
-func (rb *rankBoard) seedReward () {
+func (rb *rankBoard) seedReward() {
 	var uidList []uint64
 	var honorList []int32
 
-	for _, item := range rb.curRankList.items{
+	for _, item := range rb.curRankList.items {
 		if item.getCrossAreaHonor() < 0 {
 			break
 		}
@@ -329,7 +329,7 @@ func (rb *rankBoard) seedReward () {
 	}
 
 	logic.PushBackend(gconsts.AppGame, 1, pb.MessageID_R2G_SEND_RANK_HONOR, &pb.RankHonorInfo{
-		Uids: uidList,
+		Uids:   uidList,
 		Honors: honorList,
 	})
 }
@@ -337,7 +337,7 @@ func (rb *rankBoard) seedReward () {
 func (rb *rankBoard) getCurRankList(maxRank int) []uint64 {
 	var rankUids []uint64
 	rb.curRankList.forEach(func(i int, ri *rankItem) bool {
-		if i + 1 > maxRank {
+		if i+1 > maxRank {
 			return false
 		}
 		rankUids = append(rankUids, uint64(ri.getUid()))

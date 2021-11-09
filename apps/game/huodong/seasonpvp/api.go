@@ -1,15 +1,15 @@
 package seasonpvp
 
 import (
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/attribute"
-	"kinger/gamedata"
-	"kinger/proto/pb"
+	htypes "kinger/apps/game/huodong/types"
+	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
-	htypes "kinger/apps/game/huodong/types"
+	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/glog"
+	"kinger/proto/pb"
 	"strconv"
-	"kinger/apps/game/module"
 	"time"
 )
 
@@ -24,8 +24,8 @@ func NewSeasonPvpHd(area int, attr *attribute.AttrMgr, gdata interface{}) htypes
 	}
 
 	hd := &seasonPvpHd{
-		area: area,
-		sessionDatas: map[int]*seasonPvpHdSessionData{},
+		area:               area,
+		sessionDatas:       map[int]*seasonPvpHdSessionData{},
 		loadingSessionData: map[int]chan struct{}{},
 	}
 	hd.I = hd
@@ -45,8 +45,8 @@ func NewSeasonPvpHd(area int, attr *attribute.AttrMgr, gdata interface{}) htypes
 
 func NewSeasonPvpHdByAttr(area int, attr *attribute.AttrMgr) *seasonPvpHd {
 	hd := &seasonPvpHd{
-		area: area,
-		sessionDatas: map[int]*seasonPvpHdSessionData{},
+		area:               area,
+		sessionDatas:       map[int]*seasonPvpHdSessionData{},
 		loadingSessionData: map[int]chan struct{}{},
 	}
 	hd.I = hd
@@ -57,7 +57,7 @@ func NewSeasonPvpHdByAttr(area int, attr *attribute.AttrMgr) *seasonPvpHd {
 }
 
 func GetSeasonPvpHandCardInfo(player types.IPlayer) (gamedata.ISeasonPvp, int, pb.BattleHandType, *pb.SeasonPvpChooseCardData,
-	*pb.FetchSeasonHandCardReply)  {
+	*pb.FetchSeasonHandCardReply) {
 
 	hd := htypes.Mod.GetHuodong(player.GetArea(), pb.HuodongTypeEnum_HSeasonPvp)
 	if hd == nil || hd.IsClose() {
@@ -86,11 +86,11 @@ func GetSeasonPvpHandCardInfo(player types.IPlayer) (gamedata.ISeasonPvp, int, p
 	}
 
 	return seasonData, playerData.getCamp(), pb.BattleHandType_Random, nil, &pb.FetchSeasonHandCardReply{
-		ChangeType: pb.FetchSeasonHandCardReply_ChangeTypeEnum(seasonData.GetChangeHandType()[0]),
-		CardIDs: handCards,
+		ChangeType:   pb.FetchSeasonHandCardReply_ChangeTypeEnum(seasonData.GetChangeHandType()[0]),
+		CardIDs:      handCards,
 		ChangeMaxPro: int32(seasonData.GetChangeHandType()[1]),
 		ChangeCurPro: int32(playerData.getHandCardCurPro()),
-		WinCnt: int32(playerData.getHandCardWinCnt()),
+		WinCnt:       int32(playerData.getHandCardWinCnt()),
 	}
 }
 

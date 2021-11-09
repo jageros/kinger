@@ -1,10 +1,10 @@
 package gamedata
 
 import (
-	"kinger/common/consts"
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"errors"
+	"kinger/common/consts"
 )
 
 type IRechargeGameData interface {
@@ -14,14 +14,14 @@ type IRechargeGameData interface {
 }
 
 type Recharge struct {
-	GoodsID string `json:"__id__"`
-	Price int `json:"price"`
-	JadeCnt int `json:"jadeCnt"`
-	JadePrice int `json:"jadePrice"`
-	Areas [][]int `json:"areas"`
-	FirstJadeCnt int `json:"firstJadeCnt"`
-	FirstJadrVer int `json:"firstJaceVersion"`
-	areaLimit *AreaLimitConfig
+	GoodsID      string  `json:"__id__"`
+	Price        int     `json:"price"`
+	JadeCnt      int     `json:"jadeCnt"`
+	JadePrice    int     `json:"jadePrice"`
+	Areas        [][]int `json:"areas"`
+	FirstJadeCnt int     `json:"firstJadeCnt"`
+	FirstJadrVer int     `json:"firstJaceVersion"`
+	areaLimit    *AreaLimitConfig
 }
 
 func (r *Recharge) init() {
@@ -30,8 +30,8 @@ func (r *Recharge) init() {
 
 type RechargeGameData struct {
 	baseGameData
-	areaVersion int
-	rawData []byte
+	areaVersion     int
+	rawData         []byte
 	goodsList       []*Recharge
 	areaToGoodsList map[int][]*Recharge
 }

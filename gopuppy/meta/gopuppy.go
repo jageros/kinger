@@ -6,10 +6,9 @@ package meta
 import (
 	"errors"
 
-	"kinger/gopuppy/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/gopuppy/proto/pb"
 )
-
 
 //@ A2C_REGISTER_APP    req: AppInfo    resp: ok or err
 //------------------------------------------------------------------------------------------
@@ -1431,4 +1430,3 @@ func (m *L2C_PLAYER_LOGOUT_Meta) DecodeReply(data []byte) (interface{}, error) {
 }
 
 //------------------------------------ L2C_PLAYER_LOGOUT END ----------------------------------------
-

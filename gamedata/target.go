@@ -7,32 +7,32 @@ import (
 )
 
 type Target struct {
-	ID            int     `json:"__id__"`
-	Relative      int     `json:"relative"`
-	Types         []int   `json:"type"`
-	Side          int     `json:"targetCamp"`
-	TargetBat     []int   `json:"targetBat"`
-	Turn          int     `json:"targeTurn"`
-	Poses           []int   `json:"targetPos"`
-	Camp          []int     `json:"targetNation"`
-	TargetSkill   []int32 `json:"targetSkill"`
-	TargetSkillFog []int32 `json:"targetSkill_fog"`
-	InitSide      []int   `json:"targetIniCamp"`
-	Random        int     `json:"random"`
-	TargetAtt     []int   `json:"targetAtt"`
-	CardType      int     `json:"cardType"`
-	PreTurnSide   int     `json:"preTurnCamp"`
-	Type2         []int   `json:"type2"`
-	Sequential    [][]int `json:"sequential"`
-	NoTargetSkill []int32 `json:"noTargetSkill"`
-	NoTargetSkillFog []int32 `json:"notargetSkill_fog"`
-	TargetCard []uint32 `json:"targetCard"`
-	NotargetCard []uint32 `json:"notargetCard"`
-	TargetClean int `json:"targeRoot"`
-	Condition []string `json:"condition"`
-	TargetSummon int `json:"targetSummon"`
-	Surrender int `json:"surrender"`
-	TargetEquip int `json:"targetItem"`
+	ID               int      `json:"__id__"`
+	Relative         int      `json:"relative"`
+	Types            []int    `json:"type"`
+	Side             int      `json:"targetCamp"`
+	TargetBat        []int    `json:"targetBat"`
+	Turn             int      `json:"targeTurn"`
+	Poses            []int    `json:"targetPos"`
+	Camp             []int    `json:"targetNation"`
+	TargetSkill      []int32  `json:"targetSkill"`
+	TargetSkillFog   []int32  `json:"targetSkill_fog"`
+	InitSide         []int    `json:"targetIniCamp"`
+	Random           int      `json:"random"`
+	TargetAtt        []int    `json:"targetAtt"`
+	CardType         int      `json:"cardType"`
+	PreTurnSide      int      `json:"preTurnCamp"`
+	Type2            []int    `json:"type2"`
+	Sequential       [][]int  `json:"sequential"`
+	NoTargetSkill    []int32  `json:"noTargetSkill"`
+	NoTargetSkillFog []int32  `json:"notargetSkill_fog"`
+	TargetCard       []uint32 `json:"targetCard"`
+	NotargetCard     []uint32 `json:"notargetCard"`
+	TargetClean      int      `json:"targeRoot"`
+	Condition        []string `json:"condition"`
+	TargetSummon     int      `json:"targetSummon"`
+	Surrender        int      `json:"surrender"`
+	TargetEquip      int      `json:"targetItem"`
 }
 
 func (t *Target) String() string {

@@ -1,21 +1,21 @@
 package bag
 
 import (
-	"kinger/gopuppy/attribute"
 	"kinger/apps/game/module/types"
+	"kinger/gopuppy/attribute"
 )
 
 type bagSt struct {
-	attr *attribute.MapAttr
+	attr      *attribute.MapAttr
 	itemsAttr *attribute.MapAttr
-	type_ int
-	items map[string]types.IItem
+	type_     int
+	items     map[string]types.IItem
 }
 
 func newBag(type_ int, attr *attribute.MapAttr) *bagSt {
 	b := &bagSt{
 		type_: type_,
-		attr: attr,
+		attr:  attr,
 		items: map[string]types.IItem{},
 	}
 

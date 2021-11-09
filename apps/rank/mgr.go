@@ -1,15 +1,15 @@
 package main
 
 import (
-	"kinger/gopuppy/apps/center/api"
-	"kinger/gopuppy/apps/logic"
-	gconsts "kinger/gopuppy/common/consts"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common"
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common/timer"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/apps/center/api"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	gconsts "kinger/gopuppy/common/consts"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
 	"kinger/proto/pb"
 	"time"
 )
@@ -17,28 +17,28 @@ import (
 var rankMgr *rankMgrSt
 
 const (
-	attrTodayRankItem = "todayRankItem"
-	attrCurRankItem = "curRankItem"
-	attrTodayRank = "pvpRank"
-	attrCurRank = "curPvpRank"
-	attrTodaySeasonRank = "seasonRank"
-	attrCurSeasonRank = "curSeasonRank"
+	attrTodayRankItem      = "todayRankItem"
+	attrCurRankItem        = "curRankItem"
+	attrTodayRank          = "pvpRank"
+	attrCurRank            = "curPvpRank"
+	attrTodaySeasonRank    = "seasonRank"
+	attrCurSeasonRank      = "curSeasonRank"
 	attrTodayCrossAreaRank = "crossAreaRank"
-	attrCurCrossAreaRank = "curCrossAreaRank"
+	attrCurCrossAreaRank   = "curCrossAreaRank"
 )
 
 type rankMgrSt struct {
-	todayPlayers map[common.UUid]*rankItem  // 今天所有榜的玩家数据
-	curPlayers map[common.UUid]*rankItem    // 当前所有榜的玩家数据
-	totalBoard *rankBoard                   // 全服总榜
-	type2Boards map[pb.RankType]map[int]*rankBoard  // 分区天梯、分区锦标赛、分区跨区荣誉
+	todayPlayers map[common.UUid]*rankItem          // 今天所有榜的玩家数据
+	curPlayers   map[common.UUid]*rankItem          // 当前所有榜的玩家数据
+	totalBoard   *rankBoard                         // 全服总榜
+	type2Boards  map[pb.RankType]map[int]*rankBoard // 分区天梯、分区锦标赛、分区跨区荣誉
 }
 
 func newRankMgr() {
 	rankMgr = &rankMgrSt{
 		todayPlayers: map[common.UUid]*rankItem{},
-		curPlayers: map[common.UUid]*rankItem{},
-		type2Boards: map[pb.RankType]map[int]*rankBoard{},
+		curPlayers:   map[common.UUid]*rankItem{},
+		type2Boards:  map[pb.RankType]map[int]*rankBoard{},
 	}
 
 	timer.AddTicker(15*time.Minute, func() {
@@ -62,7 +62,7 @@ func (rm *rankMgrSt) getBoard(rankType pb.RankType, area int) *rankBoard {
 	return area2broad[area]
 }
 
-func (rm *rankMgrSt) getBoardUsersByArea(rankType pb.RankType, maxRank int, area int)  *pb.Area2UserRanking{
+func (rm *rankMgrSt) getBoardUsersByArea(rankType pb.RankType, maxRank int, area int) *pb.Area2UserRanking {
 	area2Board, ok := rm.type2Boards[rankType]
 	if !ok {
 		return nil
@@ -166,8 +166,8 @@ func (rm *rankMgrSt) refreshCurRankList(needReply bool) {
 		}
 	}
 
-
-L:	for uid, ri := range rm.curPlayers {
+L:
+	for uid, ri := range rm.curPlayers {
 		uid2 := uint64(uid)
 		for _, players := range allCurPlayers {
 			if players.Contains(uid2) {
@@ -192,7 +192,8 @@ func (rm *rankMgrSt) refreshTodayRankList() {
 		}
 	}
 
-L:	for uid, ri := range rm.todayPlayers {
+L:
+	for uid, ri := range rm.todayPlayers {
 		uid2 := uint64(uid)
 		for _, players := range allTodayPlayers {
 			if players.Contains(uid2) {

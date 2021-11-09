@@ -2,8 +2,8 @@ package gamedata
 
 import (
 	"encoding/json"
-	"strings"
 	"strconv"
+	"strings"
 )
 
 type ActivityFirstRechargeReward struct {

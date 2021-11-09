@@ -1,28 +1,28 @@
 package gamedata
 
 import (
-	"kinger/common/consts"
 	"encoding/json"
+	"kinger/common/consts"
 	"kinger/gopuppy/common/utils"
 	"math/rand"
 	"time"
 )
 
 type Mission struct {
-	ID int `json:"__id__"`
-	Type int `json:"type"`
-	Process int `json:"process"`
-	Camp int `json:"country"`
-	CardRare int `json:"cardRare"`
-	Jade int `json:"jade"`
+	ID         int `json:"__id__"`
+	Type       int `json:"type"`
+	Process    int `json:"process"`
+	Camp       int `json:"country"`
+	CardRare   int `json:"cardRare"`
+	Jade       int `json:"jade"`
 	UnlockRank int `json:"unlockRank"`
-	Gold int `json:"gold"`
-	Bowlder int `json:"bowlder"`
+	Gold       int `json:"gold"`
+	Bowlder    int `json:"bowlder"`
 }
 
 type MissionGameData struct {
 	baseGameData
-	Missions       map[int]*Mission
+	Missions      map[int]*Mission
 	Rank2Missions map[int][]*Mission
 }
 
@@ -64,19 +64,20 @@ func (mgd *MissionGameData) GetCanAcceptMission(pvpLevel, fightCampType, fightCa
 		fightCampType = 4
 	}
 
-	if pvpLevel < 9 && fightCampType == 2{
+	if pvpLevel < 9 && fightCampType == 2 {
 		rad := rand.NewSource(time.Now().Unix())
 		n := rand.New(rad).Int()
 		if n%2 == 0 {
 			fightCampType = 1
-		}else {
+		} else {
 			fightCampType = 3
 		}
 	}
 
 	for lv := 1; lv <= pvpLevel; lv++ {
 		rl := mgd.Rank2Missions[lv]
-L:		for _, m := range rl {
+	L:
+		for _, m := range rl {
 			for _, id := range ignore {
 				if id == m.ID {
 					continue L
@@ -84,15 +85,15 @@ L:		for _, m := range rl {
 			}
 
 			switch fightCampType {
-			case 1:  // 跟当前阵容相关
+			case 1: // 跟当前阵容相关
 				if m.Camp != fightCamp {
 					continue
 				}
-			case 2:  // 跟其他阵容相关
+			case 2: // 跟其他阵容相关
 				if m.Camp == 0 || m.Camp == fightCamp {
 					continue
 				}
-			case 3:  // 跟阵容无关
+			case 3: // 跟阵容无关
 				if m.Camp > 0 {
 					continue
 				}

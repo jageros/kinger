@@ -4,19 +4,19 @@ import (
 	//pconsts "kinger/gopuppy/common/consts"
 	"kinger/gopuppy/common/evq"
 
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common/rpubsub"
-	"kinger/gopuppy/attribute"
 	"kinger/common/config"
 	"kinger/common/consts"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/rpubsub"
 )
 
 var (
-	allGameData  = make(map[string]IGameData)
-	allGameDataList []IGameData
-	gameDataPath = "jsondata"
+	allGameData         = make(map[string]IGameData)
+	allGameDataList     []IGameData
+	gameDataPath        = "jsondata"
 	handjoyGameDataName = map[string]string{}
-	OnReload func()
+	OnReload            func()
 )
 
 type IGameData interface {
@@ -37,15 +37,15 @@ func (g *baseGameData) AddReloadCallback(f func(data IGameData)) {
 }
 
 func (g *baseGameData) load() error {
-	attr := attribute.NewAttrMgr("gamedata", wrapName( g.i.name() ), true)
+	attr := attribute.NewAttrMgr("gamedata", wrapName(g.i.name()), true)
 	err := attr.Load()
 	if err != nil {
-		glog.Errorf("load %s ReadFile error, %s", wrapName( g.i.name() ), err)
+		glog.Errorf("load %s ReadFile error, %s", wrapName(g.i.name()), err)
 		return err
 	}
 
 	if err := g.i.init([]byte(attr.GetStr("data"))); err != nil {
-		glog.Errorf("load %s init error, %s", wrapName( g.i.name() ), err)
+		glog.Errorf("load %s init error, %s", wrapName(g.i.name()), err)
 		return err
 	}
 
@@ -92,7 +92,7 @@ func onReload(ev evq.IEvent) {
 }
 
 func addGameData(gdata IGameData) {
-	name := wrapName( gdata.name() )
+	name := wrapName(gdata.name())
 	if _, ok := allGameData[name]; !ok {
 		allGameData[name] = gdata
 		allGameDataList = append(allGameDataList, gdata)
@@ -120,7 +120,7 @@ func Load() {
 		allRewardTblNames := getAllRewardTblName()
 		for _, name := range allRewardTblNames {
 			if _, ok := allGameData[name]; !ok {
-				addGameData( newRewardTblGameData(name) )
+				addGameData(newRewardTblGameData(name))
 			}
 		}
 
@@ -140,101 +140,101 @@ func Load() {
 
 	//allGameData[consts.Duel] = newDuelGameData()
 	//allGameData[consts.FreeJddeAds] = newFreeJadeAdsGameData()
-	addGameData( newAreaConfigGameData() )
-	addGameData( newExchangeGameData() )
-	addGameData( newTextGameData() )
-	addGameData( newLevelGameData() )
-	addGameData( newPoolGameData() )
-	addGameData( newBonusGameData() )
+	addGameData(newAreaConfigGameData())
+	addGameData(newExchangeGameData())
+	addGameData(newTextGameData())
+	addGameData(newLevelGameData())
+	addGameData(newPoolGameData())
+	addGameData(newBonusGameData())
 	//addGameData( newDiyGameData() )
-	addGameData( newSkillGameData() )
-	addGameData( newTargetGameData() )
-	addGameData( newTreasureGameData() )
-	addGameData( newTreasureRewardFakeGameData() )
-	addGameData( newTreasureDailyFakeGameData() )
-	addGameData( newRankGameData() )
-	addGameData( newTutorialGameData() )
-	addGameData( name1 )
-	addGameData( name2 )
-	addGameData( name3 )
-	addGameData( name4 )
-	addGameData( name5 )
-	addGameData( newGiftCodeGameData() )
-	addGameData( newTreasureShareGameData() )
-	addGameData( newIosRechargeGameData() )
-	addGameData( newLimitGiftGameData() )
-	addGameData( newSoldTreasureGameData() )
-	addGameData( newSoldGoldGameData() )
-	addGameData( newFreeGoldAdsGameData() )
-	addGameData( newFreeTreasureAdsGameData() )
-	addGameData( newFreeGoodTreasureAdsGameData() )
-	addGameData( newMissionGameData() )
-	addGameData( newMissionTreasureGameData() )
-	addGameData( newNewbiePvpGameData() )
-	addGameData( newWxInviteRewardGameData() )
-	addGameData( newWxRechargeGameData() )
-	addGameData( newWxLimitGiftGameData() )
-	addGameData( newAndroidRechargeGameData() )
-	addGameData( newAndroidLimitGiftGameData() )
-	addGameData( newSeasonPvpGameData() )
-	addGameData( newHeadFrameGameData() )
-	addGameData( newCardSkinGameData() )
-	addGameData( newSeasonRewardGameData() )
-	addGameData( newRebornSoldCardGameData() )
-	addGameData( newRebornSoldPrivGameData() )
-	addGameData( newRebornSoldSkinGameData() )
-	addGameData( newRebornCardCaculGameData() )
-	addGameData( newRebornGoldCaculGameData() )
-	addGameData( newRebornTreausreGameData() )
-	addGameData( newEquipGameData() )
-	addGameData( newEmojiGameData() )
-	addGameData( newRebornSoldEquipGameData() )
-	addGameData( newCityGameData() )
-	addGameData( newRoadGameData() )
-	addGameData( newCampaignParamGameData() )
-	addGameData( newRebornCntGameData() )
-	addGameData( newHuodongGameData() )
-	addGameData( newHuodongRewardGameData() )
-	addGameData( newLuckBagRewardGameData() )
-	addGameData( newFunctionPriceGameData() )
-	addGameData( newPieceCardGameData() )
-	addGameData( newPieceSkinGameData() )
-	addGameData( newAiMatchGameData() )
-	addGameData( newRecruitTreasureGameData() )
+	addGameData(newSkillGameData())
+	addGameData(newTargetGameData())
+	addGameData(newTreasureGameData())
+	addGameData(newTreasureRewardFakeGameData())
+	addGameData(newTreasureDailyFakeGameData())
+	addGameData(newRankGameData())
+	addGameData(newTutorialGameData())
+	addGameData(name1)
+	addGameData(name2)
+	addGameData(name3)
+	addGameData(name4)
+	addGameData(name5)
+	addGameData(newGiftCodeGameData())
+	addGameData(newTreasureShareGameData())
+	addGameData(newIosRechargeGameData())
+	addGameData(newLimitGiftGameData())
+	addGameData(newSoldTreasureGameData())
+	addGameData(newSoldGoldGameData())
+	addGameData(newFreeGoldAdsGameData())
+	addGameData(newFreeTreasureAdsGameData())
+	addGameData(newFreeGoodTreasureAdsGameData())
+	addGameData(newMissionGameData())
+	addGameData(newMissionTreasureGameData())
+	addGameData(newNewbiePvpGameData())
+	addGameData(newWxInviteRewardGameData())
+	addGameData(newWxRechargeGameData())
+	addGameData(newWxLimitGiftGameData())
+	addGameData(newAndroidRechargeGameData())
+	addGameData(newAndroidLimitGiftGameData())
+	addGameData(newSeasonPvpGameData())
+	addGameData(newHeadFrameGameData())
+	addGameData(newCardSkinGameData())
+	addGameData(newSeasonRewardGameData())
+	addGameData(newRebornSoldCardGameData())
+	addGameData(newRebornSoldPrivGameData())
+	addGameData(newRebornSoldSkinGameData())
+	addGameData(newRebornCardCaculGameData())
+	addGameData(newRebornGoldCaculGameData())
+	addGameData(newRebornTreausreGameData())
+	addGameData(newEquipGameData())
+	addGameData(newEmojiGameData())
+	addGameData(newRebornSoldEquipGameData())
+	addGameData(newCityGameData())
+	addGameData(newRoadGameData())
+	addGameData(newCampaignParamGameData())
+	addGameData(newRebornCntGameData())
+	addGameData(newHuodongGameData())
+	addGameData(newHuodongRewardGameData())
+	addGameData(newLuckBagRewardGameData())
+	addGameData(newFunctionPriceGameData())
+	addGameData(newPieceCardGameData())
+	addGameData(newPieceSkinGameData())
+	addGameData(newAiMatchGameData())
+	addGameData(newRecruitTreasureGameData())
 	addGameData(newActivityGameData())
 	addGameData(newActivityOpenConditionGameData())
 	addGameData(newActivityTimeGameData())
-	addGameData( newRandomShopGameData() )
-	addGameData( newMatchParamGameData() )
-	addGameData( newTreasureEventGameData() )
-	addGameData( newPrivilegeGameData() )
-	addGameData( newChatPopGameData() )
-	addGameData( newRankHonorRewardData() )
-	addGameData( newSoldGoldGiftGameData() )
-	addGameData( newWinningRateGameData() )
-	addGameData( newRecruitRefreshConfigGameData() )
-	addGameData( newLeagueGameData() )
-	addGameData( newLeagueRewardGameData() )
-	addGameData( newLeagueRankRewardGameData() )
+	addGameData(newRandomShopGameData())
+	addGameData(newMatchParamGameData())
+	addGameData(newTreasureEventGameData())
+	addGameData(newPrivilegeGameData())
+	addGameData(newChatPopGameData())
+	addGameData(newRankHonorRewardData())
+	addGameData(newSoldGoldGiftGameData())
+	addGameData(newWinningRateGameData())
+	addGameData(newRecruitRefreshConfigGameData())
+	addGameData(newLeagueGameData())
+	addGameData(newLeagueRewardGameData())
+	addGameData(newLeagueRankRewardGameData())
 
 	if config.GetConfig().IsMultiLan {
-		addGameData( nameEn1 )
-		addGameData( nameEn2 )
-		addGameData( newAndroidHandJoyLimitGiftGameData() )
-		addGameData( newIosHandJoyLimitGiftGameData() )
-		addGameData( newSoldGoldHandjoyGameData() )
-		addGameData( newSoldTreasureHandjoyGameData() )
-		addGameData( newMultiLanSeasonPvpGameData() )
+		addGameData(nameEn1)
+		addGameData(nameEn2)
+		addGameData(newAndroidHandJoyLimitGiftGameData())
+		addGameData(newIosHandJoyLimitGiftGameData())
+		addGameData(newSoldGoldHandjoyGameData())
+		addGameData(newSoldTreasureHandjoyGameData())
+		addGameData(newMultiLanSeasonPvpGameData())
 	} else {
-		addGameData( newWarShopCardGameData() )
-		addGameData( newWarShopEquipGameData() )
-		addGameData( newWarShopSkinGameData() )
-		addGameData( newWarShopResGameData() )
+		addGameData(newWarShopCardGameData())
+		addGameData(newWarShopEquipGameData())
+		addGameData(newWarShopSkinGameData())
+		addGameData(newWarShopResGameData())
 	}
 
 	allRewardTblNames := getAllRewardTblName()
 	for _, name := range allRewardTblNames {
-		addGameData( newRewardTblGameData(name) )
+		addGameData(newRewardTblGameData(name))
 	}
 
 	for i := 0; i < len(allGameDataList); i++ {

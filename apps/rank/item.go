@@ -1,15 +1,15 @@
 package main
 
 import (
-	"kinger/gopuppy/common/glog"
+	"kinger/common/consts"
+	"kinger/common/utils"
+	"kinger/gamedata"
 	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/glog"
+	"kinger/proto/pb"
 	"strconv"
 	"time"
-	"kinger/gamedata"
-	"kinger/common/consts"
-	"kinger/gopuppy/common"
-	"kinger/proto/pb"
-	"kinger/common/utils"
 )
 
 //const maxRank = 200
@@ -17,7 +17,7 @@ import (
 type rankList struct {
 	rankType pb.RankType
 	uid2Item map[common.UUid]*rankItem
-	items []*rankItem
+	items    []*rankItem
 }
 
 func newRankList(rankType pb.RankType) *rankList {
@@ -34,7 +34,7 @@ func (rl *rankList) fixSize() {
 	if rl.rankType == pb.RankType_RtCrossArea {
 		var honor []*rankItem
 		var blot []*rankItem
-		for i, item := range rl.items{
+		for i, item := range rl.items {
 			if item.getCrossAreaHonor() < 0 {
 				index = i
 				break
@@ -42,21 +42,21 @@ func (rl *rankList) fixSize() {
 		}
 		if index > 0 {
 			if len(rl.items[index:]) > maxRank {
-				for i := index+maxRank; i < size; i++ {
+				for i := index + maxRank; i < size; i++ {
 					delete(rl.uid2Item, rl.items[i].getUid())
 				}
-				blot = rl.items[index: index + maxRank]
-			}else {
+				blot = rl.items[index : index+maxRank]
+			} else {
 				blot = rl.items[index:]
 			}
 
 			itemsSize := len(rl.items[:index])
-			if  itemsSize > maxRank {
+			if itemsSize > maxRank {
 				for i := maxRank; i < itemsSize; i++ {
 					delete(rl.uid2Item, rl.items[i].getUid())
 				}
 				honor = rl.items[:maxRank]
-			}else {
+			} else {
 				honor = rl.items[:index]
 			}
 
@@ -65,7 +65,7 @@ func (rl *rankList) fixSize() {
 		}
 	}
 
-	if size > maxRank && index == 0{
+	if size > maxRank && index == 0 {
 		for i := maxRank; i < size; i++ {
 			delete(rl.uid2Item, rl.items[i].getUid())
 		}
@@ -73,7 +73,7 @@ func (rl *rankList) fixSize() {
 	}
 }
 
-func (rl *rankList) forEach(callback func(i int, ri *rankItem) bool)  {
+func (rl *rankList) forEach(callback func(i int, ri *rankItem) bool) {
 	for i, ri := range rl.items {
 		if !callback(i, ri) {
 			return
@@ -86,7 +86,7 @@ func (rl *rankList) append(ri *rankItem) {
 		return
 	}
 
-	if rl.rankType == pb.RankType_RtCrossArea && ri.getCrossAreaHonor() == 0{
+	if rl.rankType == pb.RankType_RtCrossArea && ri.getCrossAreaHonor() == 0 {
 		return
 	}
 
@@ -110,7 +110,6 @@ func (rl *rankList) Less(i, j int) bool {
 	return iRt.rankLess(rl, i, j)
 }
 
-
 type rankItem struct {
 	uid  common.UUid
 	attr *attribute.AttrMgr
@@ -132,15 +131,15 @@ func newRankItemByAttr(uid common.UUid, attr *attribute.AttrMgr) *rankItem {
 
 func (ri *rankItem) packItemMsg(rankType iRankType, isTotalBoard bool) *pb.RankItem {
 	msg := &pb.RankItem{
-		Uid:      uint64(ri.uid),
-		Name:     ri.getName(),
-		PvpScore: int32(ri.getPvpScore()),
-		Rank:     int32(rankType.getRank(ri, isTotalBoard)),
-		LastRank: int32(ri.getLastRank()),
-		Camp:     int32(ri.getCamp()),
-		WinDiff: int32(ri.getSeasonWinDiff()),
+		Uid:            uint64(ri.uid),
+		Name:           ri.getName(),
+		PvpScore:       int32(ri.getPvpScore()),
+		Rank:           int32(rankType.getRank(ri, isTotalBoard)),
+		LastRank:       int32(ri.getLastRank()),
+		Camp:           int32(ri.getCamp()),
+		WinDiff:        int32(ri.getSeasonWinDiff()),
 		CrossAreaHonor: int32(ri.getCrossAreaHonor()),
-		RankScore: int32(ri.getRankScore()),
+		RankScore:      int32(ri.getRankScore()),
 	}
 
 	msg = rankType.getMsgData(ri, msg, isTotalBoard)
@@ -318,7 +317,7 @@ func (ri *rankItem) oldGetFightCards() []*pb.SkinGCard {
 }
 
 func (ri *rankItem) getFightCards() []*pb.SkinGCard {
-	fightCardsAttr :=  ri.attr.GetListAttr("fightCards2")
+	fightCardsAttr := ri.attr.GetListAttr("fightCards2")
 	if fightCardsAttr == nil {
 		return ri.oldGetFightCards()
 	}
@@ -327,8 +326,8 @@ func (ri *rankItem) getFightCards() []*pb.SkinGCard {
 		cardAttr := fightCardsAttr.GetMapAttr(index)
 		cards = append(cards, &pb.SkinGCard{
 			GCardID: cardAttr.GetUInt32("gcardID"),
-			Skin: cardAttr.GetStr("skin"),
-			Equip: cardAttr.GetStr("equip"),
+			Skin:    cardAttr.GetStr("skin"),
+			Equip:   cardAttr.GetStr("equip"),
 		})
 		return true
 	})
@@ -428,24 +427,24 @@ func (ri *rankItem) onMultiLanSeasonPvpBegin(now int64) {
 	}
 
 	/*
-	ri.attr.SetInt64("updateTime", now)
-	if curPvpLevel >= 31 {
-		resetLevel = 21
-	} else if curPvpLevel >= 28 {
-		resetLevel = 20
-	} else if curPvpLevel >= 25 {
-		resetLevel = 19
-	} else if curPvpLevel >= 22 {
-		resetLevel = 18
-	} else if curPvpLevel >= 19 {
-		resetLevel = 17
-	} else {
-		resetLevel = 16
-	}
+		ri.attr.SetInt64("updateTime", now)
+		if curPvpLevel >= 31 {
+			resetLevel = 21
+		} else if curPvpLevel >= 28 {
+			resetLevel = 20
+		} else if curPvpLevel >= 25 {
+			resetLevel = 19
+		} else if curPvpLevel >= 22 {
+			resetLevel = 18
+		} else if curPvpLevel >= 19 {
+			resetLevel = 17
+		} else {
+			resetLevel = 16
+		}
 	*/
 
 	resetLevel = 16
-	rankData, ok := rankGameData.Ranks[resetLevel - 1]
+	rankData, ok := rankGameData.Ranks[resetLevel-1]
 	if !ok {
 		resetPvpScore = 1
 	} else {

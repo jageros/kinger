@@ -1,13 +1,13 @@
 package spring
 
 import (
+	"fmt"
+	atypes "kinger/apps/game/activitys/types"
+	"kinger/apps/game/module"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/common/glog"
 	"kinger/proto/pb"
-	atypes "kinger/apps/game/activitys/types"
-	"kinger/gamedata"
-	"kinger/apps/game/module"
-	"fmt"
 	"strconv"
 )
 
@@ -48,7 +48,7 @@ func rpc_C2S_HuodongExchange(agent *logic.PlayerAgent, arg interface{}) (interfa
 		return nil, gamedata.GameError(3)
 	}
 
-	module.Player.ModifyResource(player, resType, - goodsData.Price)
+	module.Player.ModifyResource(player, resType, -goodsData.Price)
 	itemID, itemName, treasure := goods.exchange(player)
 	pdata.onExchangeGoods(aid, goodsData)
 

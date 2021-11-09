@@ -1,10 +1,10 @@
 package main
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/proto/pb"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/proto/pb"
 	"math/rand"
 )
 
@@ -44,15 +44,15 @@ func getDrawCardGenerator(battleType int, f *fighter) drawCardGenerator {
 
 type drawCard struct {
 	gcardID uint32
-	skin string
-	equip string
+	skin    string
+	equip   string
 }
 
 func newDrawCard(gcardID uint32, skin, equip string) *drawCard {
 	return &drawCard{
 		gcardID: gcardID,
-		skin: skin,
-		equip: equip,
+		skin:    skin,
+		equip:   equip,
 	}
 }
 
@@ -75,17 +75,17 @@ type drawCardPoolSt struct {
 	drawCardPool     []*fightCard // 被观星的，待抓的牌
 	drawCards        []*drawCard  // 可以抓哪些牌（当前阵营）
 	drawHeroesCards  []*drawCard  // 可以抓哪些群雄牌
-	othDrawCards []*drawCard      // 其他两个国家的牌
+	othDrawCards     []*drawCard  // 其他两个国家的牌
 	initHandMinLevel int
-	cardGenerator drawCardGenerator
+	cardGenerator    drawCardGenerator
 
-	disCards        []*drawCard  // 被弃的牌（当前阵营）
-	disHeroesCards  []*drawCard  // 被弃的群雄牌
-	othDisCards []*drawCard      // 被弃的其他两个国家的牌
+	disCards       []*drawCard // 被弃的牌（当前阵营）
+	disHeroesCards []*drawCard // 被弃的群雄牌
+	othDisCards    []*drawCard // 被弃的其他两个国家的牌
 }
 
 func (dcp *drawCardPoolSt) copy() *drawCardPoolSt {
-	cpy := &drawCardPoolSt{ initHandMinLevel: dcp.initHandMinLevel }
+	cpy := &drawCardPoolSt{initHandMinLevel: dcp.initHandMinLevel}
 	cpy.cardGenerator = dcp.cardGenerator
 	cpy.drawCardPool = make([]*fightCard, len(dcp.drawCardPool))
 	copy(cpy.drawCardPool, dcp.drawCardPool)

@@ -39,4 +39,3 @@ func (dg *deskGrid) restoredFromAttr(attr *attribute.MapAttr, situation *battleS
 func (dg *deskGrid) getCopyTarget() iTarget {
 	return dg
 }
-

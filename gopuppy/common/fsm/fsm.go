@@ -11,9 +11,9 @@ type State interface {
 type Event string
 
 type FSM struct {
-	state State
+	state          State
 	stateTransfers map[string]map[Event]State
-	stateChanging bool
+	stateChanging  bool
 }
 
 func NewFSM(state State) *FSM {

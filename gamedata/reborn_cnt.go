@@ -1,12 +1,12 @@
 package gamedata
 
 import (
-	"kinger/common/consts"
 	"encoding/json"
+	"kinger/common/consts"
 )
 
 type RebornCnt struct {
-	Cnt int `json:"__id__"`
+	Cnt     int `json:"__id__"`
 	SkyBook int `json:"book"`
 }
 

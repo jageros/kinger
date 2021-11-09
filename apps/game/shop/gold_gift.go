@@ -1,19 +1,19 @@
 package shop
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/apps/game/module/types"
-	"kinger/proto/pb"
-	"kinger/gamedata"
-	"kinger/common/consts"
-	"kinger/gopuppy/common/timer"
 	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/timer"
+	"kinger/proto/pb"
 	"strconv"
 )
 
 type goldGiftSt struct {
 	player types.IPlayer
-	attr *attribute.MapAttr
+	attr   *attribute.MapAttr
 }
 
 func newGoldGiftSt(player types.IPlayer, cptAttr *attribute.MapAttr) *goldGiftSt {
@@ -24,7 +24,7 @@ func newGoldGiftSt(player types.IPlayer, cptAttr *attribute.MapAttr) *goldGiftSt
 	}
 	return &goldGiftSt{
 		player: player,
-		attr: attr,
+		attr:   attr,
 	}
 }
 
@@ -43,7 +43,7 @@ func (gg *goldGiftSt) getGameData() *gamedata.SoldGoldGift {
 
 func (gg *goldGiftSt) getLastGameData() *gamedata.SoldGoldGift {
 	return gamedata.GetGameData(consts.SoldGoldGift).(*gamedata.SoldGoldGiftGameData).GetGift(gg.player.GetArea(),
-		gg.getCurIdx() - 1)
+		gg.getCurIdx()-1)
 }
 
 func (gg *goldGiftSt) packMsg() *pb.SoldGoldGift {
@@ -57,9 +57,9 @@ func (gg *goldGiftSt) packMsg() *pb.SoldGoldGift {
 		remainTime = int32(timer.TimeDelta(0, 0, 0).Seconds())
 	}
 
-	return &pb.SoldGoldGift {
-		TreasureID: data.TreasureID,
-		JadePrice: int32(data.JadePrice),
+	return &pb.SoldGoldGift{
+		TreasureID:       data.TreasureID,
+		JadePrice:        int32(data.JadePrice),
 		CanBuyRemainTime: remainTime,
 	}
 }
@@ -81,7 +81,7 @@ func (gg *goldGiftSt) buy() (*pb.BuySoldGoldGiftReply, error) {
 	if !module.Player.HasResource(gg.player, consts.Jade, data.JadePrice) {
 		return nil, gamedata.GameError(2)
 	}
-	module.Player.ModifyResource(gg.player, consts.Jade, - data.JadePrice, consts.RmrBuyGoldGift)
+	module.Player.ModifyResource(gg.player, consts.Jade, -data.JadePrice, consts.RmrBuyGoldGift)
 
 	module.Shop.LogShopBuyItem(gg.player, "gold_gift", "金币礼包", 1, "shop",
 		strconv.Itoa(consts.Jade), module.Player.GetResourceName(consts.Jade), data.JadePrice, "")

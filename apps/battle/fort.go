@@ -1,9 +1,9 @@
 package main
 
 import (
-	"kinger/gopuppy/common"
-	"kinger/gopuppy/attribute"
 	"kinger/common/consts"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
 )
 
 var _ iCaster = &fortCaster{}

@@ -14,7 +14,7 @@ var (
 	nextAddSeq uint64 = 1
 	tHeap      timerHeap
 	startOnce  sync.Once
-	tLock sync.Mutex
+	tLock      sync.Mutex
 )
 
 type CallbackFunc func()
@@ -191,7 +191,7 @@ func GetDayNo(args ...int64) int {
 	return int((t-timeBase)/86400 + 1)
 }
 
-func GetWeekNo(args ... int64) int {
+func GetWeekNo(args ...int64) int {
 	var t int64
 	if len(args) > 0 {
 		t = args[0]

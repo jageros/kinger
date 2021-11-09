@@ -3,6 +3,11 @@ package player
 import (
 	"errors"
 	"fmt"
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/config"
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/center/api"
 	"kinger/gopuppy/apps/center/mq"
 	"kinger/gopuppy/apps/logic"
@@ -16,25 +21,20 @@ import (
 	"kinger/gopuppy/common/timer"
 	"kinger/gopuppy/common/utils"
 	"kinger/gopuppy/network"
-	"kinger/apps/game/module"
-	"kinger/apps/game/module/types"
-	"kinger/common/config"
-	"kinger/common/consts"
-	"kinger/gamedata"
 	kpb "kinger/proto/pb"
 	"math"
+	"math/rand"
 	"strconv"
 	"time"
-	"math/rand"
 )
 
 var mod *playerModule
 
 type onlineInfoLog struct {
 	onlineAmount int
-	onlineTime int
-	accountType string
-	area int
+	onlineTime   int
+	accountType  string
+	area         int
 }
 
 func (ol *onlineInfoLog) MarshalLogObject(encoder glog.ObjectEncoder) error {
@@ -46,11 +46,11 @@ func (ol *onlineInfoLog) MarshalLogObject(encoder glog.ObjectEncoder) error {
 }
 
 type playerModule struct {
-	playersMap  map[common.UUid]types.IPlayer
-	playerCache *lru.LruCache
-	loadingPlayer map[common.UUid]chan struct{}
+	playersMap                  map[common.UUid]types.IPlayer
+	playerCache                 *lru.LruCache
+	loadingPlayer               map[common.UUid]chan struct{}
 	accountID2BindAccountRegion map[string]uint32
-	pong *kpb.Pong
+	pong                        *kpb.Pong
 }
 
 func newPlayerModule() *playerModule {
@@ -65,11 +65,11 @@ func newPlayerModule() *playerModule {
 	}
 
 	m := &playerModule{
-		playersMap:  make(map[common.UUid]types.IPlayer),
-		playerCache: c,
-		loadingPlayer: map[common.UUid]chan struct{}{},
+		playersMap:                  make(map[common.UUid]types.IPlayer),
+		playerCache:                 c,
+		loadingPlayer:               map[common.UUid]chan struct{}{},
 		accountID2BindAccountRegion: map[string]uint32{},
-		pong: &kpb.Pong{ServerTime: int32(time.Now().Unix())},
+		pong:                        &kpb.Pong{ServerTime: int32(time.Now().Unix())},
 	}
 	m.beginHeartBeat()
 	m.loadBindAccountRegion()
@@ -147,7 +147,7 @@ func (m *playerModule) dumpOnlineInfo() {
 
 	onlineInfos := m.getOnlineInfo()
 	for area, type2OInfo := range onlineInfos {
-		for accountType, oInfo := range type2OInfo{
+		for accountType, oInfo := range type2OInfo {
 			type2OnlineInfo, ok := area2TypeOnlineInfo[area]
 			if !ok {
 				type2OnlineInfo = map[kpb.AccountTypeEnum]*onlineInfoLog{}
@@ -179,8 +179,8 @@ func (m *playerModule) dumpOnlineInfo() {
 }
 
 func (m *playerModule) beginHeartBeat() {
-	timer.AfterFunc(time.Duration(rand.Intn(50) + 10) * time.Second, func() {
-		timer.AddTicker(5 * time.Minute, m.saveAllPlayer)
+	timer.AfterFunc(time.Duration(rand.Intn(50)+10)*time.Second, func() {
+		timer.AddTicker(5*time.Minute, m.saveAllPlayer)
 	})
 
 	if module.Service.GetAppID() == 1 {
@@ -262,7 +262,6 @@ func (m *playerModule) addName(name string, uid common.UUid) {
 func (m *playerModule) delName(name string) {
 	attribute.NewAttrMgr("names", name, true).Delete(false)
 }
-
 
 func (m *playerModule) GetSimplePlayerInfo(uid common.UUid) *kpb.SimplePlayerInfo {
 	if p, ok := m.playersMap[uid]; ok {
@@ -508,17 +507,17 @@ func (m *playerModule) HasResource(p types.IPlayer, resType, amount int) bool {
 func (m *playerModule) PackUpdateRankMsg(p types.IPlayer, battleHandCards []*kpb.SkinGCard, battleCamp int) *kpb.UpdatePvpScoreArg {
 	resCpt := p.GetComponent(consts.ResourceCpt).(*ResourceComponent)
 	return &kpb.UpdatePvpScoreArg{
-		Uid:       uint64(p.GetUid()),
-		Name:      p.GetName(),
-		HandCards: battleHandCards,
-		Camp:      int32(battleCamp),
-		PvpScore:  int32(resCpt.GetResource(consts.Score)),
-		WinDiff: int32(resCpt.GetResource(consts.WinDiff)),
-		WinCnt: int32(module.Huodong.GetSeasonPvpWinCnt(p)),
-		RebornCnt: int32(module.Reborn.GetRebornCnt(p)),
-		Area: int32(p.GetArea()),
+		Uid:            uint64(p.GetUid()),
+		Name:           p.GetName(),
+		HandCards:      battleHandCards,
+		Camp:           int32(battleCamp),
+		PvpScore:       int32(resCpt.GetResource(consts.Score)),
+		WinDiff:        int32(resCpt.GetResource(consts.WinDiff)),
+		WinCnt:         int32(module.Huodong.GetSeasonPvpWinCnt(p)),
+		RebornCnt:      int32(module.Reborn.GetRebornCnt(p)),
+		Area:           int32(p.GetArea()),
 		CrossAreaHonor: int32(resCpt.GetResource(consts.CrossAreaHonor)),
-		RankScore: int32(resCpt.GetResource(consts.MatchScore)),
+		RankScore:      int32(resCpt.GetResource(consts.MatchScore)),
 	}
 }
 
@@ -536,10 +535,10 @@ func (m *playerModule) getResourceMaxAmount(resType int) int {
 func (m *playerModule) getResourceMinAmount(resType int, player types.IPlayer) int {
 	if resType == consts.CrossAreaHonor {
 		return math.MinInt32
-	} else if resType == consts.MatchScore && player.GetPvpTeam() >= 9{
+	} else if resType == consts.MatchScore && player.GetPvpTeam() >= 9 {
 		minScore := gamedata.GetGameData(consts.League).(*gamedata.LeagueGameData).GetScoreById(1)
 		return minScore
-	}else {
+	} else {
 		return 0
 	}
 }
@@ -601,7 +600,7 @@ func Initialize() {
 	mod = newPlayerModule()
 	module.Player = mod
 	timer.RunEveryDay(0, 0, 1, onCrossDay)
-	timer.AddTicker(10 * time.Second, onHeartBeat)
+	timer.AddTicker(10*time.Second, onHeartBeat)
 	checkAccountCode()
 	//fixRecharge(19750, "1fa8a8b512ace0aac94ea0bab29d7167", "197501552274490634748", "10035a0d1b38853b39d51jyohkcvns4o", 30)
 }

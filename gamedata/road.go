@@ -3,14 +3,14 @@ package gamedata
 import (
 	"encoding/json"
 
-	"kinger/common/consts"
 	"github.com/pkg/errors"
+	"kinger/common/consts"
 )
 
 type Road struct {
-	ID          int     `json:"__id__"`
-	City1       int     `json:"city1"`
-	City2       int     `json:"city2"`
+	ID       int `json:"__id__"`
+	City1    int `json:"city1"`
+	City2    int `json:"city2"`
 	Distance int `json:"distance"`
 }
 

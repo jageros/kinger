@@ -1,42 +1,42 @@
 package shop
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/common/consts"
-	"kinger/apps/game/module/types"
-	"time"
-	"kinger/gamedata"
-	"kinger/proto/pb"
-	"kinger/gopuppy/common/timer"
-	"kinger/apps/game/module"
 	"fmt"
-	"strconv"
-	"kinger/gopuppy/common/glog"
 	"github.com/gogo/protobuf/proto"
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
 	"kinger/common/config"
+	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
+	"kinger/proto/pb"
+	"strconv"
+	"time"
 	//"kinger/gopuppy/common/evq"
 )
 
 var _ types.IShopComponent = &shopComponent{}
 
 type shopComponent struct {
-	attr *attribute.MapAttr
-	player types.IPlayer
+	attr         *attribute.MapAttr
+	player       types.IPlayer
 	limitGiftMgr *limitGiftMgrSt
 	// 探访
-	randomShop iRandomShop
-	orderID2Order    map[string]*orderSt
+	randomShop    iRandomShop
+	orderID2Order map[string]*orderSt
 	// 军备宝箱
 	soldTreasure iSoldTreasure
 	// 招募宝箱
 	recruitTreasure iRecruitTreasure
 	// 赞助
-	adsMgr iAdsMgr
-	goldGift *goldGiftSt
+	adsMgr        iAdsMgr
+	goldGift      *goldGiftSt
 	recommendGift *recommendGiftSt
-	midasPayment *midasPaymentSt
-	isClientInit bool
-	buyGoldTimer *timer.Timer
+	midasPayment  *midasPaymentSt
+	isClientInit  bool
+	buyGoldTimer  *timer.Timer
 }
 
 func (sc *shopComponent) ComponentID() string {
@@ -103,7 +103,7 @@ func (sc *shopComponent) OnCrossDay(dayno int) {
 
 	sc.recruitTreasure.onCrossDay()
 	sc.randomShop.onCrossDay()
-	sc.limitGiftMgr.forEachCanShowLimitGifts(func(gift iLimitGift){
+	sc.limitGiftMgr.forEachCanShowLimitGifts(func(gift iLimitGift) {
 		gift.onCrossDay()
 	})
 	if sc.goldGift != nil {
@@ -209,7 +209,7 @@ func (sc *shopComponent) beginBuyGoldTimer() {
 	sc.stopBuyGoldTimer()
 	remainTime := sc.getBuyGoldRemainTime()
 	if remainTime > 0 {
-		sc.buyGoldTimer = timer.AfterFunc(time.Duration(remainTime) * time.Second, func() {
+		sc.buyGoldTimer = timer.AfterFunc(time.Duration(remainTime)*time.Second, func() {
 			sc.onShopDataUpdate(pb.UpdateShopDataArg_Gold)
 		})
 	}
@@ -248,7 +248,7 @@ func (sc *shopComponent) buyGold(goodsID string) (*pb.BuyGoldReply, error) {
 				}
 				resType = consts.Jade
 				resAmount = goldGoods.JadePrice
-				resCpt.ModifyResource(consts.Jade, - goldGoods.JadePrice, consts.RmrShopBuyGold)
+				resCpt.ModifyResource(consts.Jade, -goldGoods.JadePrice, consts.RmrShopBuyGold)
 			}
 
 			now := time.Now()
@@ -263,12 +263,12 @@ func (sc *shopComponent) buyGold(goodsID string) (*pb.BuyGoldReply, error) {
 				fmt.Sprintf("金币_%d", goldGoods.Gold), 1, "shop",
 				strconv.Itoa(resType), module.Player.GetResourceName(resType), resAmount,
 				fmt.Sprintf("goodsID=%s, needjade=%d, needBowlder=%d, nextRemainTime=%f",
-				goodsID, goldGoods.JadePrice, goldGoods.BowlderPrice, nextRemainTime.Seconds()))
+					goodsID, goldGoods.JadePrice, goldGoods.BowlderPrice, nextRemainTime.Seconds()))
 
 			sc.beginBuyGoldTimer()
 
 			return &pb.BuyGoldReply{
-				Gold: int32(goldGoods.Gold),
+				Gold:           int32(goldGoods.Gold),
 				NextRemainTime: int32(nextRemainTime.Seconds()),
 			}, nil
 		}
@@ -295,7 +295,7 @@ func (sc *shopComponent) OnShopAdsBeHelp(type_ pb.ShopFreeAdsType, id int) error
 }
 
 func (sc *shopComponent) addCumulativePay(amount int) {
-	sc.attr.SetInt("cumulativePay", sc.attr.GetInt("cumulativePay") + amount)
+	sc.attr.SetInt("cumulativePay", sc.attr.GetInt("cumulativePay")+amount)
 }
 
 func (sc *shopComponent) GetCumulativePay() int {
@@ -328,14 +328,14 @@ func (sc *shopComponent) OnSdkRecharge(channelUid, cpOrderID, channelOrderID str
 	order := sc.loadOrder(cpOrderID)
 	reply := &pb.SdkRechargeResult{Errcode: pb.SdkRechargeResult_Fail}
 	if order == nil {
-		glog.Errorf("OnSdkRecharge no order, uid=%d, accountType=%s, channelUid=%s, cpOrderID=%s, channelOrderID=%s, " +
+		glog.Errorf("OnSdkRecharge no order, uid=%d, accountType=%s, channelUid=%s, cpOrderID=%s, channelOrderID=%s, "+
 			"paymentAmount=%d", sc.player.GetUid(), sc.player.GetAccountType(), channelUid, cpOrderID, channelOrderID, paymentAmount)
 		sc.player.GetAgent().PushClient(pb.MessageID_S2C_NOTIFY_SDK_RECHARGE_RESULT, reply)
 		return
 	}
 
 	if order.isComplete() {
-		glog.Errorf("OnSdkRecharge order isComplete, uid=%d, accountType=%s, channelUid=%s, cpOrderID=%s, channelOrderID=%s, " +
+		glog.Errorf("OnSdkRecharge order isComplete, uid=%d, accountType=%s, channelUid=%s, cpOrderID=%s, channelOrderID=%s, "+
 			"paymentAmount=%d", sc.player.GetUid(), sc.player.GetAccountType(), channelUid, cpOrderID, channelOrderID, paymentAmount)
 		sc.player.GetAgent().PushClient(pb.MessageID_S2C_NOTIFY_SDK_RECHARGE_RESULT, reply)
 		return
@@ -348,7 +348,7 @@ func (sc *shopComponent) OnSdkRecharge(channelUid, cpOrderID, channelOrderID str
 
 func (sc *shopComponent) CompensateRecharge(cpOrderID, channelOrderID, goodsID string) {
 	if cpOrderID == "" {
-		orderID := fmt.Sprintf("%d%d", sc.player.GetUid(), time.Now().UnixNano() / 1000)
+		orderID := fmt.Sprintf("%d%d", sc.player.GetUid(), time.Now().UnixNano()/1000)
 		order := newOrder(orderID, goodsID, "", sc.player)
 		order.setIsTest()
 		reply := mod.payment.onRecharge(sc.player, order, sc.player.GetChannel(), 0, false)
@@ -399,7 +399,7 @@ func (sc *shopComponent) onBuyVip(goodsID string) {
 	//})
 }
 
-func (sc *shopComponent) setJadeData(recharge *gamedata.Recharge)(isDouble bool){
+func (sc *shopComponent) setJadeData(recharge *gamedata.Recharge) (isDouble bool) {
 	var hasGoods bool
 	buyJadeAttr := sc.getBuyJadeListAttr()
 	buyJadeAttr.ForEachIndex(func(index int) bool {
@@ -407,7 +407,7 @@ func (sc *shopComponent) setJadeData(recharge *gamedata.Recharge)(isDouble bool)
 		if goodsAttr.GetStr("goodsID") == recharge.GoodsID {
 			if goodsAttr.GetInt("ver") != recharge.FirstJadrVer {
 				buyJadeAttr.DelMapAttr(goodsAttr)
-			}else {
+			} else {
 				isDouble = goodsAttr.GetBool("isDouble")
 				hasGoods = true
 			}
@@ -426,7 +426,7 @@ func (sc *shopComponent) setJadeData(recharge *gamedata.Recharge)(isDouble bool)
 	return
 }
 
-func (sc *shopComponent) setJadeIsDouble(goodsID string){
+func (sc *shopComponent) setJadeIsDouble(goodsID string) {
 	buyJadeAttr := sc.getBuyJadeListAttr()
 	buyJadeAttr.ForEachIndex(func(index int) bool {
 		goodsAttr := buyJadeAttr.GetMapAttr(index)
@@ -437,7 +437,7 @@ func (sc *shopComponent) setJadeIsDouble(goodsID string){
 	})
 }
 
-func (sc *shopComponent) getJadeIsDouble(goodsID string) (isDouble bool){
+func (sc *shopComponent) getJadeIsDouble(goodsID string) (isDouble bool) {
 	buyJadeAttr := sc.getBuyJadeListAttr()
 	buyJadeAttr.ForEachIndex(func(index int) bool {
 		goodsAttr := buyJadeAttr.GetMapAttr(index)
@@ -449,7 +449,7 @@ func (sc *shopComponent) getJadeIsDouble(goodsID string) (isDouble bool){
 	return
 }
 
-func (sc *shopComponent) getBuyJadeListAttr() *attribute.ListAttr  {
+func (sc *shopComponent) getBuyJadeListAttr() *attribute.ListAttr {
 	buyJadeAttr := sc.attr.GetListAttr("buyJadeList")
 	if buyJadeAttr == nil {
 		buyJadeAttr = attribute.NewListAttr()
@@ -468,9 +468,9 @@ func (sc *shopComponent) packJadeGoodsMsg() []*pb.JadeGoods {
 	for _, recharge := range rechargeGameData.GetAllGoods(sc.player.GetArea()) {
 		isDouble := sc.setJadeData(recharge)
 		goods = append(goods, &pb.JadeGoods{
-			GoodsID: recharge.GoodsID,
-			Price:   int32(recharge.Price),
-			Jade:    int32(recharge.JadeCnt),
+			GoodsID:  recharge.GoodsID,
+			Price:    int32(recharge.Price),
+			Jade:     int32(recharge.JadeCnt),
 			IsDouble: isDouble,
 		})
 	}
@@ -489,7 +489,7 @@ func (sc *shopComponent) packVipGoodsMsg() *pb.VipCardGoods {
 			return &pb.VipCardGoods{
 				GoodsID:   vipCardData.GiftID,
 				JadePrice: int32(vipCardData.JadePrice),
-				Price: int32(vipCardData.Price),
+				Price:     int32(vipCardData.Price),
 			}
 		}
 	}
@@ -528,13 +528,13 @@ func (sc *shopComponent) packFreeAdsMsg() []*pb.ShopFreeAds {
 
 func (sc *shopComponent) packMsg() *pb.ShopData {
 	reply := &pb.ShopData{
-		Gift: sc.limitGiftMgr.packMsg(),
-		SoldTreasures: sc.getSoldTreasure().packMsg(),
+		Gift:            sc.limitGiftMgr.packMsg(),
+		SoldTreasures:   sc.getSoldTreasure().packMsg(),
 		RecruitTreasure: sc.getRecruitTreasure().packMsg(),
-		RandomShopData: sc.getRandomShop().packMsg(),
-		JadeGoodsList: sc.packJadeGoodsMsg(),
-		VipCard: sc.packVipGoodsMsg(),
-		Adses: sc.packFreeAdsMsg(),
+		RandomShopData:  sc.getRandomShop().packMsg(),
+		JadeGoodsList:   sc.packJadeGoodsMsg(),
+		VipCard:         sc.packVipGoodsMsg(),
+		Adses:           sc.packFreeAdsMsg(),
 	}
 
 	if sc.goldGift != nil {

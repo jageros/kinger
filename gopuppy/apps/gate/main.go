@@ -26,7 +26,7 @@ var (
 
 type gateService struct {
 	appID         uint32
-	region uint32
+	region        uint32
 	clientProxies sync.Map
 	filterTrees   map[string]*filterTree
 }
@@ -96,7 +96,7 @@ func (gs *gateService) notifyClientClose(uid, clientID common.UUid) {
 			GateID:   gs.appID,
 			ClientID: uint64(clientID),
 			Uid:      uint64(uid),
-			Region: gs.region,
+			Region:   gs.region,
 		})
 	}
 }
@@ -107,7 +107,7 @@ func (gs *gateService) notifySnetDisconnect(uid, clientID common.UUid) {
 			GateID:   gs.appID,
 			ClientID: uint64(clientID),
 			Uid:      uint64(uid),
-			Region: gs.region,
+			Region:   gs.region,
 		})
 	}
 }
@@ -118,7 +118,7 @@ func (gs *gateService) notifySnetReconnect(uid, clientID common.UUid) {
 			GateID:   gs.appID,
 			ClientID: uint64(clientID),
 			Uid:      uint64(uid),
-			Region: gs.region,
+			Region:   gs.region,
 		})
 	}
 }

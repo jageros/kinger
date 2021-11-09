@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_BEGIN_MATCH    req: MatchArg    resp: MatchReply
@@ -1041,4 +1041,3 @@ func (m *G2R_LEAGUE_SEASON_END_Meta) DecodeReply(data []byte) (interface{}, erro
 }
 
 //------------------------------------ G2R_LEAGUE_SEASON_END END ----------------------------------------
-

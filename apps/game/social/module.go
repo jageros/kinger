@@ -9,13 +9,13 @@ import (
 	"container/list"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
+	"kinger/common/consts"
+	"kinger/common/utils"
+	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/common/eventhub"
 	"kinger/proto/pb"
 	"time"
-	"kinger/common/consts"
-	"kinger/gamedata"
-	"kinger/common/utils"
-	"kinger/gopuppy/common/eventhub"
-	"kinger/gopuppy/apps/logic"
 )
 
 var mod *socialModule
@@ -24,7 +24,7 @@ type socialModule struct {
 	inviteRooms     map[common.UUid]*list.Element
 	inviteRoomsList *list.List
 	beInviteRooms   map[common.UUid]map[common.UUid]*inviteRoom
-	lastAdvertChat string
+	lastAdvertChat  string
 }
 
 func (m *socialModule) NewComponent(playerAttr *attribute.AttrMgr) types.IPlayerComponent {
@@ -199,8 +199,8 @@ func (m *socialModule) onWxInviteFriendUpdate(player types.IPlayer, inviterUid c
 		socialCpt.OnWxInviteFriendUpdate(player.GetUid(), player.GetHeadImgUrl(), player.GetMaxPvpLevel())
 	} else {
 		utils.PlayerMqPublish(inviterUid, pb.RmqType_WxInviteFriendTp, &pb.RmqWxInviteFriend{
-			Uid:  uint64(player.GetUid()),
-			HeadImgUrl: player.GetHeadImgUrl(),
+			Uid:         uint64(player.GetUid()),
+			HeadImgUrl:  player.GetHeadImgUrl(),
 			MaxPvpLevel: int32(player.GetMaxPvpLevel()),
 		})
 	}

@@ -1,25 +1,25 @@
 package main
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/apps/logic"
-	"kinger/gopuppy/common"
-	"kinger/proto/pb"
 	"fmt"
 	"kinger/common/config"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/proto/pb"
 )
 
 var chatMgr *chatMgrSt
 
 type chatMgrSt struct {
 	uid2Channels map[common.UUid][]*chatChannel
-	channels map[string]*chatChannel   // map[channelKey]*chatChannel
+	channels     map[string]*chatChannel // map[channelKey]*chatChannel
 }
 
 func newChatMgr() {
 	chatMgr = &chatMgrSt{
 		uid2Channels: map[common.UUid][]*chatChannel{},
-		channels: map[string]*chatChannel{},
+		channels:     map[string]*chatChannel{},
 	}
 }
 

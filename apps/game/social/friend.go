@@ -1,13 +1,13 @@
 package social
 
 import (
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/consts"
 	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common"
-	"kinger/apps/game/module"
-	"kinger/proto/pb"
-	"kinger/common/consts"
-	"kinger/apps/game/module/types"
 	"kinger/gopuppy/common/utils"
+	"kinger/proto/pb"
 )
 
 type friend struct {
@@ -57,12 +57,12 @@ func (f *friend) packMsgAsync() chan *pb.FriendItem {
 					IsOnline:       playerInfo.IsOnline,
 					HeadImgUrl:     playerInfo.HeadImgUrl,
 					IsWechatFriend: f.isWechatFriend(),
-					PvpCamp: playerInfo.PvpCamp,
-					Country: playerInfo.Country,
-					HeadFrame: playerInfo.HeadFrame,
-					RebornCnt: playerInfo.RebornCnt,
-					CountryFlag: playerInfo.CountryFlag,
-					RankScore: playerInfo.RankScore,
+					PvpCamp:        playerInfo.PvpCamp,
+					Country:        playerInfo.Country,
+					HeadFrame:      playerInfo.HeadFrame,
+					RebornCnt:      playerInfo.RebornCnt,
+					CountryFlag:    playerInfo.CountryFlag,
+					RankScore:      playerInfo.RankScore,
 				}
 
 				if !msg.IsOnline {
@@ -84,12 +84,12 @@ func (f *friend) packMsgAsync() chan *pb.FriendItem {
 		IsOnline:       player.IsOnline(),
 		HeadImgUrl:     player.GetHeadImgUrl(),
 		IsWechatFriend: f.isWechatFriend(),
-		PvpCamp: int32(player.GetComponent(consts.CardCpt).(types.ICardComponent).GetFightCamp()),
-		Country: player.GetCountry(),
-		HeadFrame: player.GetHeadFrame(),
-		RebornCnt: int32(module.Reborn.GetRebornCnt(player)),
-		CountryFlag: player.GetCountryFlag(),
-		RankScore: int32(player.GetRankScore()),
+		PvpCamp:        int32(player.GetComponent(consts.CardCpt).(types.ICardComponent).GetFightCamp()),
+		Country:        player.GetCountry(),
+		HeadFrame:      player.GetHeadFrame(),
+		RebornCnt:      int32(module.Reborn.GetRebornCnt(player)),
+		CountryFlag:    player.GetCountryFlag(),
+		RankScore:      int32(player.GetRankScore()),
 	}
 
 	if !msg.IsOnline {

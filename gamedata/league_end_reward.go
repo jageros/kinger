@@ -6,13 +6,13 @@ import (
 )
 
 type LeagueReward struct {
-	ID          int      `json:"__id__"`
-	Reward     []string `json:"reward"`
+	ID     int      `json:"__id__"`
+	Reward []string `json:"reward"`
 }
 
 type LeagueRewardGameData struct {
 	baseGameData
-	ID2LeagueReward  map[int]*LeagueReward
+	ID2LeagueReward map[int]*LeagueReward
 }
 
 func newLeagueRewardGameData() *LeagueRewardGameData {

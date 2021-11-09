@@ -1,13 +1,13 @@
 package shop
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common/timer"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
 	"kinger/proto/pb"
 	"math/rand"
 	"strconv"
@@ -112,11 +112,11 @@ func (gg *recommendGiftSt) packMsg() *pb.SoldRecommendGift {
 func (gg *recommendGiftSt) refreshGiftData() {
 	curCamp := gg.player.GetCurCamp()
 	var iCards []types.ICollectCard
-	for lv := 4; lv <=5; lv ++ {
+	for lv := 4; lv <= 5; lv++ {
 		iCards = gg.player.GetPvpCardPoolsByCamp(curCamp)
 		for i := 0; i < len(iCards); i++ {
-			if iCards[i].IsSpCard() || iCards[i].GetLevel() >= lv{
-				iCards = append(iCards[:i], iCards[i+1:] ... )
+			if iCards[i].IsSpCard() || iCards[i].GetLevel() >= lv {
+				iCards = append(iCards[:i], iCards[i+1:]...)
 				i--
 			}
 		}
@@ -124,7 +124,7 @@ func (gg *recommendGiftSt) refreshGiftData() {
 			iCards = gg.player.GetComponent(consts.CardCpt).(types.ICardComponent).GetAllCollectCards()
 			for i := 0; i < len(iCards); i++ {
 				if iCards[i].IsSpCard() || iCards[i].GetLevel() >= lv {
-					iCards = append(iCards[:i], iCards[i+1:] ... )
+					iCards = append(iCards[:i], iCards[i+1:]...)
 					i--
 				}
 			}
@@ -168,7 +168,7 @@ func (gg *recommendGiftSt) buy() (*pb.BuyRecommendGiftReply, error) {
 	if !module.Player.HasResource(gg.player, consts.Jade, data.JadePrice) {
 		return nil, gamedata.GameError(2)
 	}
-	module.Player.ModifyResource(gg.player, consts.Jade, - data.JadePrice, consts.RmrBuyRecommendGift)
+	module.Player.ModifyResource(gg.player, consts.Jade, -data.JadePrice, consts.RmrBuyRecommendGift)
 
 	module.Shop.LogShopBuyItem(gg.player, gg.getCurGiftId(), "推荐礼包", 1, "shop",
 		strconv.Itoa(consts.Jade), module.Player.GetResourceName(consts.Jade), data.JadePrice, "")

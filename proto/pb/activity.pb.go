@@ -645,7 +645,9 @@ var ActivityReceiveStatus_value = map[string]int32{
 func (x ActivityReceiveStatus) String() string {
 	return proto.EnumName(ActivityReceiveStatus_name, int32(x))
 }
-func (ActivityReceiveStatus) EnumDescriptor() ([]byte, []int) { return fileDescriptorActivity, []int{0} }
+func (ActivityReceiveStatus) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptorActivity, []int{0}
+}
 
 // 可显示的活动ID列表
 type ActivityLabelList struct {

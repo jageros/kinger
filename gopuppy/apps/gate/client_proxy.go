@@ -7,12 +7,12 @@ import (
 )
 
 type clientProxy struct {
-	clientID    common.UUid
-	uid         common.UUid
-	ses         *network.Session
-	filterProps map[string]string
-	isKickout   bool
-	beMonitor bool
+	clientID       common.UUid
+	uid            common.UUid
+	ses            *network.Session
+	filterProps    map[string]string
+	isKickout      bool
+	beMonitor      bool
 	monitorPending []func()
 }
 
@@ -41,5 +41,3 @@ func (cp *clientProxy) executeMonitorTask() {
 	}
 	cp.monitorPending = []func(){}
 }
-
-

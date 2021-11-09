@@ -1,16 +1,16 @@
 package event
 
 import (
-	htypes "kinger/apps/game/huodong/types"
 	"fmt"
-	"time"
-	"kinger/apps/game/module/types"
-	"kinger/apps/game/module"
-	"kinger/common/consts"
-	"kinger/proto/pb"
-	"kinger/gamedata"
 	"github.com/gogo/protobuf/proto"
+	htypes "kinger/apps/game/huodong/types"
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/attribute"
+	"kinger/proto/pb"
+	"time"
 )
 
 // 读event_config表的活动
@@ -102,8 +102,8 @@ func (hd *EventHd) OnStart() {
 	}
 
 	beginArg := &pb.HuodongData{
-		Type: hd.GetHtype(),
-		RemainTime: int32(remainTimef),
+		Type:               hd.GetHtype(),
+		RemainTime:         int32(remainTimef),
 		RemainExchangeTime: int32(exchangeRemainTimef),
 	}
 
@@ -173,7 +173,6 @@ func (hd *EventHd) Refresh(gdata interface{}) bool {
 	return true
 }
 
-
 func (hd *EventHd) OnPlayerLogin(player types.IPlayer, hdData htypes.IHdPlayerData) {
 	if hdData == nil {
 		return
@@ -200,7 +199,7 @@ func (hd *EventHd) HasEventItem(player types.IPlayer, amount int) bool {
 }
 
 func (hd *EventHd) SubEventItem(player types.IPlayer, amount int) {
-	module.Player.ModifyResource(player, consts.EventItem1, - amount)
+	module.Player.ModifyResource(player, consts.EventItem1, -amount)
 }
 
 func (hd *EventHd) GetEventItemType() int {

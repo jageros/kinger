@@ -1,10 +1,10 @@
 package level
 
 import (
-	"kinger/gopuppy/attribute"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
+	"kinger/gopuppy/attribute"
 )
 
 var mod = &levelModule{}

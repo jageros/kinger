@@ -1,14 +1,14 @@
 package main
 
 import (
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common"
 	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/wordfilter"
 	"kinger/gopuppy/network"
-	"kinger/common/consts"
-	"kinger/gamedata"
 	"kinger/proto/pb"
 	"strconv"
 	"strings"
@@ -34,30 +34,30 @@ func rpc_G2CA_FetchCampaignInfo(agent *logic.PlayerAgent, arg interface{}) (inte
 
 	reply := &pb.CampaignInfo{
 		//State: &pb.CampaignState{State: warMgr.getState()},
-		State: &pb.CampaignState{State: pb.CampaignState_Unified},
+		State:            &pb.CampaignState{State: pb.CampaignState_Unified},
 		DefPlayerAmounts: sceneMgr.getDefAmount(),
 	}
 
 	/*
-	warRecord := p.fetchWarEndRecord()
-	switch reply.State.State {
-	case pb.CampaignState_ReadyWar:
-		fallthrough
-	case pb.CampaignState_InWar:
-		reply.State.Arg, _ = (&pb.CaStateWarArg{RemainTime: int32(warMgr.getStateRemainTime())}).Marshal()
-	case pb.CampaignState_Unified:
-		reply.State.Arg = warMgr.getUnifiedInfo()
-	case pb.CampaignState_Pause:
-		fallthrough
-	case pb.CampaignState_Normal:
-		if warRecord != nil {
-			reply.State.State = pb.CampaignState_WarEnd
-			reply.State.Arg, _ = warRecord.Marshal()
-		} else {
+		warRecord := p.fetchWarEndRecord()
+		switch reply.State.State {
+		case pb.CampaignState_ReadyWar:
+			fallthrough
+		case pb.CampaignState_InWar:
 			reply.State.Arg, _ = (&pb.CaStateWarArg{RemainTime: int32(warMgr.getStateRemainTime())}).Marshal()
-		}
+		case pb.CampaignState_Unified:
+			reply.State.Arg = warMgr.getUnifiedInfo()
+		case pb.CampaignState_Pause:
+			fallthrough
+		case pb.CampaignState_Normal:
+			if warRecord != nil {
+				reply.State.State = pb.CampaignState_WarEnd
+				reply.State.Arg, _ = warRecord.Marshal()
+			} else {
+				reply.State.Arg, _ = (&pb.CaStateWarArg{RemainTime: int32(warMgr.getStateRemainTime())}).Marshal()
+			}
 
-	}
+		}
 	*/
 
 	if p != nil {
@@ -161,7 +161,7 @@ func rpc_G2CA_CreateCountry(agent *logic.PlayerAgent, arg interface{}) (interfac
 	glog.Infof("rpc_G2CA_CreateCountry uid=%d, gold=%d, cityID=%d", uid, arg2.Gold, c.getCityID())
 	reply := &pb.ApplyCreateCountryData{
 		RemainTime: int32(createCountryMgr.getApplyCreateCountryRemainTime().Seconds()),
-		Players: c.getCreateCoutryApplysByPage(0),
+		Players:    c.getCreateCoutryApplysByPage(0),
 	}
 	ca := c.getCreateCountryApply(agent.GetUid())
 	if ca != nil {
@@ -188,7 +188,7 @@ func rpc_C2S_FetchApplyCreateCountryInfo(agent *logic.PlayerAgent, arg interface
 
 	reply := &pb.ApplyCreateCountryData{
 		RemainTime: int32(createCountryMgr.getApplyCreateCountryRemainTime().Seconds()),
-		Players: cty.getCreateCoutryApplysByPage(0),
+		Players:    cty.getCreateCoutryApplysByPage(0),
 	}
 	ca := cty.getCreateCountryApply(agent.GetUid())
 	if ca != nil {
@@ -249,7 +249,7 @@ func rpc_G2CA_AcceptCampaignMission(agent *logic.PlayerAgent, arg interface{}) (
 	reply := &pb.GAcceptCampaignMissionReply{
 		AcceptReply: &pb.AcceptCampaignMissionReply{
 			RemainTime: int32(ms.getRemainTime().Seconds()),
-			Missions: campaignMgr.getCampaignMissionInfo(c, nil).Missions,
+			Missions:   campaignMgr.getCampaignMissionInfo(c, nil).Missions,
 		},
 	}
 
@@ -324,8 +324,8 @@ func rpc_C2S_CampaignPublishMission(agent *logic.PlayerAgent, arg interface{}) (
 	}
 	return &pb.CampaignPublishMissionReply{
 		MissionInfo: campaignMgr.getCampaignMissionInfo(cty, p),
-		Gold: int32(cty.getResource(resGold)),
-		Forage: int32(cty.getResource(resForage)),
+		Gold:        int32(cty.getResource(resGold)),
+		Forage:      int32(cty.getResource(resForage)),
 	}, nil
 }
 
@@ -422,7 +422,7 @@ func rpc_C2S_FetchForagePrice(agent *logic.PlayerAgent, arg interface{}) (interf
 
 	return &pb.FetchForagePriceReply{
 		ForageAmount: int32(cty.getResource(resForage)),
-		Price: int32(cty.getForagePrice()),
+		Price:        int32(cty.getForagePrice()),
 	}, nil
 }
 
@@ -430,9 +430,9 @@ func rpc_C2S_FetchAllCityPlayerAmount(agent *logic.PlayerAgent, arg interface{})
 	reply := &pb.AllCityPlayerAmount{}
 	cityMgr.forEachCity(func(cty *city) bool {
 		msg := &pb.CityPlayerAmount{
-			CityID: int32(cty.getCityID()),
-			PlayerAmount: int32(cty.getPlayerAmount()),
-			Glory: int32(cty.getGlory() * 10),
+			CityID:           int32(cty.getCityID()),
+			PlayerAmount:     int32(cty.getPlayerAmount()),
+			Glory:            int32(cty.getGlory() * 10),
 			AvgMissionReward: int32(cty.getMaxMissionReward()),
 		}
 		ca := cty.getTopCreateCoutryApply()
@@ -461,7 +461,7 @@ func rpc_C2S_FetchCountryJobPlayers(agent *logic.PlayerAgent, arg interface{}) (
 	if cry == nil {
 		return nil, gamedata.GameError(3)
 	}
-	return &pb.CampaignPlayerList {
+	return &pb.CampaignPlayerList{
 		Players: cry.getCountryJobPlayers(),
 	}, nil
 }
@@ -546,7 +546,7 @@ func rpc_C2S_RecallJob(agent *logic.PlayerAgent, arg interface{}) (interface{}, 
 	}
 
 	glog.Infof("rpc_C2S_RecallJob, uid=%d, targetUid=%d, job=%s", uid, targetUid, arg2.Job)
-	return nil, cry.recallJob(p, targetPlayer, arg2.Job, p == targetPlayer,true, true)
+	return nil, cry.recallJob(p, targetPlayer, arg2.Job, p == targetPlayer, true, true)
 }
 
 func rpc_C2S_FetchCampaignNotice(agent *logic.PlayerAgent, arg interface{}) (interface{}, error) {
@@ -580,7 +580,7 @@ func rpc_G2CA_CityCapitalInjection(agent *logic.PlayerAgent, arg interface{}) (i
 	cty.capitalInjection(p, int(arg2.Gold))
 	glog.Infof("rpc_G2CA_CityCapitalInjection, uid=%d, cityID=%d, gold=%d", uid, arg2.CityID, arg2.Gold)
 	return &pb.CityCapitalInjectionReply{
-		CurGold: int32( cty.getResource(resGold) ),
+		CurGold: int32(cty.getResource(resGold)),
 	}, nil
 }
 
@@ -769,8 +769,8 @@ func rpc_C2S_CancelPublishMission(agent *logic.PlayerAgent, arg interface{}) (in
 	cty.cancelMission(arg2.Type, int(arg2.TransportTargetCity))
 	glog.Infof("rpc_C2S_CancelPublishMission uid=%d, msType=%s, TransportTargetCity=%d", uid, arg2.Type,
 		arg2.TransportTargetCity)
-	return &pb.CancelPublishMissionReply {
-		Gold: int32(cty.getResource(resGold)),
+	return &pb.CancelPublishMissionReply{
+		Gold:   int32(cty.getResource(resGold)),
 		Forage: int32(cty.getResource(resForage)),
 	}, nil
 }
@@ -1071,10 +1071,10 @@ func rpc_G2CA_FetchCampaignPlayerInfo(agent *logic.PlayerAgent, arg interface{})
 		}
 	}
 	reply := &pb.GCampaignPlayerInfo{
-		CountryID: p.getCountryID(),
-		CityID: int32(p.getCityID()),
-		CityJob: p.getCityJob(),
-		CountryJob: p.getCountryJob(),
+		CountryID:   p.getCountryID(),
+		CityID:      int32(p.getCityID()),
+		CityJob:     p.getCityJob(),
+		CountryJob:  p.getCountryJob(),
 		CountryName: countryName,
 	}
 
@@ -1104,7 +1104,7 @@ func rpc_C2S_CountryModifyFlag(agent *logic.PlayerAgent, arg interface{}) (inter
 	cry.setFlag(arg2.Flag)
 	campaignMgr.broadcastClient(pb.MessageID_S2C_UPDATE_COUNTRY_FLAG, &pb.UpdateCountryFlagArg{
 		CountryID: cry.getID(),
-		Flag: arg2.Flag,
+		Flag:      arg2.Flag,
 	})
 	return nil, nil
 }
@@ -1356,7 +1356,7 @@ func rpc_G2CA_GmCommand(agent *logic.PlayerAgent, arg interface{}) (interface{},
 		p.modifyForage(amount)
 	case "addco":
 		amount, _ := strconv.Atoi(commandInfo[2])
-		p.setContribution(p.getContribution() + float64(amount), true)
+		p.setContribution(p.getContribution()+float64(amount), true)
 	default:
 		return nil, gamedata.GameError(2)
 	}
@@ -1439,7 +1439,7 @@ func rpc_C2S_CampaignSurrender(agent *logic.PlayerAgent, arg interface{}) (inter
 
 	cityID := lcty.getCityID()
 	oldCityID := p.getCityID()
-	p.subContribution( p.getMaxContribution() * 0.1, true )
+	p.subContribution(p.getMaxContribution()*0.1, true)
 	p.setCity(cityID, cityID, true)
 	p.setCountryID(lcty.getCountryID(), true)
 
@@ -1546,10 +1546,10 @@ func rpc_G2CA_FetchCampaignTargetPlayerInfo(_ *network.Session, arg interface{})
 		}
 	}
 	return &pb.GCampaignPlayerInfo{
-		CountryID: p.getCountryID(),
-		CityID: int32(p.getCityID()),
-		CityJob: p.getCityJob(),
-		CountryJob: p.getCountryJob(),
+		CountryID:   p.getCountryID(),
+		CityID:      int32(p.getCityID()),
+		CityJob:     p.getCityJob(),
+		CountryJob:  p.getCountryJob(),
 		CountryName: countryName,
 	}, nil
 }
@@ -1564,11 +1564,11 @@ func rpc_G2CA_ModifyContribution(_ *network.Session, arg interface{}) (interface
 
 	amount := float64(arg2.Amount)
 	old := p.getContribution()
-	if amount < 0 && old < - amount {
+	if amount < 0 && old < -amount {
 		return nil, gamedata.GameError(2)
 	}
 
-	p.setContribution( old + amount, true  )
+	p.setContribution(old+amount, true)
 	return nil, nil
 }
 

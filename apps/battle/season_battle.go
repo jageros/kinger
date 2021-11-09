@@ -1,27 +1,27 @@
 package main
 
 import (
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/common"
 	"kinger/proto/pb"
-	"kinger/gamedata"
 	"math/rand"
-	"kinger/common/consts"
 )
 
 type seasonBattle struct {
 	battle
-	handType pb.BattleHandType
+	handType          pb.BattleHandType
 	fighter1HandCards []*pb.SkinGCard
 	fighter2HandCards []*pb.SkinGCard
-	randomArg *pb.SeasonRandomHand
-	banArg *seasonBanHand
-	switchArg *pb.SeasonSwitchHand
+	randomArg         *pb.SeasonRandomHand
+	banArg            *seasonBanHand
+	switchArg         *pb.SeasonSwitchHand
 }
 
 func newSeasonBattle(battleID common.UUid, battleType int, fighterData1, fighterData2 *pb.FighterData, upperType, bonusType,
 	scale, battleRes int, needVideo bool, needFortifications bool, seasonPvpData *gamedata.SeasonPvp) *seasonBattle {
 
-	battleObj := &seasonBattle {
+	battleObj := &seasonBattle{
 		handType: pb.BattleHandType_Default,
 	}
 	battleObj.battleID = battleID
@@ -73,7 +73,7 @@ func (b *seasonBattle) readyDone(cards ...uint32) error {
 
 func (b *seasonBattle) packSeasonMsg(isFighter1 bool) *pb.SeasonBattle {
 	msg := &pb.SeasonBattle{
-		Battle: b.packMsg().(*pb.FightDesk),
+		Battle:   b.packMsg().(*pb.FightDesk),
 		HandType: b.handType,
 	}
 
@@ -124,7 +124,6 @@ func (b *seasonBattle) syncReadyFight() {
 		fighter2.agent.PushClient(pb.MessageID_S2C_BEGIN_SEASON_BATTLE, b.packSeasonMsg(false))
 	}
 
-
 }
 
 type seasonBanHand struct {
@@ -172,7 +171,8 @@ func (sbh *seasonBanHand) ban(fighterData1, fighterData2 *pb.FighterData, f1Hand
 			fighterData.DrawCardPool[a], fighterData.DrawCardPool[b] = fighterData.DrawCardPool[b], fighterData.DrawCardPool[a]
 		}
 
-	L:	for _, card := range fighterData.DrawCardPool {
+	L:
+		for _, card := range fighterData.DrawCardPool {
 			if amount <= 0 {
 				break
 			}

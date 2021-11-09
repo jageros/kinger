@@ -8,7 +8,7 @@ import (
 )
 
 func Signature(appKey string, masterSecret string) (string, string) {
-	timestamp := strconv.FormatInt(time.Now().UnixNano() / 1000000, 10)
+	timestamp := strconv.FormatInt(time.Now().UnixNano()/1000000, 10)
 
 	//sha256(appkey+timestamp+mastersecret),mastersecret为注册应用时生成
 	original := appKey + timestamp + masterSecret

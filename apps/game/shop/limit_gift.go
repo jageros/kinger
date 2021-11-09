@@ -3,21 +3,21 @@ package shop
 import (
 	"fmt"
 	"github.com/gogo/protobuf/proto"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/glog"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
 	"kinger/proto/pb"
 	"strconv"
 	"time"
-	"kinger/gopuppy/common/evq"
 )
 
 const (
 	minVipCardGiftID = "minivip"
-	timeLayout = "2006-01-02 15:04:05"
+	timeLayout       = "2006-01-02 15:04:05"
 )
 
 type iLimitGift interface {
@@ -44,15 +44,15 @@ type iLimitGift interface {
 type limitGiftCondition func(player types.IPlayer) bool
 
 type limitGiftMgrSt struct {
-	player types.IPlayer
-	gifts []iLimitGift
+	player          types.IPlayer
+	gifts           []iLimitGift
 	prefix2TeamGift map[string]*teamGiftSt
-	limitGiftsAttr *attribute.ListAttr
+	limitGiftsAttr  *attribute.ListAttr
 }
 
 func newLimitGiftMgr(player types.IPlayer, cptAttr *attribute.MapAttr) *limitGiftMgrSt {
 	lgm := &limitGiftMgrSt{
-		player: player,
+		player:          player,
 		prefix2TeamGift: map[string]*teamGiftSt{},
 	}
 
@@ -192,7 +192,8 @@ func (lgm *limitGiftMgrSt) onMaxPvpLevelUp(limitGiftGameData gamedata.ILimitGift
 
 	isUpdate := false
 	allLimitGifts := limitGiftGameData.GetAllLimitGifts(lgm.player.GetArea())
-L1:	for _, giftData := range allLimitGifts {
+L1:
+	for _, giftData := range allLimitGifts {
 		var showTeam int
 		for _, conditionInfo := range giftData.ShowConditions {
 			if len(conditionInfo) >= 2 && conditionInfo[0] == "maxTeam" {
@@ -266,22 +267,22 @@ func (lgm *limitGiftMgrSt) newLimitGiftByAttr(attr *attribute.MapAttr, player ty
 	giftID := attr.GetStr("giftID")
 	if giftID == "1ygacha" {
 		/*
-		gift := &gaChaGift{}
-		gift.player = player
-		gift.attr = attr
-		gift.hideConditions = nil
-		gift.showConditions = []limitGiftCondition{}
-		gift.buyConditions = []limitGiftCondition{}
-		lg = gift
+			gift := &gaChaGift{}
+			gift.player = player
+			gift.attr = attr
+			gift.hideConditions = nil
+			gift.showConditions = []limitGiftCondition{}
+			gift.buyConditions = []limitGiftCondition{}
+			lg = gift
 		*/
 		return nil, false
 	} else {
 		gift := &limitGift{
-			player: player,
-			attr:   attr,
+			player:         player,
+			attr:           attr,
 			hideConditions: nil,
 			showConditions: []limitGiftCondition{},
-			buyConditions: []limitGiftCondition{},
+			buyConditions:  []limitGiftCondition{},
 		}
 
 		key := gift.genOldRewardKey()
@@ -345,7 +346,7 @@ func (lgm *limitGiftMgrSt) newLimitGift(player types.IPlayer, giftData *gamedata
 	attr.SetStr("giftID", giftData.GiftID)
 	attr.SetBool("isNew", true)
 	if giftData.ContinueTime > 0 {
-		attr.SetInt64("tmout", time.Now().Unix() + giftData.ContinueTime)
+		attr.SetInt64("tmout", time.Now().Unix()+giftData.ContinueTime)
 	}
 	attr.SetInt("version", giftData.Version)
 	gift, hasNew := lgm.newLimitGiftByAttr(attr, player)
@@ -358,19 +359,18 @@ func (lgm *limitGiftMgrSt) newLimitGift(player types.IPlayer, giftData *gamedata
 	return nil, attr
 }
 
-
 type limitGift struct {
 	player types.IPlayer
-	attr *attribute.MapAttr
+	attr   *attribute.MapAttr
 
 	// 为nil时，永远不满足条件
 	showConditions []limitGiftCondition
 	hideConditions []limitGiftCondition
-	buyConditions []limitGiftCondition
+	buyConditions  []limitGiftCondition
 }
 
 func (lg *limitGift) onCrossDay() {}
-func (lg *limitGift) onLogin() {}
+func (lg *limitGift) onLogin()    {}
 
 func (lg *limitGift) setVersion(version int) {
 	lg.attr.SetInt("version", version)
@@ -546,7 +546,7 @@ func (lg *limitGift) buy() (reply proto.Marshaler, goodsType pb.SdkRechargeResul
 	if giftData.GiftID == minVipCardGiftID {
 		st := module.OutStatus.GetStatus(lg.player, consts.OtMinVipCard)
 		if st == nil {
-			module.OutStatus.AddStatus(lg.player, consts.OtMinVipCard, 7 * 24 * 3600)
+			module.OutStatus.AddStatus(lg.player, consts.OtMinVipCard, 7*24*3600)
 		} else {
 			st.Over(7 * 24 * 3600)
 		}
@@ -584,12 +584,12 @@ func (lg *limitGift) tryRefresh(now time.Time) {
 	}
 
 	nowTS := now.Unix()
-	if nowTS < lg.getTimeout() + giftData.RefreshTime {
+	if nowTS < lg.getTimeout()+giftData.RefreshTime {
 		return
 	}
 
 	if giftData.ContinueTime > 0 {
-		lg.attr.SetInt64("tmout", nowTS + giftData.ContinueTime)
+		lg.attr.SetInt64("tmout", nowTS+giftData.ContinueTime)
 	}
 	lg.reset()
 }
@@ -659,7 +659,6 @@ func (lg *limitGift) checkCondition(conditions []limitGiftCondition) bool {
 	return true
 }
 
-
 type gaChaGift struct {
 	limitGift
 }
@@ -706,7 +705,7 @@ func (gc *gaChaGift) setBuyCnt(value int) {
 	gc.attr.SetInt("buyCnt", value)
 }
 
-func (gc *gaChaGift) getBuyCnt() int{
+func (gc *gaChaGift) getBuyCnt() int {
 	return gc.attr.GetInt("buyCnt")
 }
 
@@ -727,27 +726,27 @@ func (gc *gaChaGift) getNextTime() int32 {
 	return int32(nextTime.Unix())
 }
 
-func (gc *gaChaGift) caclHint(isLogin bool){
-	if !gc.canBuy(){
+func (gc *gaChaGift) caclHint(isLogin bool) {
+	if !gc.canBuy() {
 		gc.player.DelHint(pb.HintType_HtGaCha)
-	}else {
+	} else {
 		if isLogin {
 			gc.player.AddHint(pb.HintType_HtGaCha, 1)
-		}else{
+		} else {
 			gc.player.UpdateHint(pb.HintType_HtGaCha, 1)
 		}
 	}
 }
 
 func (gc *gaChaGift) onLogin() {
-	curTime :=time.Now().Unix()
+	curTime := time.Now().Unix()
 	if int32(curTime) > gc.getTimeout() {
 		gc.setBuyCnt(0)
 	}
 	gc.caclHint(true)
 }
 
-func (gc *gaChaGift) onCrossDay(){
+func (gc *gaChaGift) onCrossDay() {
 	timeout := gc.getNextTime()
 	gc.setTimeout(timeout)
 	gc.setBuyCnt(0)
@@ -760,7 +759,7 @@ func (gc *gaChaGift) setIsNew(val bool) {
 
 // 某个国家的段位礼包，gift + camp 开头的
 type teamGiftSt struct {
-	curGift iLimitGift  // 当前应该显示的
+	curGift  iLimitGift // 当前应该显示的
 	allGifts []iLimitGift
 }
 

@@ -7,13 +7,13 @@ import (
 	"sync"
 	"time"
 
+	ws "github.com/gorilla/websocket"
 	"kinger/gopuppy/common/consts"
 	"kinger/gopuppy/common/evq"
 	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/network/protoc"
 	"kinger/gopuppy/network/snet"
 	"kinger/gopuppy/network/websocket"
-	ws "github.com/gorilla/websocket"
 	"net/url"
 )
 

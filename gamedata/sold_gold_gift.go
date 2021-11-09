@@ -1,19 +1,19 @@
 package gamedata
 
 import (
-	"kinger/common/consts"
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"errors"
+	"kinger/common/consts"
 	"sort"
 )
 
 type SoldGoldGift struct {
-	ID string `json:"__id__"`
-	TreasureID string `json:"treasureId"`
-	JadePrice int `json:"jadePrice"`
-	Order int `json:"order"`
-	Areas [][]int `json:"areas"`
+	ID         string  `json:"__id__"`
+	TreasureID string  `json:"treasureId"`
+	JadePrice  int     `json:"jadePrice"`
+	Order      int     `json:"order"`
+	Areas      [][]int `json:"areas"`
 
 	areaLimit *AreaLimitConfig
 }
@@ -24,8 +24,8 @@ func (g *SoldGoldGift) init() {
 
 type SoldGoldGiftGameData struct {
 	baseGameData
-	areaVersion int
-	rawData []byte
+	areaVersion    int
+	rawData        []byte
 	areaToGiftList map[int][]*SoldGoldGift
 }
 

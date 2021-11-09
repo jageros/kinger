@@ -1,13 +1,13 @@
 package player
 
 import (
+	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
-	"kinger/gopuppy/attribute"
+	"kinger/common/config"
 	"kinger/common/consts"
+	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common/timer"
 	"time"
-	"kinger/apps/game/module"
-	"kinger/common/config"
 )
 
 // 防沉迷
@@ -23,7 +23,7 @@ const (
 )
 
 type fatigueComponent struct {
-	p *Player
+	p    *Player
 	attr *attribute.MapAttr
 }
 
@@ -55,7 +55,7 @@ func (fc *fatigueComponent) OnInit(player types.IPlayer) {
 }
 
 func (fc *fatigueComponent) OnLogout() {
-	fc.setTodayOnlineTime( fc.getTodayOnlineTime() +  int(time.Now().Unix() - fc.getLoginTime()) )
+	fc.setTodayOnlineTime(fc.getTodayOnlineTime() + int(time.Now().Unix()-fc.getLoginTime()))
 }
 
 func (fc *fatigueComponent) OnLogin(isRelogin, isRestore bool) {
@@ -64,7 +64,7 @@ func (fc *fatigueComponent) OnLogin(isRelogin, isRestore bool) {
 	}
 
 	if isRelogin {
-		fc.setTodayOnlineTime( fc.getTodayOnlineTime() + int(time.Now().Unix() - fc.getLoginTime()) )
+		fc.setTodayOnlineTime(fc.getTodayOnlineTime() + int(time.Now().Unix()-fc.getLoginTime()))
 	}
 
 	fc.setLoginTime(time.Now().Unix())

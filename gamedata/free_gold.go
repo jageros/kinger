@@ -1,11 +1,11 @@
 package gamedata
 
 import (
+	"bytes"
 	"encoding/json"
+	"github.com/pkg/errors"
 	"kinger/common/consts"
 	"math/rand"
-	"bytes"
-	"github.com/pkg/errors"
 )
 
 type IFreeShopAds interface {
@@ -14,10 +14,10 @@ type IFreeShopAds interface {
 }
 
 type FreeGoldAds struct {
-	ID         int    `json:"__id__"`
-	Gold        int    `json:"soldGold"`
+	ID   int `json:"__id__"`
+	Gold int `json:"soldGold"`
 	Time int `json:"time"`
-	Team     int    `json:"team"`
+	Team int `json:"team"`
 }
 
 func (fa *FreeGoldAds) GetID() int {
@@ -30,9 +30,9 @@ func (fa *FreeGoldAds) GetTime() int {
 
 type FreeGoldAdsGameData struct {
 	baseGameData
-	rawData []byte
+	rawData  []byte
 	Team2Ads map[int][]*FreeGoldAds
-	ID2Ads map[int]*FreeGoldAds
+	ID2Ads   map[int]*FreeGoldAds
 }
 
 func newFreeGoldAdsGameData() *FreeGoldAdsGameData {

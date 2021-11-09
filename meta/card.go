@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_FETCH_CARD_DATA    resp: CardPools
@@ -787,4 +787,3 @@ func (m *S2C_ADD_CARD_SKIN_Meta) DecodeReply(data []byte) (interface{}, error) {
 }
 
 //------------------------------------ S2C_ADD_CARD_SKIN END ----------------------------------------
-

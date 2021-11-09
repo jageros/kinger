@@ -1,15 +1,15 @@
 package gamedata
 
 import (
-	"kinger/common/consts"
 	"encoding/json"
+	"kinger/common/consts"
 )
 
 type PieceCardGoods struct {
-	ID int `json:"__id__"`
-	CardID uint32 `json:"cardId"`
-	Price int `json:"piece"`
-	Areas [][]int `json:"areas"`
+	ID     int     `json:"__id__"`
+	CardID uint32  `json:"cardId"`
+	Price  int     `json:"piece"`
+	Areas  [][]int `json:"areas"`
 
 	AreaLimit *AreaLimitConfig
 }
@@ -20,8 +20,8 @@ func (c *PieceCardGoods) init() {
 
 type PieceCardGameData struct {
 	baseGameData
-	Goods []*PieceCardGoods
-	area2Goods map[int]map[uint32]*PieceCardGoods   // map[area]map[cardID]*PieceCardGoods
+	Goods      []*PieceCardGoods
+	area2Goods map[int]map[uint32]*PieceCardGoods // map[area]map[cardID]*PieceCardGoods
 }
 
 func newPieceCardGameData() *PieceCardGameData {

@@ -2,33 +2,33 @@ package web
 
 import (
 	"kinger/apps/game/module"
-	"kinger/gopuppy/apps/logic"
-	"kinger/proto/pb"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/network"
 	"kinger/apps/game/module/types"
 	"kinger/common/config"
-	"kinger/gopuppy/common/evq"
 	"kinger/common/consts"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/network"
+	"kinger/proto/pb"
 )
 
 var mod *gmModule
 
 type gmModule struct {
-	maxNoticeVersion int
+	maxNoticeVersion   int
 	channel2NoticeAttr map[string]*attribute.AttrMgr
-	channel2Notice map[string]*pb.LoginNotice
+	channel2Notice     map[string]*pb.LoginNotice
 
 	serverStatusAttr *attribute.AttrMgr
-	serverStatus *pb.ServerStatus
+	serverStatus     *pb.ServerStatus
 }
 
 func newGmModule() *gmModule {
 	m := &gmModule{
-		channel2Notice: map[string]*pb.LoginNotice{},
+		channel2Notice:     map[string]*pb.LoginNotice{},
 		channel2NoticeAttr: map[string]*attribute.AttrMgr{},
-		serverStatusAttr: attribute.NewAttrMgr("server_status", 1, true),
-		serverStatus: &pb.ServerStatus{},
+		serverStatusAttr:   attribute.NewAttrMgr("server_status", 1, true),
+		serverStatus:       &pb.ServerStatus{},
 	}
 
 	err := m.serverStatusAttr.Load()
@@ -61,7 +61,7 @@ func newGmModule() *gmModule {
 		noticesAttr.ForEachIndex(func(index int) bool {
 			noticeAttr := noticesAttr.GetMapAttr(index)
 			notice.Notices = append(notice.Notices, &pb.LoginNoticeData{
-				Title: noticeAttr.GetStr("title"),
+				Title:   noticeAttr.GetStr("title"),
 				Content: noticeAttr.GetStr("content"),
 			})
 			return true
@@ -159,7 +159,7 @@ func (m *gmModule) onLoginNoticeUpdate(channel string, noticeMsg *pb.LoginNotice
 
 	logic.BroadcastBackend(pb.MessageID_G2G_ON_LOGIN_NOTICE_UPDATE, &pb.GmLoginNotice{
 		Channel: channel,
-		Notice: noticeMsg,
+		Notice:  noticeMsg,
 	})
 }
 

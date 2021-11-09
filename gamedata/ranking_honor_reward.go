@@ -6,16 +6,16 @@ import (
 )
 
 type RankHonorReward struct {
-	ID  		int   	`json:"__id__"`
-	Rank		[]int 	`json:"rank"`
-	Treasure 	string	`json:"treasure"`
-	Gold		int		`json:"gold"`
-	Jade 		int 	`json:"jade"`
+	ID       int    `json:"__id__"`
+	Rank     []int  `json:"rank"`
+	Treasure string `json:"treasure"`
+	Gold     int    `json:"gold"`
+	Jade     int    `json:"jade"`
 }
 
 type RankHonorRewardData struct {
 	baseGameData
-	RankReward 	map[int]*RankHonorReward
+	RankReward map[int]*RankHonorReward
 }
 
 func (rr *RankHonorRewardData) name() string {
@@ -27,7 +27,6 @@ func newRankHonorRewardData() *RankHonorRewardData {
 	gd.i = gd
 	return gd
 }
-
 
 func (rr *RankHonorRewardData) init(d []byte) error {
 	var l []*RankHonorReward

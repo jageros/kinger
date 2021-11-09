@@ -64,7 +64,7 @@ func (c *activityCom) onExchangeGoods(aid int, goodsData *gamedata.HuodongGoods)
 		}
 
 		key := strconv.Itoa(goodsData.ID)
-		exchangeCntAttr.SetInt( key, exchangeCntAttr.GetInt(key) + 1 )
+		exchangeCntAttr.SetInt(key, exchangeCntAttr.GetInt(key)+1)
 	}
 }
 

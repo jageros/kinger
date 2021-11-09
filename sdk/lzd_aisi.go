@@ -1,50 +1,50 @@
 package sdk
 
 import (
-	"net/http"
-	"io/ioutil"
-	"kinger/gopuppy/common/glog"
-	"github.com/pkg/errors"
-	"encoding/json"
-	"strings"
-	"kinger/common/config"
-	"kinger/gopuppy/common/evq"
-	"encoding/base64"
 	"crypto/rsa"
 	"crypto/x509"
+	"encoding/base64"
+	"encoding/json"
+	"github.com/pkg/errors"
+	"io/ioutil"
+	"kinger/common/config"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
 	grsa "kinger/gopuppy/common/rsa"
+	"net/http"
+	"strings"
 )
 
 var (
 	aiSiPaySuccess = []byte("success")
-	aiSiPayErr = []byte("fail")
+	aiSiPayErr     = []byte("fail")
 )
 
 type aiSiLoginReply struct {
-	Status int `json:"status"`
+	Status   int    `json:"status"`
 	UserName string `json:"username"`
-	UserId int `json:"userid"`
+	UserId   int    `json:"userid"`
 }
 
 type aiSiSdk struct {
 	publickey string
-	pub *rsa.PublicKey
+	pub       *rsa.PublicKey
 }
 
 func newAiSiSdk(cfg *config.LoginChannelConfig) ISdk {
-	s := &aiSiSdk{ publickey: cfg.PaySecret }
+	s := &aiSiSdk{publickey: cfg.PaySecret}
 	return s
 	decodePublic, err := base64.StdEncoding.DecodeString(cfg.PaySecret)
-        if err != nil {
-                glog.Errorf("newAiSiSdk DecodeString err %s", err)
-                return nil
-        }
-        pubInterface, err := x509.ParsePKIXPublicKey(decodePublic)
-        if err != nil {
-                glog.Errorf("newAiSiSdk ParsePKIXPublicKey err %s", err)
-                return nil
-        }
-        s.pub = pubInterface.(*rsa.PublicKey)
+	if err != nil {
+		glog.Errorf("newAiSiSdk DecodeString err %s", err)
+		return nil
+	}
+	pubInterface, err := x509.ParsePKIXPublicKey(decodePublic)
+	if err != nil {
+		glog.Errorf("newAiSiSdk ParsePKIXPublicKey err %s", err)
+		return nil
+	}
+	s.pub = pubInterface.(*rsa.PublicKey)
 	return s
 }
 
@@ -167,4 +167,3 @@ func (s *aiSiSdk) verifySignature(params map[string]string, sign string) bool {
 	}
 	return true
 }
-

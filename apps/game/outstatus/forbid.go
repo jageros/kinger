@@ -1,8 +1,8 @@
 package outstatus
 
 import (
-	"kinger/gopuppy/apps/logic"
 	"kinger/common/consts"
+	"kinger/gopuppy/apps/logic"
 	"kinger/proto/pb"
 	"strconv"
 	"strings"
@@ -55,12 +55,11 @@ type accountForbid struct {
 	baseForbid
 }
 
-
 type chatForbid struct {
 	baseForbid
 }
 
-func (cf *chatForbid) onDel()() {
+func (cf *chatForbid) onDel() {
 	logic.BroadcastBackend(pb.MessageID_L2CA_FORBID_CHAT, &pb.ForbidChatArg{
 		Uid:      uint64(cf.player.GetUid()),
 		IsForbid: false,
@@ -70,5 +69,3 @@ func (cf *chatForbid) onDel()() {
 type monitorForbid struct {
 	baseForbid
 }
-
-

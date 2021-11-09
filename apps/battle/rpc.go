@@ -1,18 +1,18 @@
 package main
 
 import (
-	"kinger/gopuppy/common/eventhub"
-	"kinger/gopuppy/apps/logic"
-	"kinger/proto/pb"
-	gpb "kinger/gopuppy/proto/pb"
-	"kinger/gopuppy/network"
-	"kinger/common/consts"
-	"kinger/gopuppy/common/glog"
-	"kinger/gamedata"
-	"kinger/gopuppy/common"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/evq"
 	"kinger/common/config"
+	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/eventhub"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/network"
+	gpb "kinger/gopuppy/proto/pb"
+	"kinger/proto/pb"
 	"time"
 )
 
@@ -45,7 +45,7 @@ func onRestoreAgent(args ...interface{}) {
 		battleID := common.UUid(playerBattleInfoAttr.GetUInt64("battleID"))
 		if c, ok := restoringBattle[battleID]; ok {
 			evq.Await(func() {
-				<- c
+				<-c
 			})
 		} else {
 			c := make(chan struct{})
@@ -154,8 +154,8 @@ func rpc_C2S_FightSurrender(agent *logic.PlayerAgent, arg interface{}) (interfac
 	battleType := battleObj.getBattleType()
 	if mgr.isPvp(battleType) && battleType != consts.BtFriend {
 		doActionFighter := battleObj.getSituation().getDoActionFighter()
-		if ( (doActionFighter != nil && doActionFighter != fighter) ||
-			(battleObj.getSituation().getCurBoutFighter() != fighter) ) &&
+		if ((doActionFighter != nil && doActionFighter != fighter) ||
+			(battleObj.getSituation().getCurBoutFighter() != fighter)) &&
 			time.Now().Sub(battleObj.getBoutBeginTime()) < time.Minute {
 			return nil, gamedata.GameError(100)
 		}
@@ -251,7 +251,7 @@ func rpc_G2B_LoadBattle(_ *network.Session, arg interface{}) (interface{}, error
 		Uid:      arg2.Uid,
 		ClientID: arg2.ClientID,
 		GateID:   arg2.GateID,
-		Region: arg2.Region,
+		Region:   arg2.Region,
 	})
 	reply := mgr.loadBattle(common.UUid(arg2.BattleID), agent)
 

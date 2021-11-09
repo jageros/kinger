@@ -1,17 +1,17 @@
 package main
 
 import (
-	"kinger/gopuppy/apps/logic"
-	"kinger/gopuppy/common/app"
-	gconfig "kinger/gopuppy/common/config"
-	"kinger/gopuppy/common/rpubsub"
-	"kinger/gopuppy/common/timer"
 	"kinger/common/config"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/common/app"
+	gconfig "kinger/gopuppy/common/config"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/rpubsub"
+	"kinger/gopuppy/common/timer"
 	_ "kinger/meta"
 	"time"
-	"kinger/gopuppy/common/evq"
 )
 
 var rService *rankService
@@ -36,7 +36,7 @@ func (rs *rankService) Start(appID uint16) {
 		rs.ReportRpcHandlers()
 		close(c)
 	})
-	<- c
+	<-c
 }
 
 func (rs *rankService) Stop() {
@@ -47,7 +47,7 @@ func (rs *rankService) Stop() {
 		rankMgr.save()
 		close(c)
 	})
-	<- c
+	<-c
 	rs.OnStop()
 }
 

@@ -1,16 +1,16 @@
 package mission
 
 import (
-	"kinger/gamedata"
-	"kinger/common/consts"
 	"fmt"
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/proto/pb"
 	//"kinger/gopuppy/common/glog"
 )
 
 var (
 	templates map[int]iMissionTemplate
-	_ iMissionTemplate = &baseMissionTemplate{}
+	_         iMissionTemplate = &baseMissionTemplate{}
 )
 
 type iMissionTemplate interface {
@@ -184,25 +184,25 @@ func doInitMissionTemplate(gdata gamedata.IGameData) {
 	for missionID, mdata := range missionGameData.Missions {
 		switch mdata.Type {
 		case mtBattle:
-			tpls[missionID] = &battleMissionTemplate{baseMissionTemplate{data:mdata}}
+			tpls[missionID] = &battleMissionTemplate{baseMissionTemplate{data: mdata}}
 		case mtBattleWin:
-			tpls[missionID] = &battleWinMissionTemplate{baseMissionTemplate{data:mdata}}
+			tpls[missionID] = &battleWinMissionTemplate{baseMissionTemplate{data: mdata}}
 		case mtUseCard:
-			tpls[missionID] = &useCardMissionTemplate{baseMissionTemplate{data:mdata}}
+			tpls[missionID] = &useCardMissionTemplate{baseMissionTemplate{data: mdata}}
 		case mtInviteBattle:
-			tpls[missionID] = &inviteBattleMissionTemplate{baseMissionTemplate{data:mdata}}
+			tpls[missionID] = &inviteBattleMissionTemplate{baseMissionTemplate{data: mdata}}
 		case mtOpenTreasure:
-			tpls[missionID] = &openTreasureMissionTemplate{baseMissionTemplate{data:mdata}}
+			tpls[missionID] = &openTreasureMissionTemplate{baseMissionTemplate{data: mdata}}
 		case mtWxShare:
-			tpls[missionID] = &wxShareMissionTemplate{baseMissionTemplate{data:mdata}}
+			tpls[missionID] = &wxShareMissionTemplate{baseMissionTemplate{data: mdata}}
 		case mtAddFriend:
-			tpls[missionID] = &addFriendMissionTemplate{baseMissionTemplate{data:mdata}}
+			tpls[missionID] = &addFriendMissionTemplate{baseMissionTemplate{data: mdata}}
 		case mtShareVideo:
-			tpls[missionID] = &shareVideoMissionTemplate{baseMissionTemplate{data:mdata}}
+			tpls[missionID] = &shareVideoMissionTemplate{baseMissionTemplate{data: mdata}}
 		case mtWatchVideo:
-			tpls[missionID] = &watchVideoMissionTemplate{baseMissionTemplate{data:mdata}}
+			tpls[missionID] = &watchVideoMissionTemplate{baseMissionTemplate{data: mdata}}
 		case mtAccTreasure:
-			tpls[missionID] = &accTreasureMissionTemplate{baseMissionTemplate{data:mdata}}
+			tpls[missionID] = &accTreasureMissionTemplate{baseMissionTemplate{data: mdata}}
 		default:
 			panic(fmt.Sprintf("unknow mission type %d, id=%d", mdata.Type, missionID))
 		}

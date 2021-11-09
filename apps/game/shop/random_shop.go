@@ -2,13 +2,13 @@ package shop
 
 import (
 	"fmt"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/timer"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/config"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/timer"
 	"kinger/proto/pb"
 	"math/rand"
 	"sort"
@@ -16,7 +16,6 @@ import (
 	"strings"
 	"time"
 )
-
 
 type iRandomShop interface {
 	packMsg() *pb.VisitRandomShopData
@@ -27,30 +26,30 @@ type iRandomShop interface {
 	buy(arg *pb.BuyRandomShopArg) (interface{}, error)
 }
 
-type nilRandomShopSt struct{
+type nilRandomShopSt struct {
 }
 
-func (nrs *nilRandomShopSt) pushToClient()   {}
-func (nrs *nilRandomShopSt) onCrossDay() 	 {}
-func (nrs *nilRandomShopSt) onLogin() 	     {}
+func (nrs *nilRandomShopSt) pushToClient() {}
+func (nrs *nilRandomShopSt) onCrossDay()   {}
+func (nrs *nilRandomShopSt) onLogin()      {}
 
-func (nrs *nilRandomShopSt) packMsg() *pb.VisitRandomShopData{
+func (nrs *nilRandomShopSt) packMsg() *pb.VisitRandomShopData {
 	return nil
 }
 
-func (nrs *nilRandomShopSt) buyRefreshCnt(buyCnt int) (*pb.BuyRandomShopRefreshCntReply, error){
+func (nrs *nilRandomShopSt) buyRefreshCnt(buyCnt int) (*pb.BuyRandomShopRefreshCntReply, error) {
 	return nil, gamedata.InternalErr
 }
 
-func (nrs *nilRandomShopSt) buy(arg *pb.BuyRandomShopArg) (interface{}, error){
+func (nrs *nilRandomShopSt) buy(arg *pb.BuyRandomShopArg) (interface{}, error) {
 	return nil, gamedata.InternalErr
 }
 
 type randomShop struct {
-	player types.IPlayer
-	attr *attribute.MapAttr
-	cptAttr *attribute.MapAttr
-	goodsList []*randShopGoods
+	player       types.IPlayer
+	attr         *attribute.MapAttr
+	cptAttr      *attribute.MapAttr
+	goodsList    []*randShopGoods
 	newGoodsList []*randShopGoods
 }
 
@@ -59,7 +58,7 @@ type randShopGoods struct {
 }
 
 type card struct {
-	Key uint32
+	Key   uint32
 	Value float32
 }
 
@@ -71,11 +70,11 @@ func (rsg randShopGoods) getAmount() int {
 	return rsg.attr.GetInt("amount")
 }
 
-func (rsg randShopGoods) getIsBuy() bool{
+func (rsg randShopGoods) getIsBuy() bool {
 	return rsg.attr.GetBool("isBuy")
 }
 
-func (rsg randShopGoods) getIsNeedGold() bool{
+func (rsg randShopGoods) getIsNeedGold() bool {
 	return rsg.attr.GetBool("isNeedGold")
 }
 
@@ -95,7 +94,7 @@ func (rsg randShopGoods) setIsNeedGold(value bool) {
 	rsg.attr.SetBool("isNeedGold", value)
 }
 
-func (rsg randShopGoods) setData (goodsID string, amount int, isBuy, isNeedGold bool) {
+func (rsg randShopGoods) setData(goodsID string, amount int, isBuy, isNeedGold bool) {
 	rsg.setGoodsID(goodsID)
 	rsg.setAmount(amount)
 	rsg.setIsBuy(isBuy)
@@ -103,6 +102,7 @@ func (rsg randShopGoods) setData (goodsID string, amount int, isBuy, isNeedGold 
 }
 
 var nilRandomShop = &nilRandomShopSt{}
+
 func newRandomShop(attr *attribute.MapAttr, player types.IPlayer) iRandomShop {
 	var goodsList []*randShopGoods
 	randomShopAttr := attr.GetMapAttr("randomShop")
@@ -113,7 +113,7 @@ func newRandomShop(attr *attribute.MapAttr, player types.IPlayer) iRandomShop {
 		attr.SetMapAttr("randomShop", randomShopAttr)
 		goodsListAttr := attribute.NewListAttr()
 		randomShopAttr.SetListAttr("goodsList", goodsListAttr)
-	}else {
+	} else {
 		goodsListAttr := randomShopAttr.GetListAttr("goodsList")
 		goodsListAttr.ForEachIndex(func(index int) bool {
 			goodsAttr := goodsListAttr.GetMapAttr(index)
@@ -123,15 +123,15 @@ func newRandomShop(attr *attribute.MapAttr, player types.IPlayer) iRandomShop {
 	}
 
 	r := &randomShop{
-		player: player,
-		attr: attr,
-		cptAttr: randomShopAttr,
+		player:    player,
+		attr:      attr,
+		cptAttr:   randomShopAttr,
 		goodsList: goodsList,
 	}
 	return r
 }
 
-func (rs *randomShop) packMsg() *pb.VisitRandomShopData{
+func (rs *randomShop) packMsg() *pb.VisitRandomShopData {
 	refreshTime := rs.getRefreshTime()
 	ver := rs.getVer()
 	ok := false
@@ -139,40 +139,40 @@ func (rs *randomShop) packMsg() *pb.VisitRandomShopData{
 		unix8 := int64(8 * 60 * 60)
 		timeNow := time.Now().Unix()
 		subTime := timeNow - int64(refreshTime)
-		if subTime > unix8{
+		if subTime > unix8 {
 			ok = true
 			rs.setRefreshTime(0)
 		}
 	}
 
-	if len(rs.goodsList) > 0 && !ok && ver != 0{
+	if len(rs.goodsList) > 0 && !ok && ver != 0 {
 		msg := &pb.VisitRandomShopData{}
 		randomTeam := gamedata.GetGameData(consts.RandomShop).(*gamedata.RandomShopGameData)
 		poolGameData := gamedata.GetGameData(consts.Pool).(*gamedata.PoolGameData)
-		for _, goods := range rs.goodsList{
+		for _, goods := range rs.goodsList {
 			goodsID := goods.getGoodsID()
 			shopName := strings.Split(goodsID, ":")
 			goodsName := shopName[0]
 			var needJade, amount, needGold int32
-			if goodsName == "card"{
+			if goodsName == "card" {
 				n, _ := strconv.Atoi(shopName[1])
 				card := poolGameData.GetCard(uint32(n), 1)
-				if goods.getIsNeedGold(){
+				if goods.getIsNeedGold() {
 					onePrice := randomTeam.CardStarPriceGold[card.Rare][1]
 					amount = int32(goods.getAmount())
 					needGold = int32(onePrice) * amount
-				}else{
+				} else {
 					onePrice := randomTeam.CardStarPrice[card.Rare][1]
 					amount = int32(goods.getAmount())
 					needJade = int32(onePrice) * amount
 				}
-			}else if goodsName == "gold"{
+			} else if goodsName == "gold" {
 				onePrice := randomTeam.GoldPrice[0] / randomTeam.GoldPrice[1]
 				amount = int32(goods.getAmount())
 				needJade = amount / int32(onePrice)
-			}else if goodsName == "freeGold" {
+			} else if goodsName == "freeGold" {
 				amount = int32(goods.getAmount())
-			}else if goodsName == "freeJade" {
+			} else if goodsName == "freeJade" {
 				amount = int32(goods.getAmount())
 			}
 
@@ -186,7 +186,7 @@ func (rs *randomShop) packMsg() *pb.VisitRandomShopData{
 		msg.NexRemainTime = int32(rs.getNextRemainTime().Seconds())
 
 		return msg
-	}else{
+	} else {
 		//isReset := rs.getIsReset()
 		//if ok{
 		//	isReset = true
@@ -197,7 +197,7 @@ func (rs *randomShop) packMsg() *pb.VisitRandomShopData{
 	}
 }
 
-func (rs *randomShop) getRefreshTime() int{
+func (rs *randomShop) getRefreshTime() int {
 	return rs.cptAttr.GetInt("refreshTime")
 }
 
@@ -217,17 +217,17 @@ func (rs *randomShop) setVer(ver int) {
 	rs.cptAttr.SetInt("ver", ver)
 }
 
-func (rs *randomShop) getVer() int{
+func (rs *randomShop) getVer() int {
 	return rs.cptAttr.GetInt("ver")
 }
 
-func (rs *randomShop) getPackMsg(goodsID string, amount, needJade, needGold int32, isBuy bool) *pb.RandomShop{
+func (rs *randomShop) getPackMsg(goodsID string, amount, needJade, needGold int32, isBuy bool) *pb.RandomShop {
 	return &pb.RandomShop{
-		GoodsId: goodsID,
-		Amount: amount,
+		GoodsId:  goodsID,
+		Amount:   amount,
 		NeedJade: needJade,
 		NeedGold: needGold,
-		IsBuy: isBuy,
+		IsBuy:    isBuy,
 	}
 }
 
@@ -236,12 +236,12 @@ func (rs *randomShop) setGoodsList() {
 	var i int
 	for i = 0; i < len(rs.newGoodsList); i++ {
 		newMap := rs.newGoodsList[i]
-		if len(rs.goodsList) > i && len(rs.goodsList) > 0{
+		if len(rs.goodsList) > i && len(rs.goodsList) > 0 {
 			rs.goodsList[i].attr.SetStr("goodsID", newMap.getGoodsID())
 			rs.goodsList[i].attr.SetInt("amount", newMap.getAmount())
 			rs.goodsList[i].attr.SetBool("isBuy", newMap.getIsBuy())
 			rs.goodsList[i].attr.SetBool("isNeedGold", newMap.getIsNeedGold())
-		}else {
+		} else {
 			newGoods := &randShopGoods{
 				attr: attribute.NewMapAttr(),
 			}
@@ -253,10 +253,10 @@ func (rs *randomShop) setGoodsList() {
 
 	subGoodsList := len(rs.goodsList) - len(rs.newGoodsList)
 	if subGoodsList > 0 {
-		for _, goods := range rs.goodsList[i:]{
+		for _, goods := range rs.goodsList[i:] {
 			rs.cptAttr.GetListAttr("goodsList").DelMapAttr(goods.attr)
 		}
-		rs.goodsList = rs.goodsList[:subGoodsList + 1]
+		rs.goodsList = rs.goodsList[:subGoodsList+1]
 	}
 
 	if len(newList) > 0 {
@@ -265,47 +265,47 @@ func (rs *randomShop) setGoodsList() {
 }
 
 func (rs *randomShop) setAfterTime() {
-	subTime8, pTime8 := timer.TimePreDelta(8, 0,0)
-	subTime16, pTime16 := timer.TimePreDelta(16, 0,0)
-	subTime24, pTime24 := timer.TimePreDelta(24, 0,0)
+	subTime8, pTime8 := timer.TimePreDelta(8, 0, 0)
+	subTime16, pTime16 := timer.TimePreDelta(16, 0, 0)
+	subTime24, pTime24 := timer.TimePreDelta(24, 0, 0)
 
 	if subTime8 < subTime16 {
 		rs.setRefreshTime(int(pTime8))
-	}else if subTime16 < subTime24 {
+	} else if subTime16 < subTime24 {
 		rs.setRefreshTime(int(pTime16))
-	}else {
+	} else {
 		rs.setRefreshTime(int(pTime24))
 	}
 }
 
-func (rs *randomShop) getNextRemainTime() time.Duration{
+func (rs *randomShop) getNextRemainTime() time.Duration {
 	nTime8 := timer.TimeDelta(8, 0, 0)
 	nTime16 := timer.TimeDelta(16, 0, 0)
 	nTime24 := timer.TimeDelta(24, 0, 0)
 
 	if nTime8 < nTime16 && nTime8 < nTime24 {
 		return nTime8
-	}else if nTime16 < nTime24 {
+	} else if nTime16 < nTime24 {
 		return nTime16
-	}else{
+	} else {
 		return nTime24
 	}
 }
 
-func (rs *randomShop) getIsReset()(isReset bool){
+func (rs *randomShop) getIsReset() (isReset bool) {
 	buyCnt := rs.getBuyCnt()
 	if buyCnt > 3 {
 		isReset = false
-	}else {
+	} else {
 		isReset = true
 	}
 	return
 }
 
-func (rs *randomShop) buyRefreshCnt( _ int) (*pb.BuyRandomShopRefreshCntReply, error){
+func (rs *randomShop) buyRefreshCnt(_ int) (*pb.BuyRandomShopRefreshCntReply, error) {
 	buyCnt := rs.getBuyCnt()
 	randomTeam := gamedata.GetGameData(consts.RandomShop).(*gamedata.RandomShopGameData)
-	if buyCnt >= randomTeam.RefreshCnt{
+	if buyCnt >= randomTeam.RefreshCnt {
 		return nil, gamedata.GameError(1)
 	}
 
@@ -319,7 +319,7 @@ func (rs *randomShop) buyRefreshCnt( _ int) (*pb.BuyRandomShopRefreshCntReply, e
 		if !resCpt.HasResource(consts.Jade, price) {
 			return nil, gamedata.GameError(2)
 		}
-		resCpt.ModifyResource(consts.Jade, - price, consts.RmrRefreshRandomShop)
+		resCpt.ModifyResource(consts.Jade, -price, consts.RmrRefreshRandomShop)
 	}
 
 	buyCnt += 1
@@ -353,26 +353,26 @@ func (rs *randomShop) buy(arg *pb.BuyRandomShopArg) (interface{}, error) {
 	n, _ := strconv.Atoi(shopName[1])
 
 	hasRes := false
-	for _, goods := range rs.goodsList{
+	for _, goods := range rs.goodsList {
 		amount := goods.getAmount()
-		if goods.getGoodsID() == goodsID && goods.getIsBuy() && goodsAmount == int32(amount){
-			if strings.HasPrefix(goodsID, "card"){
+		if goods.getGoodsID() == goodsID && goods.getIsBuy() && goodsAmount == int32(amount) {
+			if strings.HasPrefix(goodsID, "card") {
 				card := poolGameData.GetCard(uint32(n), 1)
 				if goods.getIsNeedGold() {
 					oneCardPrice := randomTeam.CardStarPriceGold[card.Rare][1]
 					needGold = oneCardPrice * int(amount)
-				}else{
+				} else {
 					oneCardPrice := randomTeam.CardStarPrice[card.Rare][1]
 					needJade = oneCardPrice * int(amount)
 				}
 
-			}else if strings.HasPrefix(goodsID, "gold") {
+			} else if strings.HasPrefix(goodsID, "gold") {
 				oneGoldPrice := randomTeam.GoldPrice[0] / randomTeam.GoldPrice[1]
 				needJade = int(amount) / oneGoldPrice
 
-			}else if strings.HasPrefix(goodsID, "freeGold") || strings.HasPrefix(goodsID, "freeJade"){
+			} else if strings.HasPrefix(goodsID, "freeGold") || strings.HasPrefix(goodsID, "freeJade") {
 				needJade = 0
-			}else{
+			} else {
 				return nil, gamedata.GameError(1)
 			}
 			curGoodsAttr = goods
@@ -380,7 +380,7 @@ func (rs *randomShop) buy(arg *pb.BuyRandomShopArg) (interface{}, error) {
 		}
 	}
 
-	if !hasRes{
+	if !hasRes {
 		return nil, gamedata.GameError(1)
 	}
 
@@ -393,44 +393,44 @@ func (rs *randomShop) buy(arg *pb.BuyRandomShopArg) (interface{}, error) {
 		if !resCpt.HasResource(consts.Jade, needJade) {
 			return nil, gamedata.GameError(2)
 		}
-		resCpt.ModifyResource(consts.Jade, - needJade, consts.RmrRandomShop)
+		resCpt.ModifyResource(consts.Jade, -needJade, consts.RmrRandomShop)
 	}
 
 	if needGold > 0 {
 		if !resCpt.HasResource(consts.Gold, needGold) {
 			return nil, gamedata.GameError(2)
 		}
-		resCpt.ModifyResource(consts.Gold, - needGold, consts.RmrRandomShop)
+		resCpt.ModifyResource(consts.Gold, -needGold, consts.RmrRandomShop)
 		resType = consts.Gold
 		needRes = needGold
 	}
 
-	if strings.HasPrefix(goodsID, "card"){
+	if strings.HasPrefix(goodsID, "card") {
 		cardCpt := rs.player.GetComponent(consts.CardCpt).(types.ICardComponent)
 		cardMap := make(map[uint32]*pb.CardInfo)
 		cardMap[uint32(n)] = &pb.CardInfo{
 			Amount: goodsAmount,
 		}
 		cardCpt.ModifyCollectCards(cardMap)
-	}else if strings.HasPrefix(goodsID, "gold") || strings.HasPrefix(goodsID, "freeGold"){
+	} else if strings.HasPrefix(goodsID, "gold") || strings.HasPrefix(goodsID, "freeGold") {
 		resCpt.ModifyResource(consts.Gold, int(goodsAmount), consts.RmrRandomShop)
-	}else if strings.HasPrefix(goodsID, "freeJade"){
+	} else if strings.HasPrefix(goodsID, "freeJade") {
 		resCpt.ModifyResource(consts.Jade, int(goodsAmount), consts.RmrRandomShop)
-	}else {
+	} else {
 		return nil, gamedata.GameError(1)
 	}
 
 	curGoodsAttr.setIsBuy(false)
 	rs.caclHint(false)
 
-	mod.LogShopBuyItem(rs.player, goodsID, fmt.Sprintf("%s_%s", shopName[0], shopName[1]),1,
+	mod.LogShopBuyItem(rs.player, goodsID, fmt.Sprintf("%s_%s", shopName[0], shopName[1]), 1,
 		"refresh_shop", strconv.Itoa(resType), module.Player.GetResourceName(resType), needRes,
 		fmt.Sprintf("goodsAmount=%d", goodsAmount))
 
 	return nil, nil
 }
 
-func (rs *randomShop) onCrossDay(){
+func (rs *randomShop) onCrossDay() {
 	rs.setBuyCnt(0)
 	rs.syncToClient()
 	rs.setAfterTime()
@@ -441,19 +441,19 @@ func (rs *randomShop) onLogin() {
 	rs.caclHint(true)
 }
 
-func (rs *randomShop) caclHint(isLogin bool){
-	if rs.hasFreeRes(){
+func (rs *randomShop) caclHint(isLogin bool) {
+	if rs.hasFreeRes() {
 		if isLogin {
 			rs.player.AddHint(pb.HintType_HtRandomFree, 1)
-		}else{
+		} else {
 			rs.player.UpdateHint(pb.HintType_HtRandomFree, 1)
 		}
-	}else {
+	} else {
 		rs.player.DelHint(pb.HintType_HtRandomFree)
 	}
 }
 
-func (rs *randomShop) hasFreeRes() (hasRes bool){
+func (rs *randomShop) hasFreeRes() (hasRes bool) {
 	for _, goods := range rs.goodsList {
 		if strings.HasPrefix(goods.getGoodsID(), "free") && goods.getIsBuy() {
 			hasRes = true
@@ -470,7 +470,7 @@ func (rs *randomShop) pushToClient() {
 
 func (rs *randomShop) syncToClient() {
 	agent := rs.player.GetAgent()
-	if agent == nil{
+	if agent == nil {
 		return
 	}
 	msg := rs.newPackMsg(true)
@@ -499,17 +499,17 @@ func (rs *randomShop) newPackMsg(isReset bool) *pb.VisitRandomShopData {
 	poolGameData := gamedata.GetGameData(consts.Pool).(*gamedata.PoolGameData)
 	cardIDs := module.Card.GetUnlockCards(rs.player, 0)
 
-	for _, cm := range cardIDs{
+	for _, cm := range cardIDs {
 		cardIDsMap[cm] = 1
 	}
 
 	oldID2Type := make(map[uint32]string)
-	for _, goods := range rs.goodsList{
+	for _, goods := range rs.goodsList {
 		goodsName := strings.Split(goods.getGoodsID(), ":")
 		if len(goodsName) < 2 {
 			continue
 		}
-		n, _ :=  strconv.Atoi(goodsName[1])
+		n, _ := strconv.Atoi(goodsName[1])
 		oldID2Type[uint32(n)] = goodsName[0]
 	}
 
@@ -525,11 +525,11 @@ func (rs *randomShop) newPackMsg(isReset bool) *pb.VisitRandomShopData {
 			continue
 		}
 
-		if n, ok := oldID2Type[cardData.GetCardID()]; ok && n == "card"{
+		if n, ok := oldID2Type[cardData.GetCardID()]; ok && n == "card" {
 			continue
 		}
 
-		if _, ok := cardIDsMap[cardData.GetCardID()]; ok{
+		if _, ok := cardIDsMap[cardData.GetCardID()]; ok {
 			delete(cardIDsMap, cardData.GetCardID())
 		}
 
@@ -537,7 +537,7 @@ func (rs *randomShop) newPackMsg(isReset bool) *pb.VisitRandomShopData {
 		curAmount := card.GetAmount()
 		rateLevelup := float32(curAmount) / float32(levelupAmount)
 
-		if rateLevelup < float32(1){
+		if rateLevelup < float32(1) {
 			cardRankUp[card.GetCardID()] = rateLevelup
 		}
 
@@ -549,7 +549,7 @@ func (rs *randomShop) newPackMsg(isReset bool) *pb.VisitRandomShopData {
 		cardAmount += card.GetAmount()
 
 		allAmount := 0
-		for lv:= 1; lv < 5; lv++ {
+		for lv := 1; lv < 5; lv++ {
 			cardData = poolGameData.GetCard(card.GetCardID(), lv)
 			allAmount += cardData.LevelupNum
 		}
@@ -559,13 +559,13 @@ func (rs *randomShop) newPackMsg(isReset bool) *pb.VisitRandomShopData {
 		}
 	}
 
-	for cardID, _ := range cardIDsMap{
+	for cardID, _ := range cardIDsMap {
 		cardData := poolGameData.GetCard(cardID, 1)
 		if cardData.IsSpCard() {
 			continue
 		}
 
-		if n, ok := oldID2Type[cardID]; ok && n == "card"{
+		if n, ok := oldID2Type[cardID]; ok && n == "card" {
 			continue
 		}
 
@@ -596,24 +596,24 @@ func (rs *randomShop) newPackMsg(isReset bool) *pb.VisitRandomShopData {
 		if strings.HasSuffix(randName, "gold") {
 			teamRes_0 := randomTeam.TeamFreeGold[team][0]
 			teamRes_1 := randomTeam.TeamFreeGold[team][1]
-			goodsAmount = rs.randInt(teamRes_0, teamRes_1 + 1)
+			goodsAmount = rs.randInt(teamRes_0, teamRes_1+1)
 			goodsID = fmt.Sprintf("freeGold:%d", goodsAmount)
 
-		}else if strings.HasSuffix(randName, "jade"){
+		} else if strings.HasSuffix(randName, "jade") {
 			teamRes_0 := randomTeam.TeamFreeJade[team][0]
 			teamRes_1 := randomTeam.TeamFreeJade[team][1]
-			goodsAmount = rs.randInt(teamRes_0, teamRes_1 + 1)
+			goodsAmount = rs.randInt(teamRes_0, teamRes_1+1)
 			goodsID = fmt.Sprintf("freeJade:%d", goodsAmount)
 
 		}
 		goods.setData(goodsID, int(goodsAmount), true, false)
 
 		rs.newGoodsList = append(rs.newGoodsList, goods)
-		msg.RandomShops = append(msg.RandomShops, rs.getPackMsg(goodsID, int32(goodsAmount), 0, 0,true))
+		msg.RandomShops = append(msg.RandomShops, rs.getPackMsg(goodsID, int32(goodsAmount), 0, 0, true))
 
 		goodsNum -= 1
 
-	}else if len(cardRankUp) > 0 {
+	} else if len(cardRankUp) > 0 {
 		randList := rs.rankCard(cardRankUp, true)
 
 		var num int
@@ -634,7 +634,7 @@ func (rs *randomShop) newPackMsg(isReset bool) *pb.VisitRandomShopData {
 		var num int
 		if len(cardRankDown) >= randomTeam.CardLessNum {
 			num = randomTeam.CardLessNum - 1
-		}else{
+		} else {
 			num = len(cardRankDown)
 		}
 		randNum := rand.Intn(num)
@@ -650,13 +650,13 @@ func (rs *randomShop) newPackMsg(isReset bool) *pb.VisitRandomShopData {
 		}
 
 		if strings.HasSuffix(randName, "card") {
-			Index := rand.Intn(len(cardIDs)-1)
+			Index := rand.Intn(len(cardIDs) - 1)
 			cardId := cardIDs[Index]
 			msg.RandomShops = append(msg.RandomShops, rs.getRandCard(cardId, team))
-		}else if strings.HasSuffix(randName, "gold") {
+		} else if strings.HasSuffix(randName, "gold") {
 			teamRes_0 := randomTeam.TeamGold[team][0]
 			teamRes_1 := randomTeam.TeamGold[team][1]
-			goldNum := rs.getGoldNum(teamRes_0, teamRes_1 , team, randomTeam.GoldPrice[0])
+			goldNum := rs.getGoldNum(teamRes_0, teamRes_1, team, randomTeam.GoldPrice[0])
 			goldPrice := goldNum / oneGoldPrice
 
 			goods := &randShopGoods{
@@ -666,7 +666,7 @@ func (rs *randomShop) newPackMsg(isReset bool) *pb.VisitRandomShopData {
 
 			rs.newGoodsList = append(rs.newGoodsList, goods)
 			msg.RandomShops = append(msg.RandomShops,
-				rs.getPackMsg(fmt.Sprintf("gold:%d", goldNum),int32(goldNum), int32(goldPrice), 0,true))
+				rs.getPackMsg(fmt.Sprintf("gold:%d", goldNum), int32(goldNum), int32(goldPrice), 0, true))
 		}
 	}
 
@@ -683,7 +683,7 @@ func (rs *randomShop) newPackMsg(isReset bool) *pb.VisitRandomShopData {
 	return msg
 }
 
-func (rs *randomShop) getGoldNum(teamRes_0, teamRes_1, team, goldSpace int) int{
+func (rs *randomShop) getGoldNum(teamRes_0, teamRes_1, team, goldSpace int) int {
 	var goldList []int
 	for j := teamRes_0; j <= teamRes_1; j += goldSpace {
 		goldList = append(goldList, j)
@@ -694,13 +694,13 @@ func (rs *randomShop) getGoldNum(teamRes_0, teamRes_1, team, goldSpace int) int{
 
 func (rs *randomShop) getDiscount() float64 {
 	buyCnt := rs.getBuyCnt()
-	if buyCnt <= 0{
+	if buyCnt <= 0 {
 		return 0
 	}
 	return 1
 }
 
-func (rs *randomShop) getRandCard(cardId uint32, team int) *pb.RandomShop{
+func (rs *randomShop) getRandCard(cardId uint32, team int) *pb.RandomShop {
 	poolGameData := gamedata.GetGameData(consts.Pool).(*gamedata.PoolGameData)
 	randomTeam := gamedata.GetGameData(consts.RandomShop).(*gamedata.RandomShopGameData)
 	goods := &randShopGoods{
@@ -708,7 +708,7 @@ func (rs *randomShop) getRandCard(cardId uint32, team int) *pb.RandomShop{
 	}
 
 	card := poolGameData.GetCard(cardId, 1)
-	cardNum := int32(rs.randInt(randomTeam.TeamCard[team][0], randomTeam.TeamCard[team][1] + 1))
+	cardNum := int32(rs.randInt(randomTeam.TeamCard[team][0], randomTeam.TeamCard[team][1]+1))
 
 	var isNeedGold bool
 	var cardPrice, cardPriceGold int32
@@ -717,7 +717,7 @@ func (rs *randomShop) getRandCard(cardId uint32, team int) *pb.RandomShop{
 		oneCardPrice := randomTeam.CardStarPrice[card.Rare][1]
 		cardPrice = cardNum * int32(oneCardPrice)
 		isNeedGold = false
-	}else{
+	} else {
 		oneCardPrice := randomTeam.CardStarPriceGold[card.Rare][1]
 		cardPriceGold = cardNum * int32(oneCardPrice)
 		isNeedGold = true
@@ -726,19 +726,19 @@ func (rs *randomShop) getRandCard(cardId uint32, team int) *pb.RandomShop{
 	goods.setData(fmt.Sprintf("card:%d", cardId), int(cardNum), true, isNeedGold)
 	rs.newGoodsList = append(rs.newGoodsList, goods)
 
-	return rs.getPackMsg(fmt.Sprintf("card:%d", cardId),cardNum, cardPrice, cardPriceGold, true)
+	return rs.getPackMsg(fmt.Sprintf("card:%d", cardId), cardNum, cardPrice, cardPriceGold, true)
 }
 
 func (rs *randomShop) rankCard(cardRankUp map[uint32]float32, isUp bool) []card {
 	var cards []card
 	cards = cards[:0]
-	for cardID, Rate := range cardRankUp{
+	for cardID, Rate := range cardRankUp {
 		cards = append(cards, card{cardID, Rate})
 	}
 	sort.Slice(cards, func(i, j int) bool {
-		if isUp{
+		if isUp {
 			return cards[i].Value > cards[j].Value
-		}else {
+		} else {
 			return cards[i].Value < cards[j].Value
 		}
 	})
@@ -746,7 +746,7 @@ func (rs *randomShop) rankCard(cardRankUp map[uint32]float32, isUp bool) []card 
 }
 
 func (rs *randomShop) randInt(min, max int) int {
-	if min >= max || min ==0 || max == 0{
+	if min >= max || min == 0 || max == 0 {
 		return max
 	}
 	return rand.Intn(max-min) + min
@@ -763,7 +763,6 @@ func (rs *randomShop) randWeights(m map[string][]int, maxParaValue int) string {
 	}
 	return randName
 }
-
 
 func timeToRefreshRandomShop() {
 	module.Player.ForEachOnlinePlayer(func(player types.IPlayer) {

@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_FETCH_RANK    req: FetchRankArg    resp: RankInfo
@@ -600,4 +600,3 @@ func (m *R2G_SEND_PLAYER_RANK_Meta) DecodeReply(data []byte) (interface{}, error
 }
 
 //------------------------------------ R2G_SEND_PLAYER_RANK END ----------------------------------------
-

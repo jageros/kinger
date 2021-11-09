@@ -1,13 +1,13 @@
 package mission
 
 import (
-	"kinger/gopuppy/common/eventhub"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
-	"kinger/gopuppy/attribute"
 	"kinger/common/consts"
-	"kinger/proto/pb"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/eventhub"
+	"kinger/proto/pb"
 	"strconv"
 	//"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/utils"
@@ -17,7 +17,6 @@ import (
 var mod *missionModule
 
 type missionModule struct {
-
 }
 
 func (m *missionModule) NewComponent(playerAttr *attribute.AttrMgr) types.IPlayerComponent {
@@ -131,7 +130,7 @@ func (m *missionModule) GmCompleteMission(player types.IPlayer) {
 	player.GetComponent(consts.MissionCpt).(*missionComponent).gmCompleteMission()
 }
 
-func onBattleEnd(arg ... interface{}) {
+func onBattleEnd(arg ...interface{}) {
 	player, ok := arg[0].(types.IPlayer)
 	if !ok {
 		return
@@ -143,7 +142,7 @@ func onBattleEnd(arg ... interface{}) {
 	}
 }
 
-func Initialize()  {
+func Initialize() {
 	mod = &missionModule{}
 	module.Mission = mod
 	initMissionTemplate()

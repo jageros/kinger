@@ -1,6 +1,11 @@
 package social
 
 import (
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/consts"
+	"kinger/common/utils"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/common"
 	gconsts "kinger/gopuppy/common/consts"
@@ -10,11 +15,6 @@ import (
 	"kinger/gopuppy/common/wordfilter"
 	"kinger/gopuppy/network"
 	gpb "kinger/gopuppy/proto/pb"
-	"kinger/apps/game/module"
-	"kinger/apps/game/module/types"
-	"kinger/common/consts"
-	"kinger/common/utils"
-	"kinger/gamedata"
 	"kinger/proto/pb"
 	"math"
 	"sort"
@@ -44,7 +44,7 @@ func rpc_C2S_SendChat(agent *logic.PlayerAgent, arg interface{}) (interface{}, e
 		glog.String("content", arg2.Msg), glog.String("dirtyWords", dirtyWs), glog.Int("area", player.GetArea()))
 	if hasDirty {
 		if wTy == gconsts.AccurateWords {
-			player.Forbid(consts.ForbidAccount, true, -1, arg2.Msg,true)
+			player.Forbid(consts.ForbidAccount, true, -1, arg2.Msg, true)
 			return nil, nil
 		}
 		if wTy == gconsts.FuzzyWords {
@@ -57,14 +57,14 @@ func rpc_C2S_SendChat(agent *logic.PlayerAgent, arg interface{}) (interface{}, e
 	}
 
 	garg := &pb.CSendChatArg{
-		Msg:        msg,
-		Channel:    arg2.Channel,
-		Name:       player.GetName(),
-		HeadImgUrl: player.GetHeadImgUrl(),
-		PvpLevel: int32(player.GetPvpLevel()),
-		Country: player.GetCountry(),
-		HeadFrame: player.GetHeadFrame(),
-		ChatPop:player.GetChatPop(),
+		Msg:         msg,
+		Channel:     arg2.Channel,
+		Name:        player.GetName(),
+		HeadImgUrl:  player.GetHeadImgUrl(),
+		PvpLevel:    int32(player.GetPvpLevel()),
+		Country:     player.GetCountry(),
+		HeadFrame:   player.GetHeadFrame(),
+		ChatPop:     player.GetChatPop(),
 		CountryFlag: player.GetCountryFlag(),
 	}
 
@@ -126,11 +126,11 @@ func rpc_C2S_FetchPlayerInfo(agent *logic.PlayerAgent, arg interface{}) (interfa
 		IsFriend:        f != nil,
 		IsWechatFriend:  f != nil && f.isWechatFriend(),
 		CanInviteBattle: splayer.IsOnline && !splayer.IsInBattle,
-		Country: splayer.Country,
-		HeadFrame: splayer.HeadFrame,
-		StatusIDs: splayer.StatusIDs,
-		CrossAreaHonor: splayer.CrossAreaHonor,
-		CountryFlag: splayer.CountryFlag,
+		Country:         splayer.Country,
+		HeadFrame:       splayer.HeadFrame,
+		StatusIDs:       splayer.StatusIDs,
+		CrossAreaHonor:  splayer.CrossAreaHonor,
+		CountryFlag:     splayer.CountryFlag,
 	}
 
 	if firstHandAmount <= 0 || firstHandWinAmount <= 0 {
@@ -259,7 +259,7 @@ func rpc_C2S_SendPrivateChat(agent *logic.PlayerAgent, arg interface{}) (interfa
 			return nil, nil
 		}
 		if wTy == gconsts.FuzzyWords {
-			player.Forbid(consts.ForbidMonitor, true, -1, arg2.Msg,true)
+			player.Forbid(consts.ForbidMonitor, true, -1, arg2.Msg, true)
 		}
 	}
 
@@ -274,15 +274,15 @@ func rpc_C2S_SendPrivateChat(agent *logic.PlayerAgent, arg interface{}) (interfa
 			player.GetHeadFrame(), player.GetChatPop(), player.GetCountryFlag())
 	} else {
 		utils.PlayerMqPublish(toUid, pb.RmqType_PrivateChat, &pb.RmqPrivateChat{
-			FromUid:        uint64(uid),
-			FromName:       player.GetName(),
-			FromHeadImgUrl: player.GetHeadImgUrl(),
-			Msg:            msg,
-			Time:           int32(time.Now().Unix()),
-			FromPvpLevel: int32(player.GetPvpLevel()),
-			FromCountry: player.GetCountry(),
-			FromHeadFrame: player.GetHeadFrame(),
-			ChatPop:player.GetChatPop(),
+			FromUid:         uint64(uid),
+			FromName:        player.GetName(),
+			FromHeadImgUrl:  player.GetHeadImgUrl(),
+			Msg:             msg,
+			Time:            int32(time.Now().Unix()),
+			FromPvpLevel:    int32(player.GetPvpLevel()),
+			FromCountry:     player.GetCountry(),
+			FromHeadFrame:   player.GetHeadFrame(),
+			ChatPop:         player.GetChatPop(),
 			FromCountryFlag: player.GetCountryFlag(),
 		})
 	}
@@ -324,7 +324,7 @@ func rpc_C2S_InviteBattle(agent *logic.PlayerAgent, arg interface{}) (interface{
 		agent := logic.GetPlayerAgent(common.UUid(arg2.Uid))
 		if agent == nil {
 			agent = logic.NewPlayerAgent(&gpb.PlayerClient{
-				Uid: arg2.Uid,
+				Uid:    arg2.Uid,
 				Region: logic.GetAgentRegion(common.UUid(arg2.Uid)),
 			})
 		}
@@ -448,7 +448,7 @@ func rpc_C2S_SubscribeChat(agent *logic.PlayerAgent, arg interface{}) (interface
 	arg2 := arg.(*pb.TargetChatChannel)
 	garg := &pb.SubscribeChatArg{
 		Channel: arg2.Channel,
-		Area: int32(player.GetArea()),
+		Area:    int32(player.GetArea()),
 	}
 
 	if arg2.Channel == pb.ChatChannel_CampaignCountry {
@@ -469,7 +469,7 @@ func rpc_C2S_SubscribeChat(agent *logic.PlayerAgent, arg interface{}) (interface
 	}
 
 	reply2 := reply.(*pb.ChatItemList)
-	var chatlets []interface{
+	var chatlets []interface {
 		GetTime() int32
 		Marshal() ([]byte, error)
 	}
@@ -487,7 +487,7 @@ func rpc_C2S_SubscribeChat(agent *logic.PlayerAgent, arg interface{}) (interface
 			return chatlets[i].GetTime() <= chatlets[j].GetTime()
 		})
 		if len(chatlets) > 40 {
-			chatlets = chatlets[len(chatlets) - 40:]
+			chatlets = chatlets[len(chatlets)-40:]
 		}
 	}
 

@@ -1,25 +1,25 @@
 package wxgame
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/timer"
+	"github.com/gogo/protobuf/proto"
+	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/config"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
+	"kinger/gopuppy/common/utils"
 	"kinger/proto/pb"
 	"strconv"
 	"time"
-	"github.com/gogo/protobuf/proto"
-	"kinger/gopuppy/common/glog"
-	"kinger/apps/game/module"
-	"kinger/gopuppy/common/utils"
-	"kinger/gopuppy/common"
 )
 
 type wxgameComponent struct {
-	player types.IPlayer
-	attr   *attribute.MapAttr
+	player         types.IPlayer
+	attr           *attribute.MapAttr
 	dailyShareAttr *attribute.MapAttr
 }
 
@@ -127,7 +127,7 @@ func (wc *wxgameComponent) shareBattleLose(wxGroupID string) error {
 
 	now := time.Now().Unix()
 	lastShareTime := shareBattleLoseGroupsAttr.GetInt64(wxGroupID)
-	if now-lastShareTime < 2 * 60 * 60 {
+	if now-lastShareTime < 2*60*60 {
 		return gamedata.GameError(1)
 	}
 
@@ -210,10 +210,10 @@ func (wc *wxgameComponent) OnShareBeHelp(shareType int, shareTime int64, data []
 		if module.Treasure.WxHelpDoubleDailyTreasure(wc.player, arg.TreasureID, common.UUid(arg.HelperUid), arg.HelperHeadImg,
 			arg.HelperHeadFrame, arg.HelperName) {
 			reply = &pb.DailyTreasureShareInfo{
-				HelperUid: arg.HelperUid,
-				HelperHeadImg: arg.HelperHeadImg,
+				HelperUid:       arg.HelperUid,
+				HelperHeadImg:   arg.HelperHeadImg,
 				HelperHeadFrame: arg.HelperHeadFrame,
-				HelperName: arg.HelperName,
+				HelperName:      arg.HelperName,
 			}
 		}
 	}
@@ -246,7 +246,7 @@ func (wc *wxgameComponent) onShare(shareType int, wxGroupID string, data []byte)
 
 	now := time.Now().Unix()
 	lastShareTime := attr.GetInt64(wxGroupID)
-	if now-lastShareTime < 2 * 60 * 60 {
+	if now-lastShareTime < 2*60*60 {
 		return gamedata.GameError(1)
 	}
 	attr.SetInt64(wxGroupID, now)
@@ -345,7 +345,7 @@ func (wc *wxgameComponent) packDailyShareMsg() *pb.DailyShareInfo {
 func (wc *wxgameComponent) returnDailyShareReward(playerName string) {
 	var gold int
 	dailyShareAttr := wc.getDailyShareAttr()
-	cnt :=  dailyShareAttr.GetInt("returnCnt")
+	cnt := dailyShareAttr.GetInt("returnCnt")
 	if cnt < dailyShareReturnMaxCnt {
 		gold = dailyShareReturnGold
 		cnt++
@@ -358,7 +358,7 @@ func (wc *wxgameComponent) returnDailyShareReward(playerName string) {
 	if agent != nil {
 		agent.PushClient(pb.MessageID_S2C_DAILY_SHARE_RETURN_REWARD, &pb.DailyShareReturnReward{
 			PlayerName: playerName,
-			Gold: int32(gold),
+			Gold:       int32(gold),
 		})
 	}
 }

@@ -1,18 +1,18 @@
 package gamedata
 
 import (
-	"encoding/json"
-	"math/rand"
-	"kinger/common/consts"
 	"bytes"
+	"encoding/json"
 	"errors"
+	"kinger/common/consts"
+	"math/rand"
 )
 
 type FreeJadeAds struct {
-	ID         int    `json:"__id__"`
-	Jade        int    `json:"soldJade"`
+	ID   int `json:"__id__"`
+	Jade int `json:"soldJade"`
 	Time int `json:"time"`
-	Team     int    `json:"team"`
+	Team int `json:"team"`
 }
 
 func (fa *FreeJadeAds) GetID() int {
@@ -25,9 +25,9 @@ func (fa *FreeJadeAds) GetTime() int {
 
 type FreeJadeAdsGameData struct {
 	baseGameData
-	rawData []byte
+	rawData  []byte
 	Team2Ads map[int][]*FreeJadeAds
-	ID2Ads map[int]*FreeJadeAds
+	ID2Ads   map[int]*FreeJadeAds
 }
 
 func newFreeJadeAdsGameData() *FreeJadeAdsGameData {

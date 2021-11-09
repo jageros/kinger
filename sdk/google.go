@@ -1,24 +1,25 @@
 package sdk
 
 import (
-	"net/http"
+	"bytes"
+	"crypto"
 	"crypto/rsa"
-	"kinger/gopuppy/common/evq"
-	"kinger/gopuppy/common/glog"
-	"io/ioutil"
+	"crypto/sha256"
+	"crypto/x509"
+	"encoding/base64"
 	"encoding/json"
 	"encoding/pem"
-	"crypto/x509"
 	"github.com/pkg/errors"
+	"io/ioutil"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
+	"net/http"
 	"strings"
-	"encoding/base64"
-	"bytes"
-	"crypto/sha256"
-	"crypto"
 )
 
 const _GOOGLE_OAUTH2_CERTS_URL = "https://www.googleapis.com/oauth2/v1/certs"
-var pubKeys  = map[string]*rsa.PublicKey{}
+
+var pubKeys = map[string]*rsa.PublicKey{}
 
 type claimSet struct {
 	Iss   string `json:"iss"`             // email address of the client_id of the application making the access token request
@@ -105,7 +106,7 @@ func (s *googleSdk) verifyToken(idToken string, tryCnt int) (*claimSet, error) {
 	h.Write(signedContent)
 	for _, key := range pubKeys {
 		err2 := rsa.VerifyPKCS1v15(key, crypto.SHA256, h.Sum(nil), signatureString)
-		if err2 != nil{
+		if err2 != nil {
 			err = err2
 		} else {
 			err = nil

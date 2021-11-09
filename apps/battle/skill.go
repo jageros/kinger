@@ -1,39 +1,39 @@
 package main
 
 import (
-	"math/rand"
 	"kinger/gamedata"
 	"kinger/proto/pb"
+	"math/rand"
 	//"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/attribute"
-	"strconv"
 	"fmt"
+	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common"
+	"strconv"
 )
 
 type skill struct {
-	situation *battleSituation
-	behavior       *skillBehavior
-	ownerObjID int
+	situation   *battleSituation
+	behavior    *skillBehavior
+	ownerObjID  int
 	playCardIdx int
 
 	// 开始生效的那个回合
-	addBout     int
+	addBout int
 	// 生效后多少个回合后失去
 	boutTimeout int
 	// 失去技能，直到lostUntilBout那个回合为止，小于0时永远失去
 	lostUntilBout int
 	// 是否由于owner被翻面而失去了
-	turnDel     bool
+	turnDel bool
 	// 生效时所属阵营
-	initSit     int
+	initSit int
 	// 总触发了多少次
-	triggerTotalTimes int
+	triggerTotalTimes  int
 	targetTriggerTimes int
-	statusMcMovie map[int]string
-	fogTargets common.IntSet   // 由于这个技能处于大雾中的target
-	isAddInHand bool   // 是否卡在手上时加的技能
-	isEquip bool
+	statusMcMovie      map[int]string
+	fogTargets         common.IntSet // 由于这个技能处于大雾中的target
+	isAddInHand        bool          // 是否卡在手上时加的技能
+	isEquip            bool
 }
 
 func newSkill(skillID int32, situation *battleSituation, owner iCaster) *skill {
@@ -43,10 +43,10 @@ func newSkill(skillID int32, situation *battleSituation, owner iCaster) *skill {
 	}
 
 	return &skill{
-		situation: situation,
-		behavior: sb,
+		situation:  situation,
+		behavior:   sb,
 		ownerObjID: owner.getObjID(),
-		addBout: -1,
+		addBout:    -1,
 	}
 }
 
@@ -234,7 +234,7 @@ func (s *skill) onEffective() []*clientAction {
 					acts = append(acts, &clientAction{
 						actID: pb.ClientAction_EnterFog,
 						actMsg: &pb.EnterFogAct{
-							Target:  int32(c.getObjID()),
+							Target:        int32(c.getObjID()),
 							IsPublicEnemy: c.isPublicEnemy(),
 						},
 					})
@@ -276,7 +276,7 @@ func (s *skill) onInvalid() []*clientAction {
 
 		if leaveFogAct != nil {
 			acts = append(acts, &clientAction{
-				actID: pb.ClientAction_LeaveFog,
+				actID:  pb.ClientAction_LeaveFog,
 				actMsg: leaveFogAct,
 			})
 		}
@@ -295,7 +295,7 @@ func (s *skill) addStatusMcMovie() []*clientAction {
 		return acts
 	}
 	data := s.behavior.data
-	if data.TriggerTimes > 0 && s.targetTriggerTimes + 1 != data.TriggerTimes {
+	if data.TriggerTimes > 0 && s.targetTriggerTimes+1 != data.TriggerTimes {
 		return acts
 	}
 	statusEffect := data.GetStatusEffect()
@@ -316,14 +316,15 @@ func (s *skill) addStatusMcMovie() []*clientAction {
 		var targets []iTarget
 		for _, targetID := range targetIDs {
 			ts := s.situation.getTargetMgr().findTarget(s, owner, targetID, &triggerContext{}, cacheTargets)
-		L:for _, t := range ts {
-			for _, t2 := range targets {
-				if t == t2 {
-					continue L
+		L:
+			for _, t := range ts {
+				for _, t2 := range targets {
+					if t == t2 {
+						continue L
+					}
 				}
+				targets = append(targets, t)
 			}
-			targets = append(targets, t)
-		}
 		}
 
 		for _, t := range targets {
@@ -366,7 +367,8 @@ func (s *skill) onEnterFog(targets []iTarget) []*clientAction {
 	var acts []*clientAction
 	var leaveFogAct *pb.LeaveFogAct
 	if s.fogTargets != nil {
-	L1: for objID, _ := range s.fogTargets {
+	L1:
+		for objID, _ := range s.fogTargets {
 			for _, t := range targets {
 				if t.getObjID() == objID {
 					continue L1
@@ -410,7 +412,7 @@ func (s *skill) onEnterFog(targets []iTarget) []*clientAction {
 			acts = append(acts, &clientAction{
 				actID: pb.ClientAction_EnterFog,
 				actMsg: &pb.EnterFogAct{
-					Target: int32(objID),
+					Target:        int32(objID),
 					IsPublicEnemy: c.isPublicEnemy(),
 				},
 			})
@@ -419,7 +421,7 @@ func (s *skill) onEnterFog(targets []iTarget) []*clientAction {
 
 	if leaveFogAct != nil {
 		acts = append(acts, &clientAction{
-			actID: pb.ClientAction_LeaveFog,
+			actID:  pb.ClientAction_LeaveFog,
 			actMsg: leaveFogAct,
 		})
 	}
@@ -444,7 +446,7 @@ func (s *skill) isEffectiveIgnoreLostByBout(bout int) bool {
 	if s.turnDel {
 		return false
 	}
-	if s.boutTimeout > 0 && bout >= s.addBout + s.boutTimeout {
+	if s.boutTimeout > 0 && bout >= s.addBout+s.boutTimeout {
 		return false
 	}
 	if s.behavior.totalTimes > 0 && s.triggerTotalTimes >= s.behavior.totalTimes {
@@ -510,11 +512,11 @@ func (s *skill) onOwnerTurnOver(curSit int) []*clientAction {
 		skillOwner := s.getOwner()
 		if skillOwner != nil {
 			actions = append(actions, &clientAction{
-				actID: pb.ClientAction_DelSkill,
+				actID:  pb.ClientAction_DelSkill,
 				actMsg: &pb.ModifySkillAct{CardObjID: int32(skillOwner.getObjID()), SkillID: s.getID(), IsEquip: s.isEquip},
 			})
 			//for _, skillID := range s.behavior.data.SkillCom {
-				// 后续技能
+			// 后续技能
 			//	actions = append(actions, skillOwner.addSkill(skillID, 0)...)
 			//}
 			return actions
@@ -527,7 +529,7 @@ func (s *skill) boutEnd() []*clientAction {
 	var actions []*clientAction
 	curBout := s.situation.getCurBout()
 
-	if s.boutTimeout > 0 && curBout >= s.addBout + s.boutTimeout {
+	if s.boutTimeout > 0 && curBout >= s.addBout+s.boutTimeout {
 		// 时间到了
 		s.situation.delTaunt(s.ownerObjID, s.getID())
 		owner := s.getOwner()
@@ -535,7 +537,7 @@ func (s *skill) boutEnd() []*clientAction {
 			actions = owner.delSkill(s)
 		}
 
-		if s.isEffectiveIgnoreLostByBout(curBout - 1) && !s.isLost() {
+		if s.isEffectiveIgnoreLostByBout(curBout-1) && !s.isLost() {
 			// 上回合有效，现在失效了
 			if owner != nil {
 				for _, skillID := range s.behavior.data.SkillCom {
@@ -544,7 +546,7 @@ func (s *skill) boutEnd() []*clientAction {
 			}
 		}
 
-	} else if !s.isEffectiveByBout(curBout - 1) && s.isEffective() {
+	} else if !s.isEffectiveByBout(curBout-1) && s.isEffective() {
 		// 上回合没效，现在有效了
 		if s.behavior.data.TriggerTimes <= 0 || s.targetTriggerTimes < s.behavior.data.TriggerTimes {
 			owner := s.getOwner()
@@ -554,7 +556,7 @@ func (s *skill) boutEnd() []*clientAction {
 
 			actions = s.onEffective()
 			actions = append(actions, &clientAction{
-				actID: pb.ClientAction_AddSkill,
+				actID:  pb.ClientAction_AddSkill,
 				actMsg: &pb.ModifySkillAct{CardObjID: int32(owner.getObjID()), SkillID: s.getID()},
 			})
 		}
@@ -590,7 +592,7 @@ func (s *skill) isTargetTriggerObj(triggerType int, triggerTargets []iTarget, tr
 	return false
 }
 
-var awaysTriggerIgnore = map[int]struct{} {
+var awaysTriggerIgnore = map[int]struct{}{
 	afterBoutEndTrigger:   struct{}{},
 	preAddSkillTrigger:    struct{}{},
 	loseSkillTrigger:      struct{}{},
@@ -604,6 +606,7 @@ var awaysTriggerIgnore = map[int]struct{} {
 	afterAddValueTrigger:  struct{}{},
 	afterSubValueTrigger:  struct{}{},
 }
+
 func (s *skill) canTrigger(triggerType int, triggerTargets []iTarget, triggerCxt *triggerContext,
 	cacheTargets map[int][]iTarget) (bool, bool, []*clientAction) {
 
@@ -640,9 +643,10 @@ func (s *skill) canTrigger(triggerType int, triggerTargets []iTarget, triggerCxt
 	if data.TriggerOpp == preAddSkillTrigger {
 		// 特殊处理 preAddSkillTrigger，防止禁止获得技能的技能经常闪
 		can := false
-	L:	for _, skID := range triggerCxt.preAddSkillIDs {
+	L:
+		for _, skID := range triggerCxt.preAddSkillIDs {
 			for _, skillID := range s.behavior.forbidAddSkillIDs {
-				if skillID == skID{
+				if skillID == skID {
 					can = true
 					break L
 				}
@@ -672,9 +676,9 @@ func (s *skill) canTrigger(triggerType int, triggerTargets []iTarget, triggerCxt
 	//glog.Infof("canTrigger 4444444444444 %s", s)
 	isEffective := s.isEffective()
 	if data.TriggerOpp != awaysTrigger && data.TriggerObj > 0 && data.TriggerTimes > 0 {
-		s.targetTriggerTimes ++
+		s.targetTriggerTimes++
 		// emmm
-		if data.TriggerTimes - 1 == s.targetTriggerTimes {
+		if data.TriggerTimes-1 == s.targetTriggerTimes {
 			owner := s.getOwner()
 			if owner == nil || !isEffective {
 				return false, isTargetTriggerTimesLimit, actions
@@ -718,7 +722,7 @@ func (s *skill) trigger(triggerType int, triggerTargets []iTarget, triggerCxt *t
 
 	//glog.Infof("skill trigger 22222222222222 sk=%s", s)
 
-// --------------------------- 判断条件 ----------------------------------
+	// --------------------------- 判断条件 ----------------------------------
 	cacheTargets := map[int][]iTarget{}
 	targetCounts := []int{0, 0, 0}
 	if len(s.behavior.conditions) > 0 {
@@ -740,14 +744,14 @@ func (s *skill) trigger(triggerType int, triggerTargets []iTarget, triggerCxt *t
 			}
 		}
 	}
-// --------------------------- 判断条件 end ----------------------------------
+	// --------------------------- 判断条件 end ----------------------------------
 
 	//glog.Infof("skill trigger 3333333333333 sk=%s", s)
 
 	owner.triggerSkill(s.getID())
-// ------------------- 这尼玛，进场时机的各种特殊情况 ---------------------------
+	// ------------------- 这尼玛，进场时机的各种特殊情况 ---------------------------
 	triggerTargetsAmount := len(triggerTargets)
-	needTalk := false  // 我没话说
+	needTalk := false // 我没话说
 	if triggerType == enterBattleTrigger {
 		if card, ok := owner.(*fightCard); ok && triggerCxt.isEnterBattleCard(card) {
 			needTalk = true
@@ -765,7 +769,7 @@ func (s *skill) trigger(triggerType int, triggerTargets []iTarget, triggerCxt *t
 					if card.hasTurnOverCauseByOth {
 						// 如果进场曾经被别人翻了，不触发技能
 						triggerTargetsAmount--
-					//} else if card.getSit() != card.getInitSit() {
+						//} else if card.getSit() != card.getInitSit() {
 					} else if card.hasTurnOver {
 						// 如果进场被自己翻了，不触发有sit限制的技能
 						if data.TriggerObj != 1 {
@@ -783,11 +787,11 @@ func (s *skill) trigger(triggerType int, triggerTargets []iTarget, triggerCxt *t
 			}
 		}
 	}
-// -------------------------------- 进场几时特殊情况 end ------------------------------------------
+	// -------------------------------- 进场几时特殊情况 end ------------------------------------------
 
 	//glog.Infof("skill trigger 44444444444444 sk=%s", s)
 
-// --------------------------------- 找技能目标 ----------------------------------------
+	// --------------------------------- 找技能目标 ----------------------------------------
 	targetMgr := s.situation.getTargetMgr()
 	actionTargets := map[int][]iTarget{}
 	targetIDs := s.behavior.getTargetIDs(s.situation)
@@ -818,11 +822,11 @@ func (s *skill) trigger(triggerType int, triggerTargets []iTarget, triggerCxt *t
 	if len(actionTargets) <= 0 && (s.fogTargets == nil || s.fogTargets.Size() <= 0) {
 		return nil, actions, triggerTargets, false
 	}
-// --------------------------------- 找技能目标 end ----------------------------------------
+	// --------------------------------- 找技能目标 end ----------------------------------------
 
 	//glog.Infof("skill trigger 55555555555555 sk=%s", s)
 
-// --------------------------------- 对象计数 ----------------------------------------
+	// --------------------------------- 对象计数 ----------------------------------------
 	variableAmount := 0
 	if len(data.Variable) > 0 {
 		if targets, ok := actionTargets[data.Variable[0]]; ok {
@@ -834,7 +838,7 @@ func (s *skill) trigger(triggerType int, triggerTargets []iTarget, triggerCxt *t
 			variableAmount = len(targets)
 		}
 	}
-// --------------------------------- 对象计数 end ----------------------------------------
+	// --------------------------------- 对象计数 end ----------------------------------------
 
 	//glog.Infof("skill trigger, skid=%d, owner=%d, target=%v", s.getID(), s.ownerObjID, actionTargets)
 

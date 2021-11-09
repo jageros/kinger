@@ -1,11 +1,11 @@
 package wxgame
 
 import (
-	"kinger/gopuppy/apps/logic"
-	"kinger/gopuppy/common"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/common"
 	"kinger/proto/pb"
 	"time"
 )

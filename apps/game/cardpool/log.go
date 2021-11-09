@@ -1,17 +1,17 @@
 package cardpool
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/apps/game/module"
-	"strconv"
-	"kinger/gopuppy/common/timer"
-	"time"
-	"kinger/gopuppy/common/eventhub"
-	"kinger/common/consts"
-	"kinger/apps/game/module/types"
-	"kinger/proto/pb"
-	"kinger/gamedata"
 	"fmt"
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/eventhub"
+	"kinger/gopuppy/common/timer"
+	"kinger/proto/pb"
+	"strconv"
+	"time"
 )
 
 var (
@@ -40,7 +40,7 @@ func getAreaLogs(area int) []*logHub {
 	return logs
 }
 
-func forEachLog(area int, callback func(pb.AccountTypeEnum, *logHub))  {
+func forEachLog(area int, callback func(pb.AccountTypeEnum, *logHub)) {
 	for accountType, area2Log := range accountType2Log {
 		if area <= 0 {
 			for _, log := range area2Log {
@@ -52,7 +52,7 @@ func forEachLog(area int, callback func(pb.AccountTypeEnum, *logHub))  {
 	}
 }
 
-func forEachAccountTypeLog(area int, accountType pb.AccountTypeEnum, callback func(*logHub))  {
+func forEachAccountTypeLog(area int, accountType pb.AccountTypeEnum, callback func(*logHub)) {
 	area2Log, ok := accountType2Log[accountType]
 	if !ok {
 		return
@@ -96,7 +96,7 @@ func initializeLog() {
 	areaGameData.AddReloadCallback(initAreaLog)
 	initAreaLog(areaGameData)
 
-	timer.AddTicker(10 * time.Minute, SaveAllCardLog)
+	timer.AddTicker(10*time.Minute, SaveAllCardLog)
 
 	eventhub.Subscribe(consts.EvEndPvpBattle, func(args ...interface{}) {
 		player := args[0].(types.IPlayer)
@@ -130,7 +130,7 @@ func SaveAllCardLog() {
 }
 
 type cardLog struct {
-	attr *attribute.MapAttr
+	attr      *attribute.MapAttr
 	levelAttr *attribute.MapAttr
 }
 
@@ -142,7 +142,7 @@ func newCardLog(cardID uint32) *cardLog {
 
 func newCardLogByAttr(attr *attribute.MapAttr) *cardLog {
 	cl := &cardLog{
-		attr: attr,
+		attr:      attr,
 		levelAttr: attr.GetMapAttr("level"),
 	}
 	if cl.levelAttr == nil {
@@ -161,22 +161,22 @@ func (cl *cardLog) getAmount() int {
 }
 
 func (cl *cardLog) modifyAmount(amount int) {
-	cl.attr.SetInt("amount", cl.getAmount() + amount)
+	cl.attr.SetInt("amount", cl.getAmount()+amount)
 }
 
 func (cl *cardLog) modifyLevel(oldLevel, newLevel int) {
 	if oldLevel > 0 {
 		key := strconv.Itoa(oldLevel)
-		cl.levelAttr.SetInt(key, cl.levelAttr.GetInt(key) - 1)
+		cl.levelAttr.SetInt(key, cl.levelAttr.GetInt(key)-1)
 	}
 
 	if newLevel > 0 {
 		key := strconv.Itoa(newLevel)
-		cl.levelAttr.SetInt(key, cl.levelAttr.GetInt(key) + 1)
+		cl.levelAttr.SetInt(key, cl.levelAttr.GetInt(key)+1)
 	}
 }
 
-func (cl *cardLog) forEachLevel(callback func(level, amount int))  {
+func (cl *cardLog) forEachLevel(callback func(level, amount int)) {
 	cl.levelAttr.ForEachKey(func(key string) {
 		level, _ := strconv.Atoi(key)
 		callback(level, cl.levelAttr.GetInt(key))
@@ -184,7 +184,7 @@ func (cl *cardLog) forEachLevel(callback func(level, amount int))  {
 }
 
 type battleLog struct {
-	attr *attribute.MapAttr
+	attr      *attribute.MapAttr
 	cardsAttr *attribute.MapAttr
 }
 
@@ -196,7 +196,7 @@ func newBattleLog(pvpLevel int) *battleLog {
 
 func newBattleLogByAttr(attr *attribute.MapAttr) *battleLog {
 	bl := &battleLog{
-		attr: attr,
+		attr:      attr,
 		cardsAttr: attr.GetMapAttr("cards"),
 	}
 	if bl.cardsAttr == nil {
@@ -215,10 +215,10 @@ func (bl *battleLog) getAmount() int {
 }
 
 func (bl *battleLog) battleEnd(cards []uint32) {
-	bl.attr.SetInt("amount", bl.getAmount() + 1)
+	bl.attr.SetInt("amount", bl.getAmount()+1)
 	for _, cardID := range cards {
 		key := strconv.Itoa(int(cardID))
-		bl.cardsAttr.SetInt(key, bl.cardsAttr.GetInt(key) + 1)
+		bl.cardsAttr.SetInt(key, bl.cardsAttr.GetInt(key)+1)
 	}
 }
 
@@ -230,10 +230,10 @@ func (bl *battleLog) forEachCard(callback func(cardID uint32, amount int)) {
 }
 
 type logHub struct {
-	attr *attribute.AttrMgr
-	cardsAttr *attribute.ListAttr
+	attr        *attribute.AttrMgr
+	cardsAttr   *attribute.ListAttr
 	battlesAttr *attribute.ListAttr
-	id2CardLog map[uint32]*cardLog
+	id2CardLog  map[uint32]*cardLog
 	//level2BattleLog map[int]*battleLog
 }
 
@@ -241,7 +241,7 @@ func newLog(accountType pb.AccountTypeEnum, area int) *logHub {
 	attr := attribute.NewAttrMgr(fmt.Sprintf("cardLog_%s_%d", accountType, area), module.Service.GetAppID())
 	attr.Load()
 	log := &logHub{
-		attr: attr,
+		attr:       attr,
 		id2CardLog: map[uint32]*cardLog{},
 		//level2BattleLog: map[int]*battleLog{},
 	}
@@ -258,17 +258,17 @@ func newLog(accountType pb.AccountTypeEnum, area int) *logHub {
 		return true
 	})
 	/*
-	log.battlesAttr = attr.GetListAttr("battles")
-	if log.battlesAttr == nil {
-		log.battlesAttr = attribute.NewListAttr()
-		attr.SetListAttr("battles", log.battlesAttr)
-	}
-	log.battlesAttr.ForEachIndex(func(index int) bool {
-		battleAttr := log.battlesAttr.GetMapAttr(index)
-		bl := newBattleLogByAttr(battleAttr)
-		log.level2BattleLog[bl.getPvpLevel()] = bl
-		return true
-	})*/
+		log.battlesAttr = attr.GetListAttr("battles")
+		if log.battlesAttr == nil {
+			log.battlesAttr = attribute.NewListAttr()
+			attr.SetListAttr("battles", log.battlesAttr)
+		}
+		log.battlesAttr.ForEachIndex(func(index int) bool {
+			battleAttr := log.battlesAttr.GetMapAttr(index)
+			bl := newBattleLogByAttr(battleAttr)
+			log.level2BattleLog[bl.getPvpLevel()] = bl
+			return true
+		})*/
 	return log
 }
 

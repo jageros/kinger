@@ -1,18 +1,18 @@
 package main
 
 import (
+	kconfig "kinger/common/config"
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/common"
 	"kinger/gopuppy/common/app"
 	"kinger/gopuppy/common/config"
+	"kinger/gopuppy/common/evq"
 	"kinger/gopuppy/common/rpubsub"
 	"kinger/gopuppy/common/timer"
-	kconfig "kinger/common/config"
-	"kinger/common/consts"
-	"kinger/gamedata"
 	_ "kinger/meta"
 	"time"
-	"kinger/gopuppy/common/evq"
 )
 
 var bService *battleService

@@ -1,17 +1,17 @@
 package main
 
 import (
-	"time"
 	"math/rand"
+	"time"
 
+	"kinger/common/aicardpool"
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/common"
 	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/timer"
-	"kinger/common/consts"
-	"kinger/gamedata"
 	"kinger/proto/pb"
-	"kinger/common/aicardpool"
 )
 
 const (
@@ -19,7 +19,7 @@ const (
 	maxMatchRobotLevel = 10
 )
 
-var gMatchMgr *matchMgr 
+var gMatchMgr *matchMgr
 
 type iMatchRule interface {
 	beginHeartBeat()
@@ -29,29 +29,29 @@ type iMatchRule interface {
 }
 
 type matchMgr struct {
-	maxRoomID                 int32
-	id2Room                   map[int32]iMatchRoom
-	uid2Room                  map[common.UUid]iMatchRoom
-	allRules []iMatchRule
+	maxRoomID           int32
+	id2Room             map[int32]iMatchRoom
+	uid2Room            map[common.UUid]iMatchRoom
+	allRules            []iMatchRule
 	newbieMatchingTimer map[common.UUid]*timer.Timer
 
-	readyPlayerList []*matchPlayer
+	readyPlayerList     []*matchPlayer
 	readyDonePlayerList []*matchPlayer
-	uid2ReadyPlayer map[common.UUid]*matchPlayer
+	uid2ReadyPlayer     map[common.UUid]*matchPlayer
 
-	canMatchLevels map[int][]int    // map[pvpLevel][]pvpLevel
+	canMatchLevels map[int][]int // map[pvpLevel][]pvpLevel
 }
 
 func newMatchMgr() *matchMgr {
 	m := &matchMgr{
-		id2Room:                   make(map[int32]iMatchRoom),
-		uid2Room:                  make(map[common.UUid]iMatchRoom),
+		id2Room:             make(map[int32]iMatchRoom),
+		uid2Room:            make(map[common.UUid]iMatchRoom),
 		newbieMatchingTimer: make(map[common.UUid]*timer.Timer),
-		canMatchLevels: map[int][]int{},
-		uid2ReadyPlayer: map[common.UUid]*matchPlayer{},
+		canMatchLevels:      map[int][]int{},
+		uid2ReadyPlayer:     map[common.UUid]*matchPlayer{},
 	}
 
-	m.allRules = []iMatchRule{ newFoolRule(), newHighLevelRule() }
+	m.allRules = []iMatchRule{newFoolRule(), newHighLevelRule()}
 
 	gamedata.GetGameData(consts.Rank).AddReloadCallback(func(data gamedata.IGameData) {
 		m.canMatchLevels = map[int][]int{}
@@ -96,7 +96,7 @@ func (m *matchMgr) beginHeartbeat() {
 	for _, r := range m.allRules {
 		r.beginHeartBeat()
 	}
-	timer.AddTicker(200 * time.Millisecond, m.onHeartBeat)
+	timer.AddTicker(200*time.Millisecond, m.onHeartBeat)
 }
 
 func (m *matchMgr) onMatchTimeout(mplayer iMatchPlayer) {
@@ -129,9 +129,9 @@ func (m *matchMgr) getCanMatchLevels(pvpLevel int) []int {
 		for !isUpMax || !isDownMax {
 			level := pvpLevel + diff
 			if diff > 0 {
-				diff = - diff - 1
+				diff = -diff - 1
 			} else {
-				diff = - diff
+				diff = -diff
 			}
 
 			if level > rankData.MatchUpper {
@@ -162,7 +162,7 @@ func (m *matchMgr) doMatchRobot(mPlayer iMatchPlayer, robot iMatchRobot, upperTy
 	m.addRoom(r)
 }
 
-func (m *matchMgr) doMatchNewbiePvp(agent *logic.PlayerAgent,  matchArg *pb.BeginNewbiePvpMatchArg) {
+func (m *matchMgr) doMatchNewbiePvp(agent *logic.PlayerAgent, matchArg *pb.BeginNewbiePvpMatchArg) {
 
 	uid := agent.GetUid()
 	if t, ok := m.newbieMatchingTimer[uid]; ok {

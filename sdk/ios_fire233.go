@@ -1,18 +1,18 @@
 package sdk
 
 import (
-	"fmt"
-	"net/http"
-	"kinger/gopuppy/common/glog"
-	"strings"
 	"crypto/md5"
+	"fmt"
 	"io"
+	"kinger/gopuppy/common/glog"
+	"net/http"
 	"strconv"
+	"strings"
 )
 
 var (
 	iosFire233Success = []byte("SUCCESS")
-	iosFire233Err = []byte("FAILURE")
+	iosFire233Err     = []byte("FAILURE")
 )
 
 type iosFire233 struct {
@@ -20,7 +20,7 @@ type iosFire233 struct {
 }
 
 func newIosFire233() *iosFire233 {
-	return &iosFire233 {
+	return &iosFire233{
 		gameSecret: "74d94579fc169cb9a02932243724c263",
 	}
 }

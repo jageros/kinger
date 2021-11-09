@@ -1,26 +1,26 @@
 package main
 
 import (
+	"fmt"
+	"kinger/gamedata"
 	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common"
-	"kinger/proto/pb"
-	"time"
-	"kinger/gopuppy/common/timer"
-	"fmt"
-	"strings"
-	"unicode"
-	"kinger/gamedata"
 	"kinger/gopuppy/common/eventhub"
 	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
+	"kinger/proto/pb"
+	"strings"
+	"time"
+	"unicode"
 )
 
 var createCountryMgr = &createCountryMgrSt{}
 
 type createCountryMgrSt struct {
-	canApplyCreateCountry_ bool
+	canApplyCreateCountry_         bool
 	nextApplyCreateCountryStopTime time.Time
-	uid2AyApply map[common.UUid]*autocephalyApply
-	city2AyApply map[int]*autocephalyApply
+	uid2AyApply                    map[common.UUid]*autocephalyApply
+	city2AyApply                   map[int]*autocephalyApply
 }
 
 func (ccm *createCountryMgrSt) canApplyCreateCountry() bool {
@@ -144,7 +144,7 @@ func (ccm *createCountryMgrSt) applyAutocephaly(uid common.UUid, cty *city) erro
 	return nil
 }
 
-func (ccm* createCountryMgrSt) onAutocephalyFail(aa *autocephalyApply) {
+func (ccm *createCountryMgrSt) onAutocephalyFail(aa *autocephalyApply) {
 	aa.attr.Delete(false)
 	delete(ccm.uid2AyApply, aa.getUid())
 	delete(ccm.city2AyApply, aa.getCityID())
@@ -187,7 +187,7 @@ func (ccm *createCountryMgrSt) onAutocephalySuccess(aa *autocephalyApply) {
 func (ccm *createCountryMgrSt) genCountryName(playerName string) string {
 	if strings.HasPrefix(playerName, "#c") && len(playerName) > 10 {
 		playerName = playerName[8:]
-		playerName = playerName[:len(playerName) - 2]
+		playerName = playerName[:len(playerName)-2]
 	}
 	var runes []rune
 	for i, r := range playerName {
@@ -203,9 +203,8 @@ func (ccm *createCountryMgrSt) genCountryName(playerName string) string {
 	return string(runes)
 }
 
-
 type createCountryApply struct {
-	uid common.UUid
+	uid  common.UUid
 	attr *attribute.MapAttr
 }
 
@@ -218,7 +217,7 @@ func newCreateCountryApply(p *player, gold int) *createCountryApply {
 
 func newCreateCountryApplyByAttr(uid common.UUid, attr *attribute.MapAttr) *createCountryApply {
 	return &createCountryApply{
-		uid: uid,
+		uid:  uid,
 		attr: attr,
 	}
 }
@@ -232,7 +231,7 @@ func (ca *createCountryApply) getGold() int {
 }
 
 func (ca *createCountryApply) addGold(gold int) {
-	ca.attr.SetInt("gold", ca.getGold() + gold)
+	ca.attr.SetInt("gold", ca.getGold()+gold)
 }
 
 func (ca *createCountryApply) getUid() common.UUid {
@@ -274,20 +273,20 @@ func (ca *createCountryApply) packMsg() *pb.ApplyCreateCountryPlayer {
 	}
 	return &pb.ApplyCreateCountryPlayer{
 		Player: p.packMsg(false),
-		Gold: int32(ca.getGold()),
+		Gold:   int32(ca.getGold()),
 	}
 }
 
 type autocephalyApply struct {
-	uid common.UUid
-	attr *attribute.AttrMgr
+	uid      common.UUid
+	attr     *attribute.AttrMgr
 	voteAttr *attribute.MapAttr
 }
 
 func newAutocephalyApplyByAttr(uid common.UUid, attr *attribute.AttrMgr) *autocephalyApply {
 	return &autocephalyApply{
-		uid: uid,
-		attr: attr,
+		uid:      uid,
+		attr:     attr,
 		voteAttr: attr.GetMapAttr("vote"),
 	}
 }

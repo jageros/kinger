@@ -10,7 +10,7 @@ type springSkinHdPlayerData struct {
 	springSkinsAttr *attribute.ListAttr
 }
 
-func (hpd *springSkinHdPlayerData) Reset(version int)  {
+func (hpd *springSkinHdPlayerData) Reset(version int) {
 	if hpd.GetVersion() == version {
 		return
 	}
@@ -27,7 +27,7 @@ func (hpd *springSkinHdPlayerData) getSpringSkinsAttr() *attribute.ListAttr {
 			hpd.springSkinsAttr = attribute.NewListAttr()
 			hpd.Attr.SetListAttr("springSkins", hpd.springSkinsAttr)
 		}
-    }
+	}
 	return hpd.springSkinsAttr
 }
 

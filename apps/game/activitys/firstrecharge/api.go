@@ -1,12 +1,12 @@
 package firstrecharge
 
 import (
-	"kinger/gopuppy/common/eventhub"
 	aTypes "kinger/apps/game/activitys/types"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/common/eventhub"
 	"kinger/proto/pb"
 	"strconv"
 )
@@ -39,7 +39,7 @@ func FetchActivityList(player types.IPlayer, aid int) (*pb.ActivityData, error) 
 		}
 		price := p.getRechargePrice(resID)
 		rwcStr := resID + ":" + strconv.Itoa(price)
-		finsh := func()int32{
+		finsh := func() int32 {
 			if p.hasBuy(aid, rid) {
 				return 1
 			}

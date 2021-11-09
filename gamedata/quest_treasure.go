@@ -1,19 +1,19 @@
 package gamedata
 
 import (
-	"kinger/common/consts"
 	"encoding/json"
+	"kinger/common/consts"
 )
 
 type MissionTreasure struct {
-	ID int `json:"__id__"`
+	ID       int   `json:"__id__"`
 	RareLoop []int `json:"rareLoop"`
 }
 
 type MissionTreasureGameData struct {
 	baseGameData
 	ID2MissionTreasures map[int]*MissionTreasure
-	MissionTreasures []*MissionTreasure
+	MissionTreasures    []*MissionTreasure
 }
 
 func newMissionTreasureGameData() *MissionTreasureGameData {

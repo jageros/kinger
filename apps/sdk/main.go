@@ -1,15 +1,15 @@
 package main
 
 import (
+	"kinger/common/config"
 	"kinger/common/consts"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/common/app"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/timer"
 	_ "kinger/meta"
 	"kinger/sdk"
-	"kinger/gopuppy/apps/logic"
 	"time"
-	"kinger/gopuppy/common/app"
-	"kinger/common/config"
-	"kinger/gopuppy/common/timer"
-	"kinger/gopuppy/common/evq"
 )
 
 type sdkService struct {
@@ -31,7 +31,7 @@ func (ss *sdkService) Start(appid uint16) {
 
 	})
 
-	<- c
+	<-c
 }
 
 func (ss *sdkService) Stop() {
@@ -40,7 +40,7 @@ func (ss *sdkService) Stop() {
 		ss.ReportOnStop()
 		close(c)
 	})
-	<- c
+	<-c
 	ss.OnStop()
 }
 

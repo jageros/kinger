@@ -1,29 +1,29 @@
 package seasonpvp
 
 import (
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/apps/logic"
-	"kinger/gamedata"
-	"kinger/gopuppy/common"
-	"kinger/common/consts"
 	"encoding/json"
+	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/glog"
 	"kinger/proto/pb"
 )
 
 type seasonPvpHdSessionData struct {
-	attr *attribute.AttrMgr
-	area int
-	session int
-	rewards []*gamedata.SeasonReward
+	attr     *attribute.AttrMgr
+	area     int
+	session  int
+	rewards  []*gamedata.SeasonReward
 	uid2Rank map[common.UUid]int
 }
 
 func newSeasonPvpHdSessionDataByAttr(session, area int, attr *attribute.AttrMgr) *seasonPvpHdSessionData {
 	sd := &seasonPvpHdSessionData{
 		session: session,
-		area: area,
-		attr: attr,
+		area:    area,
+		attr:    attr,
 	}
 
 	rankAttr := attr.GetListAttr("rank")

@@ -7,13 +7,13 @@ import (
 )
 
 type City struct {
-	ID              int      `json:"__id__"`
-	Castle     []int32      `json:"castle"`        // 城防技
-	AgricultureMax float64 `json:"agriculture_max"`  // 农业上限
-	BusinessMax float64 `json:"business_max"`        // 商业上限
-	DefenseMax float64 `json:"defense_max"`          // 城防上限
-	MilitaryMax float64 `json:"military_max"`        // 兵役上限
-	GloryBase float64 `json:"gloryBase"`         // 基础荣耀
+	ID             int     `json:"__id__"`
+	Castle         []int32 `json:"castle"`          // 城防技
+	AgricultureMax float64 `json:"agriculture_max"` // 农业上限
+	BusinessMax    float64 `json:"business_max"`    // 商业上限
+	DefenseMax     float64 `json:"defense_max"`     // 城防上限
+	MilitaryMax    float64 `json:"military_max"`    // 兵役上限
+	GloryBase      float64 `json:"gloryBase"`       // 基础荣耀
 }
 
 type CityGameData struct {

@@ -2,9 +2,9 @@ package gamedata
 
 import (
 	"encoding/json"
+	"kinger/common/consts"
 	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/utils"
-	"kinger/common/consts"
 	"strconv"
 	"time"
 )

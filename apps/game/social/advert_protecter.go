@@ -1,14 +1,14 @@
 package social
 
 import (
-	"time"
-	"kinger/gopuppy/common/utils"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
-	"kinger/proto/pb"
 	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common/timer"
+	"kinger/gopuppy/common/utils"
+	"kinger/proto/pb"
+	"time"
 )
 
 var nilAdvertProtecter iAdvertProtecter = &nilAdvertProtecterSt{}
@@ -33,7 +33,7 @@ func newAdvertProtecter(player types.IPlayer, cptAttr *attribute.MapAttr) iAdver
 
 	return &advertProtecterSt{
 		player: player,
-		attr: attr,
+		attr:   attr,
 	}
 }
 
@@ -46,7 +46,7 @@ func (ap *nilAdvertProtecterSt) onChat(msg string) (isAdvert bool) {
 
 type advertProtecterSt struct {
 	player types.IPlayer
-	attr *attribute.MapAttr
+	attr   *attribute.MapAttr
 }
 
 func (ap *advertProtecterSt) getLastMsg() string {
@@ -75,15 +75,15 @@ func (ap *advertProtecterSt) setAdvertCnt(cnt int) {
 
 func (ap *advertProtecterSt) sendToSelf(msg string) {
 	chat := &pb.ChatItem{
-		Uid:        uint64(ap.player.GetUid()),
-		Name:       ap.player.GetName(),
-		HeadImgUrl: ap.player.GetHeadImgUrl(),
-		Time:       int32(time.Now().Unix()),
-		Msg:        msg,
-		PvpLevel: int32(ap.player.GetPvpLevel()),
-		Country: ap.player.GetCountry(),
-		HeadFrame: ap.player.GetHeadFrame(),
-		ChatPop: ap.player.GetChatPop(),
+		Uid:         uint64(ap.player.GetUid()),
+		Name:        ap.player.GetName(),
+		HeadImgUrl:  ap.player.GetHeadImgUrl(),
+		Time:        int32(time.Now().Unix()),
+		Msg:         msg,
+		PvpLevel:    int32(ap.player.GetPvpLevel()),
+		Country:     ap.player.GetCountry(),
+		HeadFrame:   ap.player.GetHeadFrame(),
+		ChatPop:     ap.player.GetChatPop(),
 		CountryFlag: ap.player.GetCountryFlag(),
 	}
 
@@ -121,9 +121,9 @@ func (ap *advertProtecterSt) onChat(msg string) bool {
 		return alreadyInForbid
 	}
 
-	isAdvert2 := float64(utils.EditDistance(lastMsg, msg)) <= float64(len(msg)) * 0.25
+	isAdvert2 := float64(utils.EditDistance(lastMsg, msg)) <= float64(len(msg))*0.25
 	if !isAdvert2 && mod.lastAdvertChat != "" {
-		isAdvert2 = float64(utils.EditDistance(mod.lastAdvertChat, msg)) <= float64(len(msg)) * 0.25
+		isAdvert2 = float64(utils.EditDistance(mod.lastAdvertChat, msg)) <= float64(len(msg))*0.25
 	}
 	if !isAdvert2 {
 		return alreadyInForbid

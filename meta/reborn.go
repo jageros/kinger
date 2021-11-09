@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_REFINE_CARD    req: RefineCardArg    resp: RefineCardReply
@@ -196,4 +196,3 @@ func (m *C2S_FETCH_REBORN_DATA_Meta) DecodeReply(data []byte) (interface{}, erro
 }
 
 //------------------------------------ C2S_FETCH_REBORN_DATA END ----------------------------------------
-

@@ -1,11 +1,11 @@
 package spring
 
 import (
+	"github.com/gogo/protobuf/proto"
+	"kinger/apps/game/huodong/event"
 	htypes "kinger/apps/game/huodong/types"
 	"kinger/apps/game/module/types"
 	"kinger/gopuppy/attribute"
-	"kinger/apps/game/huodong/event"
-	"github.com/gogo/protobuf/proto"
 	"kinger/proto/pb"
 )
 
@@ -37,7 +37,7 @@ func (hd *springHd) PackEventDetailMsg(data event.IEventHdPlayerData) proto.Mars
 	detail := &pb.SpringHuodong{}
 	playerHdData.forEachExchangeCnt(func(goodsID, cnt int) {
 		detail.ExchangeDatas = append(detail.ExchangeDatas, &pb.SpringExchangeData{
-			GoodsID: int32(goodsID),
+			GoodsID:     int32(goodsID),
 			ExchangeCnt: int32(cnt),
 		})
 	})

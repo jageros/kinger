@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_GM_COMMAND    req: GmCommand    resp: ok or err
@@ -110,4 +110,3 @@ func (m *C2S_EXCHANGE_GIFT_CODE_Meta) DecodeReply(data []byte) (interface{}, err
 }
 
 //------------------------------------ C2S_EXCHANGE_GIFT_CODE END ----------------------------------------
-

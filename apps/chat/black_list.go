@@ -1,8 +1,8 @@
 package main
 
 import (
-	"kinger/gopuppy/common"
 	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
 	"kinger/gopuppy/common/glog"
 )
 
@@ -17,6 +17,6 @@ func loadBlackList() {
 			glog.Errorf("loadBlackList wrong uid %s", attr.GetAttrID())
 			continue
 		}
-		blackUidList.Add( uint64(id) )
+		blackUidList.Add(uint64(id))
 	}
 }

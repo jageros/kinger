@@ -1,27 +1,27 @@
 package springskin
 
 import (
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/consts"
 	"kinger/gamedata"
 	"kinger/gopuppy/common"
-	"kinger/common/consts"
-	"strconv"
 	"kinger/proto/pb"
-	"kinger/apps/game/module/types"
 	"math/rand"
-	"kinger/apps/game/module"
+	"strconv"
 )
 
 const (
 	springSkin2EventItems = 2
-	skinLvBu = "SK06399"   // 吕布
-	skinDiaoChan = "SK06699"  // 貂蝉
+	skinLvBu              = "SK06399" // 吕布
+	skinDiaoChan          = "SK06699" // 貂蝉
 )
 
 var allLuckBagSkins []*luckBagSkin
 var camp2Skins map[int]common.StringSet
 
 type luckBagSkin struct {
-	data *gamedata.LuckBagReward
+	data   *gamedata.LuckBagReward
 	amount int
 }
 
@@ -49,10 +49,10 @@ func addSpringSkin(player types.IPlayer, skins []string) int {
 	return eventItemAmount
 }
 
-func lotterySkin(player types.IPlayer) (*pb.OpenTreasureReply) {
+func lotterySkin(player types.IPlayer) *pb.OpenTreasureReply {
 	var skins []string
 	for i := 0; i < 5; i++ {
-		ls := allLuckBagSkins[ rand.Intn(len(allLuckBagSkins)) ]
+		ls := allLuckBagSkins[rand.Intn(len(allLuckBagSkins))]
 		skinID := ls.getSkin()
 		for j := 0; j < ls.amount; j++ {
 			skins = append(skins, skinID)
@@ -63,7 +63,7 @@ func lotterySkin(player types.IPlayer) (*pb.OpenTreasureReply) {
 		CardSkins: skins,
 	}
 	reply.Resources = append(reply.Resources, &pb.Resource{
-		Type: int32(consts.EventItem1),
+		Type:   int32(consts.EventItem1),
 		Amount: int32(addSpringSkin(player, skins)),
 	})
 
@@ -78,11 +78,11 @@ func isPlayerHasAllSkinByCamp(player types.IPlayer, camp int) bool {
 
 	has := true
 	sks.ForEach(func(skinID string) bool {
-		 if !module.Bag.HasItem(player, consts.ItCardSkin, skinID) {
-			 has = false
-			 return false
-		 }
-		 return true
+		if !module.Bag.HasItem(player, consts.ItCardSkin, skinID) {
+			has = false
+			return false
+		}
+		return true
 	})
 	return has
 }

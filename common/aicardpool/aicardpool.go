@@ -1,33 +1,33 @@
 package aicardpool
 
 import (
-	"kinger/gopuppy/attribute"
 	"fmt"
+	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common/evq"
 	"kinger/gopuppy/common/timer"
-	"time"
-	"strings"
-	"strconv"
+	"kinger/gopuppy/common/utils"
 	"kinger/proto/pb"
 	"math/rand"
-	"kinger/gopuppy/common/utils"
-	"kinger/gamedata"
-	"kinger/common/consts"
 	"sort"
+	"strconv"
+	"strings"
+	"time"
 )
 
 var (
-	curAppName string
-	curAppID uint32
+	curAppName     string
+	curAppID       uint32
 	pvpLevel2Pools map[int]*cardPool
-	loading chan struct{}
+	loading        chan struct{}
 )
 
 type cardPool struct {
-	attr *attribute.AttrMgr
+	attr      *attribute.AttrMgr
 	poolsAttr *attribute.ListAttr
-	pvpLevel int
-	pools [][]uint32
+	pvpLevel  int
+	pools     [][]uint32
 }
 
 func newCardPool(pvpLevel int) *cardPool {
@@ -44,7 +44,7 @@ func newCardPoolByAttr(attr *attribute.AttrMgr) *cardPool {
 		return nil
 	}
 
-	p := &cardPool{ attr: attr, pvpLevel: pvpLevel }
+	p := &cardPool{attr: attr, pvpLevel: pvpLevel}
 	poolsAttr := attr.GetListAttr("pools")
 	if poolsAttr == nil {
 		poolsAttr = attribute.NewListAttr()
@@ -58,7 +58,7 @@ func newCardPoolByAttr(attr *attribute.AttrMgr) *cardPool {
 		for i, strCardID := range cardIDsInfo {
 			cardID, _ := strconv.Atoi(strCardID)
 			pool = append(pool, uint32(cardID))
-			if i == len(cardIDsInfo) - 2 {
+			if i == len(cardIDsInfo)-2 {
 				sort.Slice(pool, func(i, j int) bool {
 					return pool[i] < pool[j]
 				})
@@ -128,7 +128,7 @@ func Load(appName string, appID uint32) {
 		pvpLevel2Pools = level2Pools
 	})
 
-	timer.AddTicker(12 * time.Minute, Save)
+	timer.AddTicker(12*time.Minute, Save)
 }
 
 func Save() {
@@ -144,7 +144,7 @@ func Save() {
 func AddCardPool(pvpLevel, camp int, cardIDs []uint32) {
 	if loading != nil {
 		evq.Await(func() {
-			<- loading
+			<-loading
 		})
 	}
 
@@ -275,14 +275,14 @@ func RandomCardPool(pvpLevel, playerCamp int, playerHandCards []*pb.SkinGCard, c
 
 	utils.ShuffleInt(levels)
 	/*
-	if equipAmount > 0 {
-		equipGameData := gamedata.GetGameData(consts.Equip).(*gamedata.EquipGameData)
-		equipIDs := utils.RandSample(equipGameData.AllEquipIDs, equipAmount, false)
-		for i, equipID := range equipIDs {
-			equips[i] = equipID.(string)
+		if equipAmount > 0 {
+			equipGameData := gamedata.GetGameData(consts.Equip).(*gamedata.EquipGameData)
+			equipIDs := utils.RandSample(equipGameData.AllEquipIDs, equipAmount, false)
+			for i, equipID := range equipIDs {
+				equips[i] = equipID.(string)
+			}
+			utils.ShuffleString(equips)
 		}
-		utils.ShuffleString(equips)
-	}
 	*/
 
 	handCards = make([]*pb.SkinGCard, 5)

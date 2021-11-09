@@ -7,21 +7,21 @@ import (
 )
 
 type Rank struct {
-	ID           int      `json:"__id__"`
-	Team         int      `json:"team"`
-	LevelUpStar  int      `json:"levelUpStar"`  // 当前段位的满分，再拿一份就升段了（已废弃）
-	Unlock       []uint32    `json:"unlock"`
-	GoldReward   int      `json:"goldReward"`
-	RankUpReward []uint32 `json:"rankUpReward"`
-	MatchUpper int `json:"matchUpper"`
-	MatchLower int `json:"matchLower"`
-	Protection int `json:"protection"`
-	IndexInterval float64 `json:"index_interval"`  // 匹配区间
-	IndexRedline float64 `json:"index_redline"`   // 匹配红线
-	Kvalue float64 `json:"k_value"`
-	RankIntegral int `json:"rank_integra"`
-	PositiveIQ int `json:"PositiveIQ"`
-	NegativeIQ int `json:"NegativeIQ"`
+	ID            int      `json:"__id__"`
+	Team          int      `json:"team"`
+	LevelUpStar   int      `json:"levelUpStar"` // 当前段位的满分，再拿一份就升段了（已废弃）
+	Unlock        []uint32 `json:"unlock"`
+	GoldReward    int      `json:"goldReward"`
+	RankUpReward  []uint32 `json:"rankUpReward"`
+	MatchUpper    int      `json:"matchUpper"`
+	MatchLower    int      `json:"matchLower"`
+	Protection    int      `json:"protection"`
+	IndexInterval float64  `json:"index_interval"` // 匹配区间
+	IndexRedline  float64  `json:"index_redline"`  // 匹配红线
+	Kvalue        float64  `json:"k_value"`
+	RankIntegral  int      `json:"rank_integra"`
+	PositiveIQ    int      `json:"PositiveIQ"`
+	NegativeIQ    int      `json:"NegativeIQ"`
 
 	OriginUnlockCard []uint32
 }

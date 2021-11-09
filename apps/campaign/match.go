@@ -1,27 +1,27 @@
 package main
 
 import (
-	"kinger/proto/pb"
-	"kinger/gopuppy/common"
-	"kinger/gopuppy/common/timer"
-	"time"
-	"kinger/gopuppy/common/eventhub"
-	"math/rand"
-	"kinger/gopuppy/apps/logic"
 	"kinger/common/consts"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/eventhub"
+	"kinger/gopuppy/common/timer"
+	"kinger/proto/pb"
+	"math/rand"
+	"time"
 	//"kinger/gopuppy/common/glog"
 )
 
 var (
 	fieldMatchMgr = &fieldMatchMgrSt{}
-	cityMatchMgr = &cityMatchMgrSt{}
+	cityMatchMgr  = &cityMatchMgrSt{}
 )
 
 type fieldMatchMgrSt struct {
-	readyUidSet common.UInt64Set
-	readyQueue []*matchTeam
+	readyUidSet   common.UInt64Set
+	readyQueue    []*matchTeam
 	uid2MatchTeam map[common.UUid]*matchTeam
-	road2Queue map[int]map[uint32][]*matchTeam
+	road2Queue    map[int]map[uint32][]*matchTeam
 
 	ticker *timer.Timer
 }
@@ -90,9 +90,9 @@ func (mm *fieldMatchMgrSt) onMatchDone(t1, t2 *matchTeam) {
 		Fighter1:           t1.fighterData,
 		Fighter2:           t2.fighterData,
 		NeedFortifications: true,
-		BonusType:             2,
+		BonusType:          2,
 		NeedVideo:          true,
-		UpperType: 3,
+		UpperType:          3,
 	})
 }
 
@@ -194,8 +194,9 @@ func (mm *fieldMatchMgrSt) beginMatch(roadID int, t *team) {
 
 const (
 	attackCityIdx = 0
-	defCityIdx = 1
+	defCityIdx    = 1
 )
+
 type cityMatchMgrSt struct {
 	readyUidSet   common.UInt64Set
 	atkReadyQueue []*matchTeam
@@ -232,7 +233,7 @@ func (mm *cityMatchMgrSt) onWarBegin(_ ...interface{}) {
 			return
 		}
 
-		for i, queue := range [][]*matchTeam{ mm.atkReadyQueue, mm.defReadyQueue } {
+		for i, queue := range [][]*matchTeam{mm.atkReadyQueue, mm.defReadyQueue} {
 			for _, t := range queue {
 				if _, ok := mm.uid2MatchTeam[t.p.getUid()]; ok {
 					continue
@@ -241,7 +242,7 @@ func (mm *cityMatchMgrSt) onWarBegin(_ ...interface{}) {
 				mm.uid2MatchTeam[t.p.getUid()] = t
 				c2ts, ok := mm.city2Queue[t.cityID]
 				if !ok {
-					c2ts = [][]*matchTeam{ []*matchTeam{}, []*matchTeam{} }
+					c2ts = [][]*matchTeam{[]*matchTeam{}, []*matchTeam{}}
 					mm.city2Queue[t.cityID] = c2ts
 				}
 
@@ -282,9 +283,9 @@ func (mm *cityMatchMgrSt) onMatchDone(atkMt, defMt *matchTeam) {
 		Fighter1:           atkMt.fighterData,
 		Fighter2:           defMt.fighterData,
 		NeedFortifications: true,
-		BonusType:             2,
+		BonusType:          2,
 		NeedVideo:          true,
-		UpperType: 1,
+		UpperType:          1,
 	})
 
 	defMt.fighterData.CasterSkills = []int32{}
@@ -334,7 +335,8 @@ func (mm *cityMatchMgrSt) onMatchTick() {
 func (mm *cityMatchMgrSt) stopMatch(uid common.UUid) {
 	if mm.readyUidSet.Contains(uint64(uid)) {
 		mm.readyUidSet.Remove(uint64(uid))
-	L1: for idx, queue := range [][]*matchTeam{mm.atkReadyQueue, mm.defReadyQueue} {
+	L1:
+		for idx, queue := range [][]*matchTeam{mm.atkReadyQueue, mm.defReadyQueue} {
 			for i, t := range queue {
 				if t.p.getUid() == uid {
 					if idx == attackCityIdx {
@@ -359,7 +361,8 @@ func (mm *cityMatchMgrSt) stopMatch(uid common.UUid) {
 		return
 	}
 
-L2:	for idx, ts := range c2ts {
+L2:
+	for idx, ts := range c2ts {
 		for i, t := range ts {
 			if t.p.getUid() == uid {
 				c2ts[idx] = append(ts[:i], ts[i+1:]...)
@@ -386,21 +389,21 @@ func (mm *cityMatchMgrSt) beginMatch(cityID int, t *team) {
 }
 
 type matchTeam struct {
-	tid int
-	p *player
-	roadID int
-	cityID int
-	countryID uint32
+	tid         int
+	p           *player
+	roadID      int
+	cityID      int
+	countryID   uint32
 	fighterData *pb.FighterData
 }
 
 func newMatchTeam(roadID, cityID int, t *team) *matchTeam {
 	return &matchTeam{
-		tid: t.getID(),
-		p: t.getOwner(),
-		roadID: roadID,
-		cityID: cityID,
-		countryID: t.getOwner().getCountryID(),
+		tid:         t.getID(),
+		p:           t.getOwner(),
+		roadID:      roadID,
+		cityID:      cityID,
+		countryID:   t.getOwner().getCountryID(),
 		fighterData: t.fighterData,
 	}
 }

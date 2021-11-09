@@ -2,6 +2,11 @@ package utils
 
 import (
 	"fmt"
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/consts"
+	"kinger/common/forbidlist"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/center/mq"
 	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/attribute"
@@ -9,11 +14,6 @@ import (
 	gconsts "kinger/gopuppy/common/consts"
 	"kinger/gopuppy/common/wordfilter"
 	"kinger/gopuppy/network/protoc"
-	"kinger/apps/game/module"
-	"kinger/apps/game/module/types"
-	"kinger/common/consts"
-	"kinger/common/forbidlist"
-	"kinger/gamedata"
 	"kinger/proto/pb"
 	"strings"
 	"time"
@@ -192,22 +192,22 @@ func CrossLeagueSeasonResetScore(oldMaxScore, oldRankScore int) (modifyMaxScore,
 	}
 
 	funGameData := gamedata.GetGameData(consts.FunctionPrice).(*gamedata.FunctionPriceGameData)
-	pro := float64(funGameData.LeagueResetRewardProp)/100
-	compensatoryScore := int(float64(oldRankScore-baseScore)*pro)
+	pro := float64(funGameData.LeagueResetRewardProp) / 100
+	compensatoryScore := int(float64(oldRankScore-baseScore) * pro)
 	maxCompensatoryScore := funGameData.LeagueResetRewardMax
 	if compensatoryScore > maxCompensatoryScore {
 		compensatoryScore = maxCompensatoryScore
 	}
 	newScore := baseScore + compensatoryScore
-	modifyScore = newScore-oldRankScore
-	modifyMaxScore = newScore-oldMaxScore
+	modifyScore = newScore - oldRankScore
+	modifyMaxScore = newScore - oldMaxScore
 	if newScore < baseScore {
-		modifyMaxScore = baseScore-oldMaxScore
+		modifyMaxScore = baseScore - oldMaxScore
 	}
 	if modifyMaxScore >= 0 {
 		modifyMaxScore = 0
 	}
-	if modifyScore >= 0 || newScore <= baseScore{
+	if modifyScore >= 0 || newScore <= baseScore {
 		modifyScore = 0
 	}
 	return

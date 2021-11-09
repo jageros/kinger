@@ -1,13 +1,13 @@
 package reborn
 
 import (
-	"kinger/gopuppy/apps/logic"
-	"kinger/proto/pb"
 	"kinger/apps/game/module"
-	"kinger/gamedata"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/common/glog"
+	"kinger/proto/pb"
 	"strconv"
 )
 
@@ -54,14 +54,14 @@ func rpc_C2S_RefineCard(agent *logic.PlayerAgent, arg interface{}) (interface{},
 
 		cards[i] = c
 		amount := c.GetAmount()
-		modifyCards[cardID] = &pb.CardInfo{Amount: - int32(amount)}
+		modifyCards[cardID] = &pb.CardInfo{Amount: -int32(amount)}
 		reputation += f * float32(amount)
 	}
 
 	glog.Infof("rpc_C2S_RefineCard uid=%d, reputation=%d, cards=%v", uid, int(reputation), cards)
 	cardCpt.ModifyCollectCards(modifyCards)
 	module.Player.ModifyResource(player, consts.Reputation, int(reputation))
-	return &pb.RefineCardReply{ Reputation: int32(reputation) }, nil
+	return &pb.RefineCardReply{Reputation: int32(reputation)}, nil
 }
 
 func rpc_C2S_BuyRebornGoods(agent *logic.PlayerAgent, arg interface{}) (interface{}, error) {
@@ -116,9 +116,9 @@ func rpc_C2S_FetchRebornData(agent *logic.PlayerAgent, arg interface{}) (interfa
 
 	rebornCpt := player.GetComponent(consts.RebornCpt).(*rebornComponent)
 	return &pb.RebornData{
-		Prestige: int32(rebornPrestige),
+		Prestige:  int32(rebornPrestige),
 		RemainDay: int32(rebornCpt.getRebornRemainDay()),
-		Cnt: int32(rebornCpt.getRebornCnt()),
+		Cnt:       int32(rebornCpt.getRebornCnt()),
 	}, nil
 }
 

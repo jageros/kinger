@@ -1,12 +1,12 @@
 package spring
 
 import (
-	"kinger/gopuppy/attribute"
-	"strconv"
-	"kinger/gamedata"
 	"kinger/apps/game/huodong/event"
 	"kinger/apps/game/module"
 	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"strconv"
 )
 
 type springHdPlayerData struct {
@@ -14,7 +14,7 @@ type springHdPlayerData struct {
 	exchangeCntAttr *attribute.MapAttr
 }
 
-func (hpd *springHdPlayerData) Reset(version int)  {
+func (hpd *springHdPlayerData) Reset(version int) {
 	if hpd.GetVersion() == version {
 		return
 	}
@@ -40,7 +40,7 @@ func (hpd *springHdPlayerData) onExchangeGoods(goodsData *gamedata.HuodongGoods)
 		}
 
 		key := strconv.Itoa(goodsData.ID)
-		hpd.exchangeCntAttr.SetInt( key, hpd.exchangeCntAttr.GetInt(key) + 1 )
+		hpd.exchangeCntAttr.SetInt(key, hpd.exchangeCntAttr.GetInt(key)+1)
 	}
 }
 

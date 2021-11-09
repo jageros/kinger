@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_FETCH_SURVEY_INFO    resp: SurveyInfo
@@ -138,4 +138,3 @@ func (m *C2S_GET_SURVEY_REWARD_Meta) DecodeReply(data []byte) (interface{}, erro
 }
 
 //------------------------------------ C2S_GET_SURVEY_REWARD END ----------------------------------------
-

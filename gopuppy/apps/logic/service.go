@@ -1,25 +1,25 @@
 package logic
 
 import (
+	"fmt"
 	"kinger/gopuppy/apps/center/api"
+	"kinger/gopuppy/apps/center/mq"
 	"kinger/gopuppy/common/async"
 	"kinger/gopuppy/common/config"
 	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/opmon"
 	"kinger/gopuppy/db"
 	_ "kinger/gopuppy/meta"
 	"kinger/gopuppy/proto/pb"
-	"kinger/gopuppy/apps/center/mq"
 	"net/http"
-	"fmt"
-	"kinger/gopuppy/common/glog"
 )
 
 var lService *LogicService
 
 type LogicService struct {
 	AppID   uint32
-	Region uint32
+	Region  uint32
 	AppName string
 }
 

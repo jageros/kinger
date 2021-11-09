@@ -3,11 +3,11 @@ package main
 import (
 	"kinger/gopuppy/common"
 	"kinger/gopuppy/common/consts"
+	"kinger/gopuppy/common/evq"
 	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
 	"kinger/gopuppy/network"
 	"kinger/gopuppy/proto/pb"
-	"kinger/gopuppy/common/evq"
-	"kinger/gopuppy/common/timer"
 	"time"
 )
 
@@ -150,7 +150,7 @@ func rpc_L2C_ReportRpc(ses *network.Session, arg interface{}) (interface{}, erro
 		}
 	}
 
-	t := timer.AfterFunc(10 * time.Second, func() {
+	t := timer.AfterFunc(10*time.Second, func() {
 		onLogicSesRestored()
 		glog.Infof("LogicSesRestored time out appName=%s, appID=%d", appName, appID)
 	})
@@ -267,7 +267,7 @@ func rpc_L2L_NoPlayerRpcPush(ses *network.Session, arg interface{}) (interface{}
 func rpc_L2L_NoPlayerBroadcast(ses *network.Session, arg interface{}) (interface{}, error) {
 	arg2 := arg.(*pb.NoPlayerBroadcastArg)
 	payload, _ := (&pb.NoPlayerRpcCallArg{
-		MsgID: arg2.MsgID,
+		MsgID:   arg2.MsgID,
 		Payload: arg2.Payload,
 	}).Marshal()
 
@@ -289,7 +289,7 @@ func rpc_LoadPlayer(ses *network.Session, arg interface{}) (interface{}, error) 
 	cpi := cService.getClientDispatchInfo(uid)
 	if cpi == nil {
 		cpi = cService.newClientDispatchInfo(&pb.PlayerClient{
-			Uid: arg2.Uid,
+			Uid:    arg2.Uid,
 			Region: cService.region,
 		}, ses.GetProp("appID").(uint32))
 	}

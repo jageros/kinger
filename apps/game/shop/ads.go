@@ -2,16 +2,16 @@ package shop
 
 import (
 	"fmt"
-	"kinger/gopuppy/attribute"
-	"kinger/proto/pb"
-	"time"
-	"kinger/gamedata"
 	"kinger/apps/game/module/types"
-	"kinger/gopuppy/common/glog"
-	"kinger/common/consts"
 	"kinger/common/config"
-	"math"
+	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/timer"
+	"kinger/proto/pb"
+	"math"
+	"time"
 )
 
 // 商城赞助
@@ -58,8 +58,8 @@ func newFreeAds(player types.IPlayer, type_ pb.ShopFreeAdsType, isNewbie bool) *
 
 func (fa *freeAds) packMsg() *pb.ShopFreeAds {
 	msg := &pb.ShopFreeAds{
-		Type: fa.getType(),
-		ID: int32(fa.getID()),
+		Type:   fa.getType(),
+		ID:     int32(fa.getID()),
 		CanGet: fa.isWxCanReward(),
 	}
 	remainTime := int32(fa.getTimeout() - time.Now().Unix())
@@ -131,12 +131,12 @@ func (fa *freeAds) getReward(player types.IPlayer, isConsumeJade bool) ([]byte, 
 		payload, _ = (&pb.WatchShopFreeAdsReply_GoldReward{
 			GoldAmount: int32(data.Gold),
 		}).Marshal()
-	//} else if type_ == pb.ShopFreeAdsType_JadeAds {
-	//	data := gamedata.GetGameData(consts.FreeJddeAds).(*gamedata.FreeJadeAdsGameData).ID2Ads[id]
-	//	player.GetComponent(consts.ResourceCpt).(types.IResourceComponent).ModifyResource(consts.Jade, data.Jade, true)
-	//	payload, _ = (&pb.WatchShopFreeAdsReply_JadeReward{
-	//		JadeAmount: int32(data.Jade),
-	//	}).Marshal()
+		//} else if type_ == pb.ShopFreeAdsType_JadeAds {
+		//	data := gamedata.GetGameData(consts.FreeJddeAds).(*gamedata.FreeJadeAdsGameData).ID2Ads[id]
+		//	player.GetComponent(consts.ResourceCpt).(types.IResourceComponent).ModifyResource(consts.Jade, data.Jade, true)
+		//	payload, _ = (&pb.WatchShopFreeAdsReply_JadeReward{
+		//		JadeAmount: int32(data.Jade),
+		//	}).Marshal()
 	} else {
 		var data *gamedata.FreeTreasureAds
 		if type_ == pb.ShopFreeAdsType_JadeAds {
@@ -163,6 +163,7 @@ type iAdsMgr interface {
 
 type nilAdsMgrSt struct {
 }
+
 func (am *nilAdsMgrSt) onLogin()                             {}
 func (am *nilAdsMgrSt) onLogout()                            {}
 func (am *nilAdsMgrSt) onMaxPvpLevelUpdate()                 {}
@@ -177,15 +178,15 @@ func (am *nilAdsMgrSt) onWxBeHelp(type_ pb.ShopFreeAdsType, id int) error {
 	return gamedata.InternalErr
 }
 
-
 type adsMgrSt struct {
-	attr *attribute.ListAttr
-	player types.IPlayer
-	adses []*freeAds
+	attr        *attribute.ListAttr
+	player      types.IPlayer
+	adses       []*freeAds
 	notifyTimer *timer.Timer
 }
 
 var nilAdsMgr = &nilAdsMgrSt{}
+
 func newAdsMgr(cptAttr *attribute.MapAttr, player types.IPlayer) iAdsMgr {
 	if config.GetConfig().IsXfServer() {
 		// 仙峰
@@ -240,7 +241,7 @@ func (am *adsMgrSt) addNotifyTimer() {
 		am.notifyTimer.Cancel()
 	}
 
-	am.notifyTimer = timer.AfterFunc(time.Duration(remainTime + 1) * time.Second, func() {
+	am.notifyTimer = timer.AfterFunc(time.Duration(remainTime+1)*time.Second, func() {
 		am.notifyTimer = nil
 		am.caclHint(false)
 		am.player.GetComponent(consts.ShopCpt).(*shopComponent).onShopDataUpdate(pb.UpdateShopDataArg_FreeAds)
@@ -304,9 +305,9 @@ func (am *adsMgrSt) watchAds(type_ pb.ShopFreeAdsType, id int, isConsumeJade boo
 	am.caclHint(false)
 
 	return &pb.WatchShopFreeAdsReply{
-		Type: type_,
+		Type:          type_,
 		RewardPayload: rewardPayload,
-		NextAds: newa.packMsg(),
+		NextAds:       newa.packMsg(),
 	}, nil
 }
 

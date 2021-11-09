@@ -1,18 +1,18 @@
 package campaign
 
 import (
-	"kinger/gopuppy/attribute"
 	"kinger/apps/game/module/types"
-	"kinger/common/consts"
-	"kinger/proto/pb"
-	"kinger/gopuppy/apps/logic"
 	"kinger/common/config"
+	"kinger/common/consts"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
+	"kinger/proto/pb"
 )
 
 type campaignComponent struct {
-	attr *attribute.MapAttr
-	player types.IPlayer
-	info *pb.GCampaignPlayerInfo
+	attr        *attribute.MapAttr
+	player      types.IPlayer
+	info        *pb.GCampaignPlayerInfo
 	offlineInfo *pb.GCampaignPlayerInfo
 }
 
@@ -119,7 +119,7 @@ func (cc *campaignComponent) addNotice(notice *pb.CampaignNotice) {
 
 func (cc *campaignComponent) modifyContribution(amount int) bool {
 	_, err := logic.CallBackend("", 0, pb.MessageID_G2CA_MODIFY_CONTRIBUTION, &pb.ModifyContributionArg{
-		Uid: uint64(cc.player.GetUid()),
+		Uid:    uint64(cc.player.GetUid()),
 		Amount: int32(amount),
 	})
 	return err == nil

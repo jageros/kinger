@@ -1,12 +1,12 @@
 package growplan
 
 import (
-	"kinger/gopuppy/common/glog"
 	aTypes "kinger/apps/game/activitys/types"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/common/glog"
 	"kinger/proto/pb"
 	"strconv"
 	"strings"
@@ -232,7 +232,7 @@ func onOpenTreasure(args ...interface{}) {
 	}
 	p.updateHint()
 }
-func onCombat(args ... interface{}) {
+func onCombat(args ...interface{}) {
 	for _, arg := range args {
 		player, ok := arg.(types.IPlayer)
 		if !ok {
@@ -331,7 +331,7 @@ func onRecharge(args ...interface{}) {
 	for _, aid := range mod.IAMod.GetActivityIdList() {
 		if p.ipc.Conform(aid) {
 			mNum := p.get1ArgAttrNum(aid, aTypes.GrowPlan_totalRecharge)
-			p.set1ArgAttrNum(aid, aTypes.GrowPlan_totalRecharge, mNum + money)
+			p.set1ArgAttrNum(aid, aTypes.GrowPlan_totalRecharge, mNum+money)
 			for _, rid := range mod.getRewardIdList(aid) {
 				if mod.getGoodsId(aid, rid) == goodsId {
 					p.setBuyGift(aid, goodsId)

@@ -1,12 +1,12 @@
 package types
 
 import (
-	"time"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/glog"
 	"kinger/apps/game/module/types"
+	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
 	"kinger/proto/pb"
+	"time"
 )
 
 var Mod IMod
@@ -61,7 +61,7 @@ func (hpd *BaseHdPlayerData) GetAttr() *attribute.MapAttr {
 type BaseHuodong struct {
 	I         IHuodong
 	Attr      *attribute.AttrMgr
-	htype       pb.HuodongTypeEnum
+	htype     pb.HuodongTypeEnum
 	beginTime time.Time
 	endTime   time.Time
 }

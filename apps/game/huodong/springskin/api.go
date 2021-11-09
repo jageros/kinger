@@ -1,12 +1,12 @@
 package springskin
 
 import (
-	"kinger/gopuppy/attribute"
 	"kinger/apps/game/huodong/event"
-	"kinger/proto/pb"
 	htypes "kinger/apps/game/huodong/types"
 	"kinger/apps/game/module/types"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/proto/pb"
 	"math/rand"
 )
 

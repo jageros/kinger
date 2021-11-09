@@ -1,19 +1,19 @@
 package main
 
 import (
-	"kinger/gopuppy/common"
-	"kinger/gopuppy/common/timer"
-	"kinger/proto/pb"
-	"time"
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common/evq"
-	"kinger/gopuppy/common/utils"
-	"math/rand"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/apps/logic"
 	"kinger/common/consts"
-	"kinger/gamedata"
 	kutils "kinger/common/utils"
+	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
+	"kinger/gopuppy/common/utils"
+	"kinger/proto/pb"
+	"math/rand"
+	"time"
 )
 
 var _ iBattle = &battle{}
@@ -43,21 +43,21 @@ type iBattle interface {
 }
 
 type battle struct {
-	i          iBattle
-	battleID   common.UUid
-	battleType int
-	situation  *battleSituation
-	end        bool
-	needVideo  bool
-	videoData  *pb.VideoBattleData
-	isFirstPvp bool
-	levelID int
+	i             iBattle
+	battleID      common.UUid
+	battleType    int
+	situation     *battleSituation
+	end           bool
+	needVideo     bool
+	videoData     *pb.VideoBattleData
+	isFirstPvp    bool
+	levelID       int
 	boutBeginTime time.Time
-	indexDiff int
+	indexDiff     int
 
-	waitClientTimer *timer.Timer
-	boutTimer       *timer.Timer
-	saveTimer *timer.Timer
+	waitClientTimer     *timer.Timer
+	boutTimer           *timer.Timer
+	saveTimer           *timer.Timer
 	surrenderWaitClient chan struct{}
 }
 
@@ -65,13 +65,13 @@ func newBattle(battleID common.UUid, battleType int, fighterData1, fighterData2 
 	scale, battleRes int, needVideo bool, needFortifications, isFirstPvp bool, seasonData *gamedata.SeasonPvp,
 	indexDiff int) *battle {
 
-	battleObj := &battle {
-		battleID: battleID,
-		battleType: battleType,
-		needVideo: needVideo,
-		isFirstPvp: isFirstPvp,
+	battleObj := &battle{
+		battleID:      battleID,
+		battleType:    battleType,
+		needVideo:     needVideo,
+		isFirstPvp:    isFirstPvp,
 		boutBeginTime: time.Now(),
-		indexDiff: indexDiff,
+		indexDiff:     indexDiff,
 	}
 	battleObj.i = battleObj
 	battleObj.situation = newBattleSituation(fighterData1, fighterData2, battleID, upperType, bonusType, scale, battleRes,
@@ -133,12 +133,12 @@ func (b *battle) getBattleID() common.UUid {
 
 func (b *battle) packMsg() interface{} {
 	msg := &pb.FightDesk{
-		DeskId:    uint64(b.battleID),
-		Type:      int32(b.battleType),
-		Fighter1:  b.situation.getFighter1().packMsg(),
-		Fighter2:  b.situation.getFighter2().packMsg(),
-		Scale:     int32(b.situation.scale),
-		BattleRes: int32(b.situation.battleRes),
+		DeskId:     uint64(b.battleID),
+		Type:       int32(b.battleType),
+		Fighter1:   b.situation.getFighter1().packMsg(),
+		Fighter2:   b.situation.getFighter2().packMsg(),
+		Scale:      int32(b.situation.scale),
+		BattleRes:  int32(b.situation.battleRes),
 		IsFirstPvp: b.isFirstPvp,
 	}
 
@@ -266,7 +266,7 @@ func (b *battle) boutReadyDone(fter *fighter) {
 	if f1.isReady() && f2.isReady() {
 		b.boutBegin()
 	} else if !fter.isRobot {
-		b.waitClientTimer = timer.AfterFunc(3 * time.Second, b.onWaitClientTimeout)
+		b.waitClientTimer = timer.AfterFunc(3*time.Second, b.onWaitClientTimeout)
 	}
 }
 
@@ -282,7 +282,7 @@ func (b *battle) boutBegin() {
 
 	winUid, _ := b.checkResult()
 	if winUid != 0 {
-		timer.AfterFunc(2 * time.Second, func() {
+		timer.AfterFunc(2*time.Second, func() {
 			if !b.isEnd() {
 				b.battleEnd(winUid, false, false)
 				mgr.delBattle(b.getBattleID())
@@ -323,7 +323,7 @@ func (b *battle) syncReadyFight() {
 
 func (b *battle) syncBoutBegin(actions []*clientAction) {
 	msg := &pb.FightBoutBegin{
-		BoutUid: uint64(b.situation.getCurBoutFighter().getUid()),
+		BoutUid:  uint64(b.situation.getCurBoutFighter().getUid()),
 		BattleID: uint64(b.battleID),
 	}
 
@@ -387,7 +387,7 @@ func (b *battle) beginBoutTimer() {
 		boutTimeout = curBoutFighter.getBoutTimeout()
 	}
 
-	b.boutTimer = timer.AfterFunc(time.Duration(boutTimeout) * time.Second, func() {
+	b.boutTimer = timer.AfterFunc(time.Duration(boutTimeout)*time.Second, func() {
 
 		if b.boutTimer == nil {
 			return
@@ -564,7 +564,7 @@ func (b *battle) battleEnd(winUid common.UUid, isSurrender, isCancel bool) {
 	var fighter2IndexDiff int
 	if !fighter1.isRobot && !fighter2.isRobot {
 		fighter1IndexDiff = b.indexDiff
-		fighter2IndexDiff = - b.indexDiff
+		fighter2IndexDiff = -b.indexDiff
 	}
 
 	winer := fighter1
@@ -578,8 +578,8 @@ func (b *battle) battleEnd(winUid common.UUid, isSurrender, isCancel bool) {
 
 	if isSurrender {
 		acts, _, _ := b.situation.triggerMgr.trigger(map[int][]iTarget{surrenderTrigger: []iTarget{loser}}, &triggerContext{
-			triggerType: surrenderTrigger,
-			surrenderor: loser,
+			triggerType:   surrenderTrigger,
+			surrenderor:   loser,
 			beSurrenderor: winer,
 		})
 
@@ -596,7 +596,7 @@ func (b *battle) battleEnd(winUid common.UUid, isSurrender, isCancel bool) {
 			}
 			b.addVideoBoutAction(msg)
 
-			tr := timer.AfterFunc(10 * time.Second, func() {
+			tr := timer.AfterFunc(10*time.Second, func() {
 				if b.surrenderWaitClient != nil {
 					c := b.surrenderWaitClient
 					b.surrenderWaitClient = nil
@@ -635,7 +635,7 @@ func (b *battle) battleEnd(winUid common.UUid, isSurrender, isCancel bool) {
 	}
 
 	for _, fter := range []*fighter{fighter1, fighter2} {
-		if !fter.isRobot && (!isCancel || fter == winer ) {
+		if !fter.isRobot && (!isCancel || fter == winer) {
 			kutils.PlayerMqPublish(fter.getUid(), pb.RmqType_BattleEnd, mqMsg)
 			if fter.agent != nil {
 				fter.agent.SetDispatchApp(consts.AppBattle, 0)
@@ -669,7 +669,7 @@ func (b *battle) battleEnd(winUid common.UUid, isSurrender, isCancel bool) {
 			if fter.isRobot {
 				logic.BroadcastBackend(pb.MessageID_B2L_ON_ROBOT_BATTLE_END, &pb.OnRobotBattleEndArg{
 					RobotID: uint64(fter.robotID),
-					IsWin: winnerEndFighter.isFighter1,
+					IsWin:   winnerEndFighter.isFighter1,
 				})
 			}
 		}
@@ -755,7 +755,7 @@ func (b *battle) onFighterLogout() {
 		return
 	}
 
-	b.saveTimer = timer.AfterFunc(15 * time.Minute, func() {
+	b.saveTimer = timer.AfterFunc(15*time.Minute, func() {
 		b.saveTimer = nil
 		b.i.save(false)
 		mgr.delBattle(b.battleID)

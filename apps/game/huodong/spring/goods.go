@@ -1,12 +1,12 @@
 package spring
 
 import (
-	"kinger/apps/game/module/types"
-	"kinger/proto/pb"
-	"kinger/gamedata"
-	"kinger/common/consts"
-	"kinger/apps/game/module"
 	"fmt"
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/proto/pb"
 	"strconv"
 	"time"
 )
@@ -33,7 +33,7 @@ type baseHuodongGoods struct {
 	data *gamedata.HuodongGoods
 }
 
-func (g *baseHuodongGoods) getGameData() *gamedata.HuodongGoods  {
+func (g *baseHuodongGoods) getGameData() *gamedata.HuodongGoods {
 	return g.data
 }
 
@@ -63,7 +63,7 @@ func (g *resourceHuodongGoods) exchange(player types.IPlayer) (itemID, itemName 
 
 type itemHuodongGoods struct {
 	baseHuodongGoods
-	itemID string
+	itemID   string
 	itemType int
 }
 
@@ -140,7 +140,7 @@ func (g *cardHuodongGoods) exchange(player types.IPlayer) (itemID, itemName stri
 
 type treasureHuodongGoods struct {
 	baseHuodongGoods
-	treasureID string
+	treasureID   string
 	treasureData *gamedata.Treasure
 }
 
@@ -266,4 +266,3 @@ func initAllGoods() {
 	})
 	doInitAllGoods(huodongGameData, false)
 }
-

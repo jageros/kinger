@@ -1,18 +1,18 @@
 package main
 
 import (
+	"fmt"
+	"kinger/common/consts"
+	"kinger/gopuppy/common/app"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/network"
 	"kinger/gopuppy/network/snet"
-	"time"
-	"kinger/gopuppy/common/glog"
-	"kinger/proto/pb"
-	"fmt"
-	"kinger/gopuppy/common/evq"
-	"kinger/gopuppy/common/app"
-	"sync"
 	_ "kinger/meta"
-	"kinger/common/consts"
+	"kinger/proto/pb"
 	"math/rand"
+	"sync"
+	"time"
 )
 
 var (
@@ -21,37 +21,37 @@ var (
 		//[]interface{}{"134.175.13.251", 9103},
 	}
 
-	gateIndex = 0
-	peer *network.Peer
+	gateIndex   = 0
+	peer        *network.Peer
 	closeSignal chan struct{}
-	wait sync.WaitGroup
-	robotAmount = 1000
-	robotMinID uint32 = 1
-	id2Robot map[uint32]*robot
+	wait        sync.WaitGroup
+	robotAmount        = 1000
+	robotMinID  uint32 = 1
+	id2Robot    map[uint32]*robot
 )
 
 type rpcCall struct {
 	msgID pb.MessageID
-	arg interface{}
+	arg   interface{}
 }
 
 type robot struct {
-	id uint32
-	uid uint64
-	gateIp string
-	gatePort int
-	ses *network.Session
-	rpcChan chan *rpcCall
-	camp int
+	id        uint32
+	uid       uint64
+	gateIp    string
+	gatePort  int
+	ses       *network.Session
+	rpcChan   chan *rpcCall
+	camp      int
 	battleObj *battle
 }
 
 func newRobot(id uint32, gateIp string, gatePort int) *robot {
 	return &robot{
-		id: id,
-		gateIp: gateIp,
+		id:       id,
+		gateIp:   gateIp,
 		gatePort: gatePort,
-		rpcChan: make(chan *rpcCall, 10),
+		rpcChan:  make(chan *rpcCall, 10),
 	}
 }
 
@@ -71,20 +71,20 @@ func (r *robot) login() {
 		})
 		result := <-c
 		if result.Err != nil {
-			<- r.ses.Close()
+			<-r.ses.Close()
 			time.Sleep(100 * time.Millisecond)
 			continue
 		}
 
 		c = r.ses.CallAsync(pb.MessageID_C2S_LOGIN, &pb.LoginArg{
-			Channel:   "robot",
-			ArchiveID: 1,
-			ChannelID: fmt.Sprintf("robot%d", r.id),
+			Channel:     "robot",
+			ArchiveID:   1,
+			ChannelID:   fmt.Sprintf("robot%d", r.id),
 			AccountType: pb.AccountTypeEnum_Ios,
 		})
 		result = <-c
 		if result.Err != nil {
-			<- r.ses.Close()
+			<-r.ses.Close()
 			time.Sleep(100 * time.Millisecond)
 			continue
 		}
@@ -100,7 +100,7 @@ func (r *robot) login() {
 			})
 			result = <-c
 			if result.Err != nil {
-				<- r.ses.Close()
+				<-r.ses.Close()
 				time.Sleep(100 * time.Millisecond)
 				continue
 			}
@@ -197,7 +197,7 @@ func (r *robot) onBattleBoutBegin(arg interface{}) {
 	r.battleObj.playCard()
 }
 
-func (r *robot) onBattleBoutResult(arg interface{})  {
+func (r *robot) onBattleBoutResult(arg interface{}) {
 	if r.battleObj == nil {
 		glog.Infof("onBattleBoutResult not battle")
 		r.beginLevelBattle()
@@ -221,10 +221,11 @@ func (r *robot) fuckIt() {
 		//r.beginMatch()
 		r.beginLevelBattle()
 
-		L1: for {
+	L1:
+		for {
 
 			select {
-			case call := <- r.rpcChan:
+			case call := <-r.rpcChan:
 				switch call.msgID {
 				case pb.MessageID_S2C_MATCH_TIMEOUT:
 					r.beginMatch()
@@ -238,7 +239,7 @@ func (r *robot) fuckIt() {
 					r.onBattleEnd(call.arg)
 				}
 
-			case <- closeSignal:
+			case <-closeSignal:
 				break L1
 			}
 
@@ -264,7 +265,7 @@ func getRpcHandler(msgID pb.MessageID) network.RpcHandler {
 
 		r.rpcChan <- &rpcCall{
 			msgID: msgID,
-			arg: arg,
+			arg:   arg,
 		}
 
 		return
@@ -272,7 +273,6 @@ func getRpcHandler(msgID pb.MessageID) network.RpcHandler {
 }
 
 type robotService struct {
-
 }
 
 func (rs *robotService) Start(appID uint16) {
@@ -280,7 +280,7 @@ func (rs *robotService) Start(appID uint16) {
 	id2Robot = make(map[uint32]*robot)
 	peer = network.NewPeer(&network.PeerConfig{
 		ReadTimeout:   10 * time.Second,
-		WriteTimeout:  10* time.Second,
+		WriteTimeout:  10 * time.Second,
 		MaxPacketSize: 1024 * 1024,
 	})
 
@@ -297,7 +297,7 @@ func (rs *robotService) Start(appID uint16) {
 
 	for i := 0; i < robotAmount; i++ {
 		id := robotMinID + uint32(i)
-		gate := gates[gateIndex % len(gates)]
+		gate := gates[gateIndex%len(gates)]
 		gateIndex++
 		gateIP := gate[0].(string)
 		gatePort := gate[1].(int)

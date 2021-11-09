@@ -1,17 +1,17 @@
 package main
 
 import (
-	"kinger/gopuppy/apps/logic"
-	"kinger/gopuppy/common/app"
-	gconfig "kinger/gopuppy/common/config"
-	"kinger/gopuppy/common/rpubsub"
-	"kinger/gopuppy/common/timer"
 	"kinger/common/config"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/common/app"
+	gconfig "kinger/gopuppy/common/config"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/rpubsub"
+	"kinger/gopuppy/common/timer"
 	_ "kinger/meta"
 	"time"
-	"kinger/gopuppy/common/evq"
 )
 
 var vService *videoService
@@ -35,7 +35,7 @@ func (vs *videoService) Start(appID uint16) {
 		vs.ReportRpcHandlers()
 		close(c)
 	})
-	<- c
+	<-c
 }
 
 func (vs *videoService) Stop() {
@@ -45,7 +45,7 @@ func (vs *videoService) Stop() {
 		videoMgr.save()
 		close(c)
 	})
-	<- c
+	<-c
 	vs.OnStop()
 }
 

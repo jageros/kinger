@@ -6,10 +6,10 @@ import (
 )
 
 type Equip struct {
-	ID string `json:"__id__"`
-	Skills []int32 `json:"skill"`
-	Name int `json:"name"`
-	Version int `json:"version"`
+	ID      string  `json:"__id__"`
+	Skills  []int32 `json:"skill"`
+	Name    int     `json:"name"`
+	Version int     `json:"version"`
 }
 
 func (e *Equip) GetName() string {
@@ -18,8 +18,8 @@ func (e *Equip) GetName() string {
 
 type EquipGameData struct {
 	baseGameData
-	Equips []*Equip
-	ID2Equip map[string]*Equip
+	Equips      []*Equip
+	ID2Equip    map[string]*Equip
 	AllEquipIDs []interface{}
 }
 
@@ -42,7 +42,7 @@ func (gd *EquipGameData) init(d []byte) error {
 
 	gd.Equips = l
 	gd.ID2Equip = map[string]*Equip{}
-	gd.AllEquipIDs = []interface{} {}
+	gd.AllEquipIDs = []interface{}{}
 	for _, e := range l {
 		gd.AllEquipIDs = append(gd.AllEquipIDs, e.ID)
 		gd.ID2Equip[e.ID] = e

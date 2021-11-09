@@ -1,19 +1,19 @@
 package gamedata
 
 import (
-	"kinger/common/consts"
 	"encoding/json"
+	"kinger/common/consts"
 )
 
 type RebornSoldEquip struct {
-	ID int `json:"__id__"`
+	ID      int    `json:"__id__"`
 	EquipID string `json:"equipId"`
-	Price int `json:"famePrice"`
+	Price   int    `json:"famePrice"`
 }
 
 type RebornSoldEquipGameData struct {
 	baseGameData
-	ID2Equip map[int]*RebornSoldEquip
+	ID2Equip      map[int]*RebornSoldEquip
 	EquipID2Goods map[string]*RebornSoldEquip
 }
 
@@ -43,4 +43,3 @@ func (gd *RebornSoldEquipGameData) init(d []byte) error {
 
 	return nil
 }
-

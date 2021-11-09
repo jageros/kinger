@@ -1,12 +1,12 @@
 package loginrecharge
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/glog"
 	aTypes "kinger/apps/game/activitys/types"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/glog"
 	"kinger/proto/pb"
 	"strconv"
 )
@@ -377,8 +377,7 @@ func (c *activityCom) updateReceiveStatus(aid, oldNum, newNum int) {
 	}
 }
 
-
-func (c *activityCom) isClosed (aid int) bool {
+func (c *activityCom) isClosed(aid int) bool {
 	if !c.checkVersion(aid) {
 		return false
 	}
@@ -390,7 +389,7 @@ func (c *activityCom) isClosed (aid int) bool {
 	return attr.GetBool(aTypes.CloseStatus)
 }
 
-func (c *activityCom) setClosed (aid int) {
+func (c *activityCom) setClosed(aid int) {
 	c.checkVersion(aid)
 	aidStr := strconv.Itoa(aid)
 	attr := c.attr.GetMapAttr(aidStr)

@@ -6,15 +6,15 @@ import (
 )
 
 type WarShopCard struct {
-	ID int `json:"__id__"`
-	Type string `json:"type"`
-	CardID uint32 `json:"cardId"`
-	FightPrice int `json:"fightPrice"`
+	ID         int    `json:"__id__"`
+	Type       string `json:"type"`
+	CardID     uint32 `json:"cardId"`
+	FightPrice int    `json:"fightPrice"`
 }
 
 type WarShopCardGameData struct {
 	baseGameData
-	Goods []*WarShopCard
+	Goods        []*WarShopCard
 	CardID2Goods map[uint32]*WarShopCard
 }
 
@@ -45,15 +45,15 @@ func (gd *WarShopCardGameData) init(d []byte) error {
 }
 
 type WarShopEquip struct {
-	ID int `json:"__id__"`
-	Type string `json:"type"`
-	EquipID string `json:"equipId"`
-	FightPrice int `json:"fightPrice"`
+	ID         int    `json:"__id__"`
+	Type       string `json:"type"`
+	EquipID    string `json:"equipId"`
+	FightPrice int    `json:"fightPrice"`
 }
 
 type WarShopEquipGameData struct {
 	baseGameData
-	Goods []*WarShopEquip
+	Goods    []*WarShopEquip
 	ID2Goods map[string]*WarShopEquip
 }
 
@@ -84,10 +84,10 @@ func (gd *WarShopEquipGameData) init(d []byte) error {
 }
 
 type WarShopSkin struct {
-	ID int `json:"__id__"`
-	Type string `json:"type"`
-	SkinID string `json:"skinId"`
-	FightPrice int `json:"fightPrice"`
+	ID         int    `json:"__id__"`
+	Type       string `json:"type"`
+	SkinID     string `json:"skinId"`
+	FightPrice int    `json:"fightPrice"`
 }
 
 type WarShopSkinGameData struct {
@@ -118,10 +118,10 @@ func (gd *WarShopSkinGameData) init(d []byte) error {
 }
 
 type WarShopRes struct {
-	ID int `json:"__id__"`
-	Type string `json:"type"`
-	Amount int `json:"cnt"`
-	FightPrice int `json:"fightPrice"`
+	ID         int    `json:"__id__"`
+	Type       string `json:"type"`
+	Amount     int    `json:"cnt"`
+	FightPrice int    `json:"fightPrice"`
 }
 
 type WarShopResGameData struct {

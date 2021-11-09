@@ -1,12 +1,12 @@
 package gamedata
 
 import (
-	"kinger/common/consts"
 	"encoding/json"
+	"kinger/common/consts"
 )
 
 type RebornDayCacul struct {
-	ID int `json:"__id__"`
+	ID       int     `json:"__id__"`
 	Prestige float32 `json:"fame"`
 }
 

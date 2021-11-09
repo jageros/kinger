@@ -3,10 +3,10 @@ package main
 import (
 	"time"
 
-	"kinger/gopuppy/apps/logic"
-	"kinger/gopuppy/common"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/common"
 	"kinger/proto/pb"
 )
 
@@ -37,30 +37,30 @@ type iMatchPlayer interface {
 }
 
 type matchPlayer struct {
-	agent               *logic.PlayerAgent
-	camp                int
-	pvpLevel            int
-	pvpTeam             int
-	pvpScore            int
-	matchScore int
-	beginMatchTime      time.Time
-	mmr                 int
-	cardStrength        int
-	robotID             common.UUid
-	name                string
-	handCards           []*pb.SkinGCard
-	drawCards           []*pb.SkinGCard
-	gridCards           []*pb.InGridCard
-	headImgUrl          string
-	headFrame           string
-	countryFlag string
-	seasonDataID        int
-	winRate             int
-	rebornCnt           int
-	area                int
-	streakWinCnt        int
-	streakLoseCnt       int
-	lastOppUid          common.UUid
+	agent              *logic.PlayerAgent
+	camp               int
+	pvpLevel           int
+	pvpTeam            int
+	pvpScore           int
+	matchScore         int
+	beginMatchTime     time.Time
+	mmr                int
+	cardStrength       int
+	robotID            common.UUid
+	name               string
+	handCards          []*pb.SkinGCard
+	drawCards          []*pb.SkinGCard
+	gridCards          []*pb.InGridCard
+	headImgUrl         string
+	headFrame          string
+	countryFlag        string
+	seasonDataID       int
+	winRate            int
+	rebornCnt          int
+	area               int
+	streakWinCnt       int
+	streakLoseCnt      int
+	lastOppUid         common.UUid
 	rechargeMatchIndex int
 }
 
@@ -145,15 +145,15 @@ func (mp *matchPlayer) packFighterData() *pb.FighterData {
 		Camp:         int32(mp.camp),
 		PvpScore:     int32(mp.pvpScore),
 		IsRobot:      mp.agent.IsRobot(),
-		RobotID: uint64(mp.robotID),
+		RobotID:      uint64(mp.robotID),
 		Mmr:          int32(mp.mmr),
-		GridCards: mp.getGridCard(),
-		HeadImgUrl: mp.headImgUrl,
-		HeadFrame: mp.headFrame,
-		WinRate: int32(mp.winRate),
-		Area: int32(mp.area),
-		Region: mp.agent.GetRegion(),
-		CountryFlag: mp.countryFlag,
+		GridCards:    mp.getGridCard(),
+		HeadImgUrl:   mp.headImgUrl,
+		HeadFrame:    mp.headFrame,
+		WinRate:      int32(mp.winRate),
+		Area:         int32(mp.area),
+		Region:       mp.agent.GetRegion(),
+		CountryFlag:  mp.countryFlag,
 	}
 
 	return ft
@@ -201,19 +201,19 @@ func (mp *matchPlayer) getCardStrength() int {
 func newMatchPlayer(agent *logic.PlayerAgent, data iMatchPlayerData, pvpData *pb.BeginMatchArg) *matchPlayer {
 
 	p := &matchPlayer{
-		agent:               agent,
-		camp:                int(data.GetCamp()),
-		beginMatchTime:      time.Now(),
-		name:                data.GetName(),
-		handCards:           data.GetHandCards(),
-		drawCards:           data.GetDrawCards(),
-		pvpScore:            int(data.GetPvpScore()),
-		mmr:                 int(data.GetMmr()),
-		headImgUrl:          data.GetHeadImgUrl(),
-		headFrame:           data.GetHeadFrame(),
-		countryFlag: data.GetCountryFlag(),
-		winRate: int(data.GetWinRate()),
-		area: int(data.GetArea()),
+		agent:          agent,
+		camp:           int(data.GetCamp()),
+		beginMatchTime: time.Now(),
+		name:           data.GetName(),
+		handCards:      data.GetHandCards(),
+		drawCards:      data.GetDrawCards(),
+		pvpScore:       int(data.GetPvpScore()),
+		mmr:            int(data.GetMmr()),
+		headImgUrl:     data.GetHeadImgUrl(),
+		headFrame:      data.GetHeadFrame(),
+		countryFlag:    data.GetCountryFlag(),
+		winRate:        int(data.GetWinRate()),
+		area:           int(data.GetArea()),
 	}
 
 	if pvpData != nil {
@@ -239,20 +239,19 @@ func newMatchPlayer(agent *logic.PlayerAgent, data iMatchPlayerData, pvpData *pb
 func newMatchPlayerByRobot(robot iMatchRobot, oopPlayer iMatchPlayer) *matchPlayer {
 
 	p := &matchPlayer{
-		agent:               logic.NewRobotAgent(),
-		camp:                robot.getCamp(),
-		beginMatchTime:      time.Now(),
-		name:                gamedata.RandomRobotName(oopPlayer.getPvpLevel()),
-		handCards:           robot.getHandCards(),
-		gridCards:           robot.getGridCards(),
-		pvpScore:            robot.getPvpScore(),
-		pvpLevel:            robot.getPvpLevel(),
-		robotID:             robot.getID(),
-		mmr:                 oopPlayer.getMmr(),
-		headImgUrl:          robot.getHeadImgUrl(),
-		headFrame:           robot.getHeadFrame(),
+		agent:          logic.NewRobotAgent(),
+		camp:           robot.getCamp(),
+		beginMatchTime: time.Now(),
+		name:           gamedata.RandomRobotName(oopPlayer.getPvpLevel()),
+		handCards:      robot.getHandCards(),
+		gridCards:      robot.getGridCards(),
+		pvpScore:       robot.getPvpScore(),
+		pvpLevel:       robot.getPvpLevel(),
+		robotID:        robot.getID(),
+		mmr:            oopPlayer.getMmr(),
+		headImgUrl:     robot.getHeadImgUrl(),
+		headFrame:      robot.getHeadFrame(),
 	}
 
 	return p
 }
-

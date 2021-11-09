@@ -1,33 +1,33 @@
 package main
 
 import (
-	"time"
-	"kinger/gopuppy/common"
 	"container/list"
-	"kinger/gopuppy/common/timer"
-	"kinger/gopuppy/common/glog"
-	"kinger/gamedata"
+	"kinger/common/config"
 	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
 	"math"
 	"math/rand"
-	"kinger/common/config"
+	"time"
 )
 
 type highLevelPlayer struct {
 	*matchPlayer
-	rankGameData *gamedata.Rank
-	index float64                  // 匹配指数
-	crossAreaIndex float64         // 跨区的匹配指数
-	maxIndexDiff float64           // 同区能匹配相差多少个指数区间的玩家
-	crossAreaMaxIndexDiff float64  // 跨区能匹配相差多少个指数区间的玩家
+	rankGameData          *gamedata.Rank
+	index                 float64 // 匹配指数
+	crossAreaIndex        float64 // 跨区的匹配指数
+	maxIndexDiff          float64 // 同区能匹配相差多少个指数区间的玩家
+	crossAreaMaxIndexDiff float64 // 跨区能匹配相差多少个指数区间的玩家
 }
 
 func newHighLevelPlayer(mp *matchPlayer, param *gamedata.MatchParamGameData) *highLevelPlayer {
 	return &highLevelPlayer{
-		matchPlayer: mp,
-		index: math.MaxFloat64,
+		matchPlayer:    mp,
+		index:          math.MaxFloat64,
 		crossAreaIndex: math.MaxFloat64,
-		maxIndexDiff: param.IndexInterval,
+		maxIndexDiff:   param.IndexInterval,
 	}
 }
 
@@ -47,7 +47,7 @@ func (p *highLevelPlayer) getStreakWinOrLoseIndex(param *gamedata.MatchParamGame
 		if streakLoseCnt > 10 {
 			streakLoseCnt = 10
 		}
-		return - param.WinningStreakIndex * float64(streakLoseCnt)
+		return -param.WinningStreakIndex * float64(streakLoseCnt)
 	}
 	return 0
 }
@@ -55,15 +55,15 @@ func (p *highLevelPlayer) getStreakWinOrLoseIndex(param *gamedata.MatchParamGame
 func (p *highLevelPlayer) getIndex(param *gamedata.MatchParamGameData) float64 {
 	if p.index == math.MaxFloat64 {
 		/*
-		pvpScore := float64(p.getPvpScore())
-		if pvpScore > 100 {
-			pvpScore = 100
-		}
+			pvpScore := float64(p.getPvpScore())
+			if pvpScore > 100 {
+				pvpScore = 100
+			}
 
-		p.index = float64(p.getCardStrength()) * param.CardStreWeight + pvpScore * param.StarWeight +
-			float64(p.getWinRate()) / 100 * param.WinRateWeight + float64(p.getRebornCnt()) * param.RebornWeight +
-			float64(p.getEquipAmount()) * param.EquipWeight + p.getStreakWinOrLoseIndex(param) +
-			float64(p.getRechargeMatchIndex())
+			p.index = float64(p.getCardStrength()) * param.CardStreWeight + pvpScore * param.StarWeight +
+				float64(p.getWinRate()) / 100 * param.WinRateWeight + float64(p.getRebornCnt()) * param.RebornWeight +
+				float64(p.getEquipAmount()) * param.EquipWeight + p.getStreakWinOrLoseIndex(param) +
+				float64(p.getRechargeMatchIndex())
 		*/
 		matchScore := float64(p.getMatchScore())
 		p.index = matchScore + p.getStreakWinOrLoseIndex(param) + float64(p.getRechargeMatchIndex())
@@ -76,9 +76,9 @@ func (p *highLevelPlayer) getIndex(param *gamedata.MatchParamGameData) float64 {
 
 func (p *highLevelPlayer) getCrossAreaIndex(param *gamedata.MatchParamGameData) float64 {
 	if p.crossAreaIndex == math.MaxFloat64 {
-		p.crossAreaIndex = float64(p.getCardStrength()) * param.CardStreWeight + float64(p.getWinRate()) /
-			100 * param.WinRateWeight + float64(p.getRebornCnt()) * param.RebornWeight +
-			float64(p.getEquipAmount()) * param.EquipWeight  + p.getStreakWinOrLoseIndex(param) +
+		p.crossAreaIndex = float64(p.getCardStrength())*param.CardStreWeight + float64(p.getWinRate())/
+			100*param.WinRateWeight + float64(p.getRebornCnt())*param.RebornWeight +
+			float64(p.getEquipAmount())*param.EquipWeight + p.getStreakWinOrLoseIndex(param) +
 			float64(p.getRechargeMatchIndex())
 	}
 	return p.crossAreaIndex
@@ -136,7 +136,7 @@ func (p *highLevelPlayer) canPair(opp *highLevelPlayer, param *gamedata.MatchPar
 	rawIndexDiff = myIndex - oppIndex
 	var indexDiff float64
 	if rawIndexDiff < 0 {
-		indexDiff = - rawIndexDiff
+		indexDiff = -rawIndexDiff
 	} else {
 		indexDiff = rawIndexDiff
 	}
@@ -173,15 +173,14 @@ func (p *highLevelPlayer) canPair(opp *highLevelPlayer, param *gamedata.MatchPar
 	return true, int(indexDiff / param.IndexInterval), rawIndexDiff
 }
 
-
 type highLevelRuleSt struct {
 	allPlayers map[common.UUid]*list.Element
 	playerList *list.List
 
-	param *gamedata.MatchParamGameData
+	param          *gamedata.MatchParamGameData
 	seasonGameData gamedata.ISeasonPvpGameData
 
-	ticker *timer.Timer
+	ticker         *timer.Timer
 	tickerInterval time.Duration
 }
 
@@ -236,7 +235,7 @@ func (r *highLevelRuleSt) beginTick(timeInterval time.Duration) {
 			opps := sec2Opps[minSec]
 			var oppElem *list.Element
 			if len(opps) > 0 {
-				oppElem = opps[ rand.Intn(len(opps)) ]
+				oppElem = opps[rand.Intn(len(opps))]
 				opp := oppElem.Value.(*highLevelPlayer)
 				gMatchMgr.onMatchLadder(mp, opp, oppUid2IndexDiff[opp.getUid()])
 

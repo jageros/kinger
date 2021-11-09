@@ -1,13 +1,13 @@
 package main
 
 import (
+	"kinger/common/consts"
 	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/common/eventhub"
 	"kinger/gopuppy/common/evq"
-	gpb "kinger/gopuppy/proto/pb"
-	"kinger/common/consts"
-	"kinger/proto/pb"
 	"kinger/gopuppy/network"
+	gpb "kinger/gopuppy/proto/pb"
+	"kinger/proto/pb"
 )
 
 func onPlayerLogut(args ...interface{}) {

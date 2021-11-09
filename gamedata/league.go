@@ -16,9 +16,9 @@ type League struct {
 
 type LeagueGameData struct {
 	baseGameData
-	LeagueList  []*League
-	ID2League map[int]*League
-	MaxScore  int
+	LeagueList []*League
+	ID2League  map[int]*League
+	MaxScore   int
 }
 
 func newLeagueGameData() *LeagueGameData {
@@ -42,13 +42,13 @@ func (r *LeagueGameData) init(d []byte) error {
 	r.LeagueList = l
 	r.ID2League = map[int]*League{}
 	r.MaxScore = 0
-    ll := len(l)
+	ll := len(l)
 	for k, t := range l {
 		r.ID2League[t.ID] = t
 		if t.RankScore > r.MaxScore {
 			r.MaxScore = t.RankScore
 		}
-		if k + 1 < ll {
+		if k+1 < ll {
 			t.NextScore = l[k+1].RankScore
 		}
 	}

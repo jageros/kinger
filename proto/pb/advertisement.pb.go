@@ -206,10 +206,12 @@ type WatchShopFreeAdsArg struct {
 	IsConsumeJade bool            `protobuf:"varint,3,opt,name=IsConsumeJade,proto3" json:"IsConsumeJade,omitempty"`
 }
 
-func (m *WatchShopFreeAdsArg) Reset()                    { *m = WatchShopFreeAdsArg{} }
-func (m *WatchShopFreeAdsArg) String() string            { return proto.CompactTextString(m) }
-func (*WatchShopFreeAdsArg) ProtoMessage()               {}
-func (*WatchShopFreeAdsArg) Descriptor() ([]byte, []int) { return fileDescriptorAdvertisement, []int{7} }
+func (m *WatchShopFreeAdsArg) Reset()         { *m = WatchShopFreeAdsArg{} }
+func (m *WatchShopFreeAdsArg) String() string { return proto.CompactTextString(m) }
+func (*WatchShopFreeAdsArg) ProtoMessage()    {}
+func (*WatchShopFreeAdsArg) Descriptor() ([]byte, []int) {
+	return fileDescriptorAdvertisement, []int{7}
+}
 
 func (m *WatchShopFreeAdsArg) GetType() ShopFreeAdsType {
 	if m != nil {

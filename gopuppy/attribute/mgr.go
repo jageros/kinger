@@ -13,15 +13,15 @@ var DbConfigCreator func(args ...interface{}) db.IDbConfig
 type AttrMgr struct {
 	*MapAttr
 	dbClient db.IDbClient
-	name string
-	id   interface{}
+	name     string
+	id       interface{}
 }
 
 func NewAttrMgr(name string, id interface{}, args ...interface{}) *AttrMgr {
 	return &AttrMgr{
-		name:    name,
-		id:      id,
-		MapAttr: NewMapAttr(),
+		name:     name,
+		id:       id,
+		MapAttr:  NewMapAttr(),
 		dbClient: db.GetOrNewDbClient(DbConfigCreator(args...)),
 	}
 }

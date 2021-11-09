@@ -6,26 +6,26 @@ import (
 )
 
 type CampaignParam struct {
-	Key string `json:"__id__"`
+	Key       string    `json:"__id__"`
 	ParaValue []float64 `json:"para_value"`
 }
 
 type CampaignParamGameData struct {
 	baseGameData
-	SingleDamage float64             // 单次攻城伤害
-	DefenseRevise float64
-	SingleMerit float64              // 单次攻城功绩
-	SingleEncounterVic float64       // 单次遭遇战胜利获得功绩
-	SingleAttackVic float64          // 单次攻城战胜利获得功绩
-	SingleLoseVic float64          // 单次攻城、守城战失败获得功绩
-	KingPer float64              // 主公功绩抽成／势力
-	JunshiPer float64            // 军师功绩抽成／势力
-	ZhonglangjiangPer float64    // 中郎将功绩抽成／势力
-	TaishouPer float64           // 太守功绩抽成／城池
-	DuweiPer float64             // 都尉功绩抽成／城池
-	XiaoweiPer float64           // 校尉功绩抽成／城池
-	KingSalary float64           // 主公俸禄／势力收益
-	JunshiSalary float64         // 军师俸禄／势力收益
+	SingleDamage         float64 // 单次攻城伤害
+	DefenseRevise        float64
+	SingleMerit          float64 // 单次攻城功绩
+	SingleEncounterVic   float64 // 单次遭遇战胜利获得功绩
+	SingleAttackVic      float64 // 单次攻城战胜利获得功绩
+	SingleLoseVic        float64 // 单次攻城、守城战失败获得功绩
+	KingPer              float64 // 主公功绩抽成／势力
+	JunshiPer            float64 // 军师功绩抽成／势力
+	ZhonglangjiangPer    float64 // 中郎将功绩抽成／势力
+	TaishouPer           float64 // 太守功绩抽成／城池
+	DuweiPer             float64 // 都尉功绩抽成／城池
+	XiaoweiPer           float64 // 校尉功绩抽成／城池
+	KingSalary           float64 // 主公俸禄／势力收益
+	JunshiSalary         float64 // 军师俸禄／势力收益
 	ZhonglangjiangSalary float64 // 中郎将俸禄／势力收益
 	TaishouSalary        float64 // 太守俸禄／城池收益
 	DuweiSalary          float64 // 都尉俸禄／城池收益
@@ -33,23 +33,23 @@ type CampaignParamGameData struct {
 	IrrigationTime       float64 // 灌溉耗时系数
 	TradeTime            float64 // 贸易耗时系数
 	BuildTime            float64 // 修筑耗时系数
-	TaskTargetIrrigation float64     // 单次灌溉目标
-	TaskTargetTrade      float64     // 单次贸易目标
-	TaskTargetBuild      float64     // 单次修筑目标
-	MarchSpeed           int // 行军速度
+	TaskTargetIrrigation float64 // 单次灌溉目标
+	TaskTargetTrade      float64 // 单次贸易目标
+	TaskTargetBuild      float64 // 单次修筑目标
+	MarchSpeed           int     // 行军速度
 	GoldConversion       float64 // 金币转化比
 	ForageConversion     float64 // 粮草转化比
 	InitialDefense       float64 // 初始城防比
-	BundleForage int             // 单捆粮草数量
-	TaskTransportForage int      // 单次运多少粮
-	TaskTransportGold int      	 // 单次运多少金
-	TransportTime float64        // 运输耗时系数
-	TransferCost float64        // 迁移花费系数
-	HonorRevise float64         // 势力荣誉修正
-	IrrigationVic float64       // 单次灌溉功绩
-	TradeVic float64            // 单次贸易功绩
-	BuildVic float64            // 单次修筑功绩
-	TransportVic float64        // 单位运输路程功绩
+	BundleForage         int     // 单捆粮草数量
+	TaskTransportForage  int     // 单次运多少粮
+	TaskTransportGold    int     // 单次运多少金
+	TransportTime        float64 // 运输耗时系数
+	TransferCost         float64 // 迁移花费系数
+	HonorRevise          float64 // 势力荣誉修正
+	IrrigationVic        float64 // 单次灌溉功绩
+	TradeVic             float64 // 单次贸易功绩
+	BuildVic             float64 // 单次修筑功绩
+	TransportVic         float64 // 单位运输路程功绩
 }
 
 func newCampaignParamGameData() *CampaignParamGameData {
@@ -68,7 +68,7 @@ func (gd *CampaignParamGameData) init(d []byte) error {
 	if err != nil {
 		return err
 	}
-	
+
 	for _, p := range l {
 		switch p.Key {
 		case "single_damage":

@@ -1,11 +1,11 @@
 package bag
 
 import (
-	"kinger/gopuppy/attribute"
 	"fmt"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
+	"kinger/gopuppy/attribute"
 	"strconv"
 )
 
@@ -14,7 +14,7 @@ var log = &logHub{
 }
 
 type itemLog struct {
-	attr *attribute.AttrMgr
+	attr         *attribute.AttrMgr
 	allAreasAttr *attribute.MapAttr
 	area2Amounts map[int]*attribute.MapAttr
 }
@@ -45,7 +45,7 @@ func newItemLog(itemType int, itemID string) *itemLog {
 	}
 
 	return &itemLog{
-		attr: attr,
+		attr:         attr,
 		allAreasAttr: attr.GetMapAttr("amounts"),
 	}
 }
@@ -65,7 +65,7 @@ func (il *itemLog) modifyAmount(player types.IPlayer, amount int) {
 			il.allAreasAttr.SetMapAttr(strconv.Itoa(area), amountsAttr)
 		}
 	}
-	amountsAttr.SetInt(accountType, amountsAttr.GetInt(accountType) + amount)
+	amountsAttr.SetInt(accountType, amountsAttr.GetInt(accountType)+amount)
 }
 
 type logHub struct {

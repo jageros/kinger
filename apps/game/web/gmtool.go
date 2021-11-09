@@ -4,10 +4,6 @@ import (
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common"
-	"kinger/gopuppy/common/evq"
-	gutils "kinger/gopuppy/common/utils"
 	"io"
 	"io/ioutil"
 	"kinger/apps/game/module"
@@ -16,6 +12,10 @@ import (
 	"kinger/common/consts"
 	"kinger/common/utils"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/evq"
+	gutils "kinger/gopuppy/common/utils"
 	"kinger/proto/pb"
 	"net/http"
 	"sort"
@@ -25,25 +25,25 @@ import (
 )
 
 var (
-	success, _ = json.Marshal(map[string]interface{} {
+	success, _ = json.Marshal(map[string]interface{}{
 		"errcode": 0,
 	})
 
-	httpMethodErr, _ = json.Marshal(map[string]interface{} {
+	httpMethodErr, _ = json.Marshal(map[string]interface{}{
 		"errcode": 100,
 	})
 
-	signErr, _ = json.Marshal(map[string]interface{} {
+	signErr, _ = json.Marshal(map[string]interface{}{
 		"errcode": 1,
 	})
 
-	noPlayerErr, _ = json.Marshal(map[string]interface{} {
+	noPlayerErr, _ = json.Marshal(map[string]interface{}{
 		"errcode": 100,
 	})
 
-	itemList []byte
-	cardList []byte
-	areaList []byte
+	itemList        []byte
+	cardList        []byte
+	areaList        []byte
 	cardID2CardName map[uint32]string
 )
 
@@ -74,7 +74,7 @@ func getCardList() ([]byte, map[uint32]string) {
 			cardID2CardName[cardData.CardID] = cardData.GetName()
 			cards = append(cards, map[string]interface{}{
 				"name": cardData2.GetName(),
-				"id": cardData2.CardID,
+				"id":   cardData2.CardID,
 			})
 		}
 
@@ -82,7 +82,7 @@ func getCardList() ([]byte, map[uint32]string) {
 		close(c)
 	})
 
-	<- c
+	<-c
 	return cardList, cardID2CardName
 }
 
@@ -101,11 +101,11 @@ func prepareRequest(writer http.ResponseWriter, request *http.Request) map[strin
 	}
 
 	args := map[string]interface{}{}
-	payload , err := ioutil.ReadAll(request.Body)
+	payload, err := ioutil.ReadAll(request.Body)
 	if err != nil {
 		errResponse, _ := json.Marshal(map[string]interface{}{
 			"errcode": 3,
-			"errMsg": err.Error(),
+			"errMsg":  err.Error(),
 		})
 		writer.Write(errResponse)
 		return nil
@@ -115,12 +115,12 @@ func prepareRequest(writer http.ResponseWriter, request *http.Request) map[strin
 	if err != nil {
 		errResponse, _ := json.Marshal(map[string]interface{}{
 			"errcode": 3,
-			"errMsg": err.Error(),
+			"errMsg":  err.Error(),
 		})
 		writer.Write(errResponse)
 		return nil
 	}
-	
+
 	return args
 }
 
@@ -159,18 +159,18 @@ func playerInfoHandler(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	uid := common.UUid(args["uid"].(float64))
-       var playerAttr *attribute.AttrMgr
-       for _, region := range []uint32{1, 2} {
-               playerAttr = attribute.NewAttrMgr("player", uid, false, region)
-               err := playerAttr.Load(true)
-               if err == nil {
-                       break
-               } else {
-                       playerAttr = nil
-               }
-       }
+	var playerAttr *attribute.AttrMgr
+	for _, region := range []uint32{1, 2} {
+		playerAttr = attribute.NewAttrMgr("player", uid, false, region)
+		err := playerAttr.Load(true)
+		if err == nil {
+			break
+		} else {
+			playerAttr = nil
+		}
+	}
 
-       if playerAttr == nil {
+	if playerAttr == nil {
 		writer.Write(noPlayerErr)
 		return
 	}
@@ -179,36 +179,36 @@ func playerInfoHandler(writer http.ResponseWriter, request *http.Request) {
 	var reply map[string]interface{}
 	evq.CallLater(func() {
 		player := module.Player.NewPlayerByAttr(uid, playerAttr)
-		winRate := int(100 * float64(player.GetFirstHandWinAmount() + player.GetBackHandWinAmount()) / float64(
-			player.GetFirstHandAmount() + player.GetBackHandAmount()))
+		winRate := int(100 * float64(player.GetFirstHandWinAmount()+player.GetBackHandWinAmount()) / float64(
+			player.GetFirstHandAmount()+player.GetBackHandAmount()))
 
 		resCpt := player.GetComponent(consts.ResourceCpt).(types.IResourceComponent)
 		cardCpt := player.GetComponent(consts.CardCpt).(types.ICardComponent)
 		// 资源
 		items := []map[string]interface{}{
 			{
-				"name": "金币",
-				"id": "gold",
+				"name":   "金币",
+				"id":     "gold",
 				"amount": resCpt.GetResource(consts.Gold),
 			},
 			{
-				"name": "宝玉",
-				"id": "jade",
+				"name":   "宝玉",
+				"id":     "jade",
 				"amount": resCpt.GetResource(consts.Jade),
 			},
 			{
-				"name": "声望",
-				"id": "reputation",
+				"name":   "声望",
+				"id":     "reputation",
 				"amount": resCpt.GetResource(consts.Reputation),
 			},
 			{
-				"name": "武将碎片",
-				"id": "cardPiece",
+				"name":   "武将碎片",
+				"id":     "cardPiece",
 				"amount": resCpt.GetResource(consts.CardPiece),
 			},
 			{
-				"name": "皮肤碎片",
-				"id": "skinPiece",
+				"name":   "皮肤碎片",
+				"id":     "skinPiece",
 				"amount": resCpt.GetResource(consts.SkinPiece),
 			},
 		}
@@ -220,8 +220,8 @@ func playerInfoHandler(writer http.ResponseWriter, request *http.Request) {
 		for _, its := range [][]types.IItem{equips, cardSkins, headFrames, emojis} {
 			for _, it := range its {
 				items = append(items, map[string]interface{}{
-					"name": it.GetName(),
-					"id": it.GetGmID(),
+					"name":   it.GetName(),
+					"id":     it.GetGmID(),
 					"amount": it.GetAmount(),
 				})
 			}
@@ -231,34 +231,34 @@ func playerInfoHandler(writer http.ResponseWriter, request *http.Request) {
 		for _, c := range cards {
 			cardData := c.GetCardGameData()
 			items = append(items, map[string]interface{}{
-				"name": cardData.GetName(),
-				"id": fmt.Sprintf("card%d", cardData.CardID),
+				"name":   cardData.GetName(),
+				"id":     fmt.Sprintf("card%d", cardData.CardID),
 				"amount": c.GetAmount(),
 			})
 		}
 
 		reply = map[string]interface{}{
-			"errcode": 0,
-			"name": player.GetName(),
-			"roleLevel": player.GetPvpLevel(),
-			"maxRoleLevel": player.GetMaxPvpLevel(),
-			"level": player.GetComponent(consts.LevelCpt).(types.ILevelComponent).GetCurLevel(),
-			"winRate": winRate,
+			"errcode":       0,
+			"name":          player.GetName(),
+			"roleLevel":     player.GetPvpLevel(),
+			"maxRoleLevel":  player.GetMaxPvpLevel(),
+			"level":         player.GetComponent(consts.LevelCpt).(types.ILevelComponent).GetCurLevel(),
+			"winRate":       winRate,
 			"isForbidLogin": player.IsForbidLogin(),
-			"isForbidChat": player.IsForbidChat(),
+			"isForbidChat":  player.IsForbidChat(),
 			"lastLoginTime": player.GetLastOnlineTime(),
-			"items": items,
-			"accountType": player.GetLogAccountType().String(),
-			"area": player.GetArea(),
-			"channel": player.GetChannel(),
-			"channelUid": player.GetChannelUid(),
-			"ipAddr": player.GetIP(),
-			"createTime": player.GetCreateTime(),
+			"items":         items,
+			"accountType":   player.GetLogAccountType().String(),
+			"area":          player.GetArea(),
+			"channel":       player.GetChannel(),
+			"channelUid":    player.GetChannelUid(),
+			"ipAddr":        player.GetIP(),
+			"createTime":    player.GetCreateTime(),
 		}
 		close(c)
 	})
 
-	<- c
+	<-c
 	response, _ := json.Marshal(reply)
 	writer.Write(response)
 }
@@ -334,47 +334,47 @@ func fetchItemListHandler(writer http.ResponseWriter, request *http.Request) {
 			},
 			{
 				"name": "钻石",
-				"id": "jade",
+				"id":   "jade",
 			},
 			{
 				"name": "功勋",
-				"id": "feats",
+				"id":   "feats",
 			},
 			{
 				"name": "名望",
-				"id": "prestige",
+				"id":   "prestige",
 			},
 			{
 				"name": "玉石",
-				"id": "bowlder",
+				"id":   "bowlder",
 			},
 			{
 				"name": "战功",
-				"id": "contribution",
+				"id":   "contribution",
 			},
 			{
 				"name": "声望",
-				"id": "reputation",
+				"id":   "reputation",
 			},
 			{
 				"name": "武将碎片",
-				"id": "cardPiece",
+				"id":   "cardPiece",
 			},
 			{
 				"name": "皮肤碎片",
-				"id": "skinPiece",
+				"id":   "skinPiece",
 			},
 			{
 				"name": "加速劵",
-				"id": "accTicket",
+				"id":   "accTicket",
 			},
 			{
 				"name": "星星",
-				"id": "pvpScore",
+				"id":   "pvpScore",
 			},
 			{
 				"name": "匹配积分",
-				"id": "matchScore",
+				"id":   "matchScore",
 			},
 		}
 
@@ -393,7 +393,7 @@ func fetchItemListHandler(writer http.ResponseWriter, request *http.Request) {
 			cardIdSet.Add(cardData.CardID)
 			items = append(items, map[string]interface{}{
 				"name": cardData2.GetName(),
-				"id": fmt.Sprintf("card%d", cardData2.CardID),
+				"id":   fmt.Sprintf("card%d", cardData2.CardID),
 			})
 		}
 
@@ -401,7 +401,7 @@ func fetchItemListHandler(writer http.ResponseWriter, request *http.Request) {
 		for _, skinData := range skinGameData.CardSkins {
 			items = append(items, map[string]interface{}{
 				"name": fmt.Sprintf("皮肤-%s", skinData.GetName()),
-				"id": skinData.ID,
+				"id":   skinData.ID,
 			})
 		}
 
@@ -409,7 +409,7 @@ func fetchItemListHandler(writer http.ResponseWriter, request *http.Request) {
 		for _, headFrameData := range headFrameGameData.HeadFrames {
 			items = append(items, map[string]interface{}{
 				"name": fmt.Sprintf("头像框-%s", headFrameData.GetName()),
-				"id": fmt.Sprintf("HF%s", headFrameData.ID),
+				"id":   fmt.Sprintf("HF%s", headFrameData.ID),
 			})
 		}
 
@@ -417,7 +417,7 @@ func fetchItemListHandler(writer http.ResponseWriter, request *http.Request) {
 		for _, eqData := range equipGameData.Equips {
 			items = append(items, map[string]interface{}{
 				"name": fmt.Sprintf("宝物-%s", eqData.GetName()),
-				"id": eqData.ID,
+				"id":   eqData.ID,
 			})
 		}
 
@@ -425,7 +425,7 @@ func fetchItemListHandler(writer http.ResponseWriter, request *http.Request) {
 		for _, eData := range emojiGameData.EmojiTeams {
 			items = append(items, map[string]interface{}{
 				"name": fmt.Sprintf("表情-%s", eData.GetTeamName()),
-				"id": fmt.Sprintf("EJ%d", eData.Team),
+				"id":   fmt.Sprintf("EJ%d", eData.Team),
 			})
 		}
 
@@ -433,18 +433,18 @@ func fetchItemListHandler(writer http.ResponseWriter, request *http.Request) {
 		for _, treasureData := range treasureGameData.AllTreasures {
 			items = append(items, map[string]interface{}{
 				"name": treasureData.GetName(),
-				"id": treasureData.ID,
+				"id":   treasureData.ID,
 			})
 		}
 
 		reply = map[string]interface{}{
 			"errcode": 0,
-			"items": items,
+			"items":   items,
 		}
 		close(c)
 	})
 
-	<- c
+	<-c
 	itemList, _ = json.Marshal(reply)
 	writer.Write(itemList)
 }
@@ -471,11 +471,11 @@ func sendMailHandler(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	if !checkSign(map[string]string{
-		"title": title,
-		"content": content,
-		"accountType": strconv.Itoa(int(accountType)),
+		"title":          title,
+		"content":        content,
+		"accountType":    strconv.Itoa(int(accountType)),
 		"newbieDeadLine": strconv.FormatInt(newbieDeadLine, 10),
-		"area": strconv.Itoa(area),
+		"area":           strconv.Itoa(area),
 	}, args["sign"].(string)) {
 		writer.Write(signErr)
 		return
@@ -532,10 +532,10 @@ func sendMailHandler(writer http.ResponseWriter, request *http.Request) {
 								resType = consts.MatchScore
 							}
 							utils.PlayerMqPublish(uid, pb.RmqType_Bonus, &pb.RmqBonus{
-								ChangeRes: []*pb.Resource{ &pb.Resource{
+								ChangeRes: []*pb.Resource{&pb.Resource{
 									Type:   int32(resType),
 									Amount: int32(amount2),
-								} },
+								}},
 							})
 						}
 					} else if strings.HasPrefix(id, "card") {
@@ -595,14 +595,14 @@ func cardAmountHandler(writer http.ResponseWriter, request *http.Request) {
 
 	getCardList()
 
-	<- c
+	<-c
 	for at, logs := range at2Logs {
 		msg := &pb.CardsAmountLog{AccountType: at}
 		reply = append(reply, msg)
 		for cardID, amount := range logs {
 			msg.Logs = append(msg.Logs, &pb.CardAmountLog{
-				CardID: cardID,
-				Amount: int32(amount),
+				CardID:   cardID,
+				Amount:   int32(amount),
 				CardName: cardID2CardName[cardID],
 			})
 		}
@@ -634,7 +634,7 @@ func cardLevelHandler(writer http.ResponseWriter, request *http.Request) {
 
 	getCardList()
 
-	<- c
+	<-c
 
 	for at, logs := range at2Logs {
 		msg := &pb.CardsLevelLog{AccountType: at}
@@ -644,7 +644,7 @@ func cardLevelHandler(writer http.ResponseWriter, request *http.Request) {
 			msg.Logs = append(msg.Logs, cardMsg)
 			for lv := 1; lv <= 5; lv++ {
 				cardMsg.Levels = append(cardMsg.Levels, &pb.CardLevelLog_LevelAmount{
-					Level: int32(lv),
+					Level:  int32(lv),
 					Amount: int32(lv2Amount[lv]),
 				})
 			}
@@ -719,7 +719,7 @@ func updateMailDeadlineHandler(writer http.ResponseWriter, request *http.Request
 	deadLine := int64(args["deadLine"].(float64))
 
 	if !checkSign(map[string]string{
-		"mailID": strconv.Itoa(mailID),
+		"mailID":   strconv.Itoa(mailID),
 		"deadLine": strconv.FormatInt(deadLine, 10),
 	}, args["sign"].(string)) {
 		writer.Write(signErr)
@@ -732,7 +732,7 @@ func updateMailDeadlineHandler(writer http.ResponseWriter, request *http.Request
 		close(c)
 	})
 
-	<- c
+	<-c
 	if ok {
 		writer.Write(success)
 	} else {
@@ -747,7 +747,7 @@ func fetchAreaListHandler(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	c := make(chan struct{})
-	reply := map[string]interface{} {}
+	reply := map[string]interface{}{}
 	evq.CallLater(func() {
 		var areas []int
 		areaGameData := gamedata.GetGameData(consts.AreaConfig).(*gamedata.AreaConfigGameData)
@@ -758,14 +758,14 @@ func fetchAreaListHandler(writer http.ResponseWriter, request *http.Request) {
 		close(c)
 	})
 
-	<- c
+	<-c
 	areaList, _ = json.Marshal(reply)
 	writer.Write(areaList)
 }
 
 func fetchServerStatusHandler(writer http.ResponseWriter, request *http.Request) {
-	reply := map[string]interface{} {
-		"status": 0,
+	reply := map[string]interface{}{
+		"status":  0,
 		"message": "",
 	}
 
@@ -779,7 +779,7 @@ func fetchServerStatusHandler(writer http.ResponseWriter, request *http.Request)
 		close(c)
 	})
 
-	<- c
+	<-c
 	status, _ := json.Marshal(reply)
 	writer.Write(status)
 }
@@ -794,7 +794,7 @@ func updateServerStatusHandler(writer http.ResponseWriter, request *http.Request
 	message := args["message"].(string)
 
 	if !checkSign(map[string]string{
-		"status": strconv.Itoa(status),
+		"status":  strconv.Itoa(status),
 		"message": message,
 	}, args["sign"].(string)) {
 		writer.Write(signErr)
@@ -826,7 +826,7 @@ func fetchNoticeHandler(writer http.ResponseWriter, request *http.Request) {
 
 		close(c)
 	})
-	<- c
+	<-c
 	notices, _ := json.Marshal(reply)
 	writer.Write(notices)
 }
@@ -875,7 +875,7 @@ func importDirtyWordsHandler(writer http.ResponseWriter, request *http.Request) 
 	}
 	addWords := args["addWords"].(string)
 	delWords := args["delWords"].(string)
-	wordType := int(args["wordType"].(float64))     // 1: 精确敏感词， 2：模糊敏感词
+	wordType := int(args["wordType"].(float64)) // 1: 精确敏感词， 2：模糊敏感词
 	if !checkSign(map[string]string{
 		"addWords": addWords,
 		"delWords": delWords,
@@ -907,11 +907,11 @@ func forbidAccountHandler(writer http.ResponseWriter, request *http.Request) {
 	overTime := int64(args["overTime"].(float64))
 	opTime := int64(args["opTime"].(float64))
 	if !checkSign(map[string]string{
-		"playerID": uid.String(),
-		"area":strconv.Itoa(int(area)),
+		"playerID":   uid.String(),
+		"area":       strconv.Itoa(int(area)),
 		"forbidType": strconv.Itoa(forbidType),
-		"overTime": strconv.Itoa(int(overTime)),
-		"opTime": strconv.Itoa(int(opTime)),
+		"overTime":   strconv.Itoa(int(overTime)),
+		"opTime":     strconv.Itoa(int(opTime)),
 	}, args["sign"].(string)) {
 		writer.Write(signErr)
 		return
@@ -950,7 +950,7 @@ func forbidAccountHandler(writer http.ResponseWriter, request *http.Request) {
 
 			if isForbid {
 				utils.UpdateForbidList(uid, consts.ForbidMonitor, false, 0, true)
-			}else {
+			} else {
 				utils.UpdateForbidList(uid, forbidType, false, 0, false)
 			}
 
@@ -962,8 +962,8 @@ func forbidAccountHandler(writer http.ResponseWriter, request *http.Request) {
 		case consts.ForbidMonitor:
 			utils.PlayerMqPublish(uid, pb.RmqType_MonitorAccount, &pb.RmqMonitorAccount{
 				IsForbid: isForbid,
-				OverTime:overTime,
-				OpTime: opTime,
+				OverTime: overTime,
+				OpTime:   opTime,
 			})
 			utils.UpdateForbidList(uid, forbidType, isForbid, opTime, false)
 		}
@@ -1048,11 +1048,11 @@ func compensateRechargeHandler(writer http.ResponseWriter, request *http.Request
 	}
 
 	if !checkSign(map[string]string{
-		"uid": uid.String(),
-		"cpOrderID": cpOrderID,
+		"uid":            uid.String(),
+		"cpOrderID":      cpOrderID,
 		"channelOrderID": channelOrderID,
-		"goodsID": goodsID,
-		"time": strconv.FormatInt(t, 10),
+		"goodsID":        goodsID,
+		"time":           strconv.FormatInt(t, 10),
 	}, args["sign"].(string)) {
 		writer.Write(signErr)
 		return
@@ -1061,9 +1061,9 @@ func compensateRechargeHandler(writer http.ResponseWriter, request *http.Request
 	c := make(chan struct{})
 	evq.CallLater(func() {
 		utils.PlayerMqPublish(uid, pb.RmqType_CompensateRecharge, &pb.RmqCompensateRecharge{
-			CpOrderID: cpOrderID,
+			CpOrderID:      cpOrderID,
 			ChannelOrderID: channelOrderID,
-			GoodsID: goodsID,
+			GoodsID:        goodsID,
 		})
 		close(c)
 	})

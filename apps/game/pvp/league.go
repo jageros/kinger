@@ -2,6 +2,10 @@ package pvp
 
 import (
 	"fmt"
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common"
@@ -9,20 +13,16 @@ import (
 	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/timer"
 	"kinger/gopuppy/common/utils"
-	"kinger/apps/game/module"
-	"kinger/apps/game/module/types"
-	"kinger/common/consts"
-	"kinger/gamedata"
 	"kinger/proto/pb"
 	"strconv"
 	"time"
 )
 
 type leagueSeasonAttr struct {
-	attr map[int]*attribute.AttrMgr
-	area2RewardAttr map[int]map[int]*attribute.AttrMgr  // map[area]map[serial]*attribute.AttrMgr
-	loadingRewardAttr map[int]map[int]chan struct{}  // map[area]map[serial]chan struct{}
-	cycleCfg *gamedata.LeagueCycleTime
+	attr              map[int]*attribute.AttrMgr
+	area2RewardAttr   map[int]map[int]*attribute.AttrMgr // map[area]map[serial]*attribute.AttrMgr
+	loadingRewardAttr map[int]map[int]chan struct{}      // map[area]map[serial]chan struct{}
+	cycleCfg          *gamedata.LeagueCycleTime
 }
 
 func (l *leagueSeasonAttr) init() {
@@ -35,7 +35,7 @@ func (l *leagueSeasonAttr) init() {
 	l.loadAttr(areaData)
 }
 
-func (l *leagueSeasonAttr)loadAttr(data gamedata.IGameData) {
+func (l *leagueSeasonAttr) loadAttr(data gamedata.IGameData) {
 	data.(*gamedata.AreaConfigGameData).ForEachOpenedArea(func(config *gamedata.AreaConfig) {
 		_, ok := l.attr[config.Area]
 		if ok {
@@ -83,8 +83,8 @@ func (l *leagueSeasonAttr) setSeasonSerial(area int, serial int, isCrossSeason b
 		attr.SetInt("league_serial", serial)
 		attr.Save(true)
 		arg := &pb.ReloadLeagueAttrArg{
-			Area: int32(area),
-			AppID: module.Service.GetAppID(),
+			Area:          int32(area),
+			AppID:         module.Service.GetAppID(),
 			IsCrossSeason: isCrossSeason,
 		}
 		logic.BroadcastBackend(pb.MessageID_G2G_SAVE_LEAGUE_ATTR_RELOAD, arg)
@@ -102,12 +102,12 @@ func (l *leagueSeasonAttr) conformTimes(area int) bool {
 	var num int
 	if attr, ok := l.attr[area]; ok {
 		defer attr.Save(false)
-		num  = attr.GetInt("time_num")
+		num = attr.GetInt("time_num")
 		num += 1
 		if num >= l.cycleCfg.TimeNum {
 			attr.SetInt("time_num", 0)
 			return true
-		}else {
+		} else {
 			attr.SetInt("time_num", num)
 			return false
 		}
@@ -174,8 +174,7 @@ func (l *leagueSeasonAttr) recordRankPlayerRewardInfo(area int) {
 			for rank, uid := range area2UserRanking.UserRanking[k].Uids {
 				playerInfo := module.Player.GetSimplePlayerInfo(common.UUid(uid))
 				rankScore := int(playerInfo.GetRankScore())
-				llv, rankReward, kingFlag := gamedata.GetGameData(consts.LeagueRankReward).(
-					*gamedata.LeagueRankRewardGameData).GetRewardByRank(int(rank))
+				llv, rankReward, kingFlag := gamedata.GetGameData(consts.LeagueRankReward).(*gamedata.LeagueRankRewardGameData).GetRewardByRank(int(rank))
 				leagueLvl := gamedata.GetGameData(consts.League).(*gamedata.LeagueGameData).GetLeagueEndRewardLvlByScore(rankScore)
 				if leagueLvl < llv {
 					continue
@@ -230,12 +229,12 @@ func (l *leagueSeasonAttr) loadRewardAttr(area, serial int, justFromCache bool) 
 	if ok {
 		if loading, ok := serial2loading[serial]; ok {
 			evq.Await(func() {
-				<- loading
+				<-loading
 			})
 			return l.loadRewardAttr(area, serial, true)
 		}
 	} else {
-		serial2loading = map[int]chan struct{} {}
+		serial2loading = map[int]chan struct{}{}
 		l.loadingRewardAttr[area] = serial2loading
 	}
 
@@ -312,7 +311,7 @@ func (l *leagueSeasonAttr) initCrossSeasonFunction() {
 	if module.Service.GetAppID() != 1 {
 		return
 	}
-	timer.RunEveryDay(0,0,0, func() {
+	timer.RunEveryDay(0, 0, 0, func() {
 		switch l.cycleCfg.TimeType {
 		case "M":
 			if time.Now().Day() == l.cycleCfg.TimeDay {
@@ -337,28 +336,28 @@ func (l *leagueSeasonAttr) getRemainTime(area int) int64 {
 	curNum := l.getCurTimes(area)
 	switch l.cycleCfg.TimeType {
 	case "M":
-		y,m,_ := time.Now().Date()
+		y, m, _ := time.Now().Date()
 		mm := int(m)
-		mm += l.cycleCfg.TimeNum-curNum
+		mm += l.cycleCfg.TimeNum - curNum
 		if mm > 12 {
-			y+=mm/12
-			mm = mm%12
+			y += mm / 12
+			mm = mm % 12
 		}
 		var mstr, dstr string
 		if mm < 10 {
 			mstr = fmt.Sprintf("0%d", mm)
-		}else {
+		} else {
 			mstr = fmt.Sprintf("%d", mm)
 		}
 		if l.cycleCfg.TimeDay < 10 {
 			dstr = fmt.Sprintf("0%d", l.cycleCfg.TimeDay)
-		}else {
+		} else {
 			dstr = fmt.Sprintf("%d", l.cycleCfg.TimeDay)
 		}
 		tStr := fmt.Sprintf("%d-%s-%s 00:00:00", y, mstr, dstr)
 		endTime, _ := utils.StringToTime(tStr, utils.TimeFormat2)
 		remainDay = timer.GetDayNo(endTime.Unix()) - timer.GetDayNo() - 1
-		remainTime = int64(timer.TimeDelta(0,0,0).Seconds() + float64(remainDay * 86400))
+		remainTime = int64(timer.TimeDelta(0, 0, 0).Seconds() + float64(remainDay*86400))
 
 	case "W":
 		wd := (l.cycleCfg.TimeNum - curNum - 1) * 7
@@ -370,15 +369,15 @@ func (l *leagueSeasonAttr) getRemainTime(area int) int64 {
 		var dayNum int
 		if int(td) > cfgDay {
 			dayNum = 7 - int(td) + cfgDay + wd
-		}else {
+		} else {
 			dayNum = cfgDay - int(td) + wd
 		}
 		remainDay = dayNum
-		remainTime = int64(timer.TimeDelta(0,0,0).Seconds() + float64(remainDay * 86400))
+		remainTime = int64(timer.TimeDelta(0, 0, 0).Seconds() + float64(remainDay*86400))
 
 	case "D":
 		remainDay = l.cycleCfg.TimeNum - curNum - 1
-		remainTime = int64(timer.TimeDelta(0,0,0).Seconds() + float64(remainDay * 86400))
+		remainTime = int64(timer.TimeDelta(0, 0, 0).Seconds() + float64(remainDay*86400))
 
 	default:
 

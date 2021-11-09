@@ -11,15 +11,15 @@ import (
 )
 
 type RecruitTreasure struct {
-	ID string `json:"__id__"`
-	TreasureID string `json:"treasureId"`
-	JadePrice int `json:"jadePrice"`
-	Team int `json:"team"`
-	Switch int `json:"switch"`
-	OpenWeekDays []int `json:"openWeekDays"`
-	Areas [][]int `json:"areas"`
+	ID           string  `json:"__id__"`
+	TreasureID   string  `json:"treasureId"`
+	JadePrice    int     `json:"jadePrice"`
+	Team         int     `json:"team"`
+	Switch       int     `json:"switch"`
+	OpenWeekDays []int   `json:"openWeekDays"`
+	Areas        [][]int `json:"areas"`
 
-	areaLimit *AreaLimitConfig
+	areaLimit          *AreaLimitConfig
 	openWeekDaysAmount int
 }
 
@@ -67,7 +67,7 @@ func (r *RecruitTreasure) GetNextOpenRemainTime() int {
 		}
 	}
 
-	return remainDay * 24 * 3600 - (now.Hour() * 3600 + now.Minute() * 60 + now.Second())
+	return remainDay*24*3600 - (now.Hour()*3600 + now.Minute()*60 + now.Second())
 }
 
 type RecruitTreasureGameData struct {
@@ -122,7 +122,7 @@ func (gd *RecruitTreasureGameData) init(d []byte) error {
 				if t.Switch > sw {
 					gd.area2MaxSwitch[area] = t.Switch
 				}
-			}else {
+			} else {
 				gd.area2MaxSwitch[area] = t.Switch
 			}
 		})

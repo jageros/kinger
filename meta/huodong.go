@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_FETCH_HUODONG_DETAIL    req: TargetHuodong    resp: HuodongDetail
@@ -340,4 +340,3 @@ func (m *G2G_ON_HUODONG_EVENT_Meta) DecodeReply(data []byte) (interface{}, error
 }
 
 //------------------------------------ G2G_ON_HUODONG_EVENT END ----------------------------------------
-

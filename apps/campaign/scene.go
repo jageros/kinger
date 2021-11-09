@@ -1,27 +1,27 @@
 package main
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/proto/pb"
-	"kinger/gopuppy/common/timer"
-	"time"
-	"kinger/gamedata"
-	"kinger/common/consts"
-	"kinger/gopuppy/common/eventhub"
 	"fmt"
+	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/eventhub"
+	"kinger/gopuppy/common/timer"
+	"kinger/proto/pb"
 	"sort"
+	"time"
 	//"kinger/gopuppy/common/glog"
 	//"encoding/json"
-	"strconv"
 	"kinger/gopuppy/common/glog"
+	"strconv"
 )
 
 var sceneMgr = &sceneMgrSt{}
 
 type sceneMgrSt struct {
 	// 支援、出征的队伍
-	id2Team map[int]*team
+	id2Team    map[int]*team
 	id2DefTeam map[int]*team
 	// 守这些城的队伍
 	city2DefTeams map[int][]*team
@@ -33,7 +33,7 @@ type sceneMgrSt struct {
 	tid2SyncTeam map[int]*team
 	// 上次同步给客户端的守城玩家数量
 	city2SyncDefAmount map[int]int
-	ticker       *timer.Timer
+	ticker             *timer.Timer
 }
 
 func (sm *sceneMgrSt) initialize() {
@@ -365,25 +365,25 @@ func (sm *sceneMgrSt) onCityBeOccupy(cty *city) {
 }
 
 type roadPath struct {
-	distance int
-	r *gamedata.Road
+	distance     int
+	r            *gamedata.Road
 	targetCityID int
-	key string
+	key          string
 }
 
 func newRoadPath(distance, targetCityID int, r *gamedata.Road) *roadPath {
 	return &roadPath{
-		distance: distance,
-		r: r,
+		distance:     distance,
+		r:            r,
 		targetCityID: targetCityID,
 	}
 }
 
 func newRoadPathByAttr(attr *attribute.MapAttr) *roadPath {
 	return &roadPath{
-		distance: attr.GetInt("distance"),
+		distance:     attr.GetInt("distance"),
 		targetCityID: attr.GetInt("targetCityID"),
-		r: gamedata.GetGameData(consts.Road).(*gamedata.RoadGameData).ID2Road[attr.GetInt("roadID")],
+		r:            gamedata.GetGameData(consts.Road).(*gamedata.RoadGameData).ID2Road[attr.GetInt("roadID")],
 	}
 }
 
@@ -434,21 +434,21 @@ func (tl teamList) Len() int {
 }
 
 type team struct {
-	id int
-	type_ int
-	forage int
-	owner *player
-	state pb.TeamState
-	cityPath []int
-	paths []*roadPath
-	distance int
-	curDistance int
+	id                  int
+	type_               int
+	forage              int
+	owner               *player
+	state               pb.TeamState
+	cityPath            []int
+	paths               []*roadPath
+	distance            int
+	curDistance         int
 	targetCityCountryID uint32
-	fighterData *pb.FighterData
-	isMatching bool
-	defCityID int
-	teamAmount int   // 跟这个队伍在同一条路，同一个方向的队伍数量
-	dirty bool       // 状态是否有了重要的改变，用于同步客户端
+	fighterData         *pb.FighterData
+	isMatching          bool
+	defCityID           int
+	teamAmount          int  // 跟这个队伍在同一条路，同一个方向的队伍数量
+	dirty               bool // 状态是否有了重要的改变，用于同步客户端
 }
 
 func newTeam(owner *player, type_, forage int, cityPath []int, paths []*roadPath, fighterData *pb.FighterData) *team {
@@ -474,24 +474,24 @@ func newTeamByProp(tid, type_, forage int, owner *player, cityPath []int, paths 
 	state pb.TeamState, targetCityCountryID uint32, fighterData *pb.FighterData, isMatching bool, defCityID int) *team {
 
 	t := &team{
-		id: tid,
-		type_: type_,
-		owner: owner,
-		state: state,
-		cityPath: cityPath,
-		distance: distance,
-		fighterData: fighterData,
-		curDistance: curDistance,
+		id:                  tid,
+		type_:               type_,
+		owner:               owner,
+		state:               state,
+		cityPath:            cityPath,
+		distance:            distance,
+		fighterData:         fighterData,
+		curDistance:         curDistance,
 		targetCityCountryID: targetCityCountryID,
-		isMatching: isMatching,
-		defCityID: defCityID,
-		forage: forage,
+		isMatching:          isMatching,
+		defCityID:           defCityID,
+		forage:              forage,
 	}
 
 	index := -1
 	pathsAmount := len(paths)
 	for i, rpath := range paths {
-		if curDistance >= rpath.distance && i != pathsAmount - 1 {
+		if curDistance >= rpath.distance && i != pathsAmount-1 {
 			sceneMgr.delToCityTeam(rpath.targetCityID, t)
 		} else {
 			if index < 0 {
@@ -757,11 +757,11 @@ func (t *team) packMsg() *pb.TeamData {
 		cityPath = append(cityPath, int32(cityID))
 	}
 	return &pb.TeamData{
-		ID: int32(t.id),
-		CountryID: t.owner.getCountryID(),
-		CityPath: cityPath,
-		Trip: int32(t.curDistance),
-		State: t.state,
+		ID:         int32(t.id),
+		CountryID:  t.owner.getCountryID(),
+		CityPath:   cityPath,
+		Trip:       int32(t.curDistance),
+		State:      t.state,
 		TeamAmount: int32(t.teamAmount),
 	}
 }
@@ -801,7 +801,7 @@ func (t *team) disappear(reason pb.MyTeamDisappear_ReasonEnum, needSync bool, ar
 		}
 		fallthrough
 	//case pb.MyTeamRetreat_SupportCityBeOccupy:
-		// 去支援的城被占领
+	// 去支援的城被占领
 	//	fallthrough
 	case pb.MyTeamDisappear_NoForage:
 		// 没粮
@@ -896,7 +896,7 @@ func (t *team) march(paramGameData *gamedata.CampaignParamGameData) {
 		index := -1
 		pathsAmount := len(t.paths)
 		for i, rpath := range t.paths {
-			if t.curDistance < rpath.distance || i == pathsAmount - 1 {
+			if t.curDistance < rpath.distance || i == pathsAmount-1 {
 				index = i
 				break
 			} else {
@@ -920,19 +920,19 @@ func (t *team) march(paramGameData *gamedata.CampaignParamGameData) {
 			t.isMatching = true
 
 			/*
-			// 前面的城如果是敌城，匹配
-			cty := cityMgr.getCity(rpath.targetCityID)
-			if cty != nil && cty.getCountryID() != t.owner.getCountryID() {
-				// 匹配
-				if !t.isMatching {
-					fieldMatchMgr.beginMatch(rpath.r.ID, t)
-					t.isMatching = true
+				// 前面的城如果是敌城，匹配
+				cty := cityMgr.getCity(rpath.targetCityID)
+				if cty != nil && cty.getCountryID() != t.owner.getCountryID() {
+					// 匹配
+					if !t.isMatching {
+						fieldMatchMgr.beginMatch(rpath.r.ID, t)
+						t.isMatching = true
+					}
+				} else {
+					// 取消匹配
+					fieldMatchMgr.stopMatch(t.owner.getUid())
+					t.isMatching = false
 				}
-			} else {
-				// 取消匹配
-				fieldMatchMgr.stopMatch(t.owner.getUid())
-				t.isMatching = false
-			}
 			*/
 		}
 	}
@@ -969,7 +969,7 @@ func (t *team) attackCity(paramGameData *gamedata.CampaignParamGameData) {
 		t.disappear(pb.MyTeamDisappear_OccupyCity, true)
 		sceneMgr.onCityBeOccupy(targetCity)
 	}
-	t.owner.addContribution( paramGameData.SingleMerit * t.owner.getCityGlory(), true, false )
+	t.owner.addContribution(paramGameData.SingleMerit*t.owner.getCityGlory(), true, false)
 }
 
 func (t *team) onBattleEnd(isWin bool) {
@@ -979,9 +979,9 @@ func (t *team) onBattleEnd(isWin bool) {
 	case pb.TeamState_FieldBattleTS:
 		t.setState(pb.TeamState_FieldBattleEndTS)
 		if isWin {
-			t.owner.addContribution( paramGameData.SingleEncounterVic * t.owner.getCityGlory(), true, false )
+			t.owner.addContribution(paramGameData.SingleEncounterVic*t.owner.getCityGlory(), true, false)
 		} else {
-			t.owner.addContribution( paramGameData.SingleLoseVic * t.owner.getCityGlory(), true, false )
+			t.owner.addContribution(paramGameData.SingleLoseVic*t.owner.getCityGlory(), true, false)
 			forage := t.getForage()
 			if forage <= 0 {
 				// 没粮，撤退
@@ -996,9 +996,9 @@ func (t *team) onBattleEnd(isWin bool) {
 	case pb.TeamState_AtkCityBattleTS:
 		t.setState(pb.TeamState_CanAttackCityTS)
 		if isWin {
-			t.owner.addContribution( paramGameData.SingleAttackVic * t.owner.getCityGlory(), true, false )
+			t.owner.addContribution(paramGameData.SingleAttackVic*t.owner.getCityGlory(), true, false)
 		} else {
-			t.owner.addContribution( paramGameData.SingleLoseVic * t.owner.getCityGlory(), true, false )
+			t.owner.addContribution(paramGameData.SingleLoseVic*t.owner.getCityGlory(), true, false)
 			forage := t.getForage()
 			if forage <= 0 {
 				// 没粮，撤退
@@ -1013,9 +1013,9 @@ func (t *team) onBattleEnd(isWin bool) {
 	case pb.TeamState_DefCityBattleTS:
 		t.setState(pb.TeamState_DefCityBattleEndTS)
 		if isWin {
-			t.owner.addContribution( paramGameData.SingleAttackVic * t.owner.getCityGlory(), true, false )
+			t.owner.addContribution(paramGameData.SingleAttackVic*t.owner.getCityGlory(), true, false)
 		} else {
-			t.owner.addContribution( paramGameData.SingleLoseVic * t.owner.getCityGlory(), true, false )
+			t.owner.addContribution(paramGameData.SingleLoseVic*t.owner.getCityGlory(), true, false)
 			forage := t.getForage()
 			if forage <= 0 {
 				// 没粮，撤退

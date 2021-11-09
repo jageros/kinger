@@ -1,14 +1,14 @@
 package mission
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/apps/game/module"
-	"kinger/proto/pb"
-	"kinger/gamedata"
-	"kinger/apps/game/module/types"
-	"kinger/gopuppy/common/glog"
-	"kinger/common/consts"
 	"fmt"
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/glog"
+	"kinger/proto/pb"
 )
 
 type missionSt struct {
@@ -37,9 +37,9 @@ func (m *missionSt) String() string {
 func (m *missionSt) packMsg() *pb.Mission {
 	msg := &pb.Mission{
 		MissionID: int32(m.attr.GetInt("missionID")),
-		CurCnt: int32(m.attr.GetInt("cnt")),
-		IsReward: m.attr.GetBool("isReward"),
-		ID: int32(m.attr.GetInt("id")),
+		CurCnt:    int32(m.attr.GetInt("cnt")),
+		IsReward:  m.attr.GetBool("isReward"),
+		ID:        int32(m.attr.GetInt("id")),
 	}
 	return msg
 }
@@ -74,7 +74,7 @@ func (m *missionSt) getReward(player types.IPlayer) (jade, gold, bowlder int, er
 
 	glog.Infof("mission get reward, uid=%d, missionID=%d, jade=%d, gold=%s", player.GetUid(), mdata.ID,
 		mdata.Jade, mdata.Gold)
-	module.Player.LogMission(player, fmt.Sprintf("doMission_%d",  mdata.ID), 2)
+	module.Player.LogMission(player, fmt.Sprintf("doMission_%d", mdata.ID), 2)
 
 	resCpt := player.GetComponent(consts.ResourceCpt).(types.IResourceComponent)
 	funcPrice := gamedata.GetGameData(consts.FunctionPrice).(*gamedata.FunctionPriceGameData)

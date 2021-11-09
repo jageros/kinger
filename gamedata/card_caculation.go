@@ -1,12 +1,12 @@
 package gamedata
 
 import (
-	"kinger/common/consts"
 	"encoding/json"
+	"kinger/common/consts"
 )
 
 type RebornCardCacul struct {
-	Star int `json:"__id__"`
+	Star  int     `json:"__id__"`
 	Honor float32 `json:"honor"`
 }
 

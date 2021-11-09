@@ -6,11 +6,11 @@ import (
 )
 
 type AiMatch struct {
-	ID       int      `json:"__id__"`
-	Winning []int      `json:"winning"`
-	PositiveIQ int `json:"PositiveIQ"`
-	NegativeIQ int    `json:"NegativeIQ"`
-	FoolSign int `json:"foolSign"`
+	ID         int   `json:"__id__"`
+	Winning    []int `json:"winning"`
+	PositiveIQ int   `json:"PositiveIQ"`
+	NegativeIQ int   `json:"NegativeIQ"`
+	FoolSign   int   `json:"foolSign"`
 
 	maxRate int
 	minRate int
@@ -28,7 +28,7 @@ func (a *AiMatch) init() {
 
 type AiMatchGameData struct {
 	baseGameData
-	ais []*AiMatch
+	ais         []*AiMatch
 	FoolWinRate int
 }
 
@@ -67,11 +67,11 @@ func (bg *AiMatchGameData) binarySearchIQ(winRate, minIdx, maxIdx int) *AiMatch 
 		return ai
 	} else if winRate < ai.minRate {
 		if idx < maxIdx {
-			return bg.binarySearchIQ(winRate, idx + 1, maxIdx)
+			return bg.binarySearchIQ(winRate, idx+1, maxIdx)
 		}
 	} else {
 		if idx > minIdx {
-			return bg.binarySearchIQ(winRate, minIdx, idx - 1)
+			return bg.binarySearchIQ(winRate, minIdx, idx-1)
 		}
 	}
 
@@ -79,5 +79,5 @@ func (bg *AiMatchGameData) binarySearchIQ(winRate, minIdx, maxIdx int) *AiMatch 
 }
 
 func (bg *AiMatchGameData) GetAiIQ(winRate int) *AiMatch {
-	return bg.binarySearchIQ(winRate, 0, len(bg.ais) - 1)
+	return bg.binarySearchIQ(winRate, 0, len(bg.ais)-1)
 }

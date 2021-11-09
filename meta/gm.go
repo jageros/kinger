@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ G2G_GET_ONLINE_INFO    resp: OnlineInfo
@@ -312,4 +312,3 @@ func (m *G2G_ON_LOGIN_NOTICE_UPDATE_Meta) DecodeReply(data []byte) (interface{},
 }
 
 //------------------------------------ G2G_ON_LOGIN_NOTICE_UPDATE END ----------------------------------------
-

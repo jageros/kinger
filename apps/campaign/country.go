@@ -1,19 +1,19 @@
 package main
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/proto/pb"
-	"kinger/gopuppy/common"
-	"kinger/gamedata"
-	"kinger/gopuppy/common/glog"
 	"fmt"
-	"strconv"
-	"kinger/gopuppy/common/timer"
-	"time"
 	"kinger/common/consts"
 	"kinger/common/utils"
-	"math/rand"
+	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
 	"kinger/gopuppy/common/eventhub"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
+	"kinger/proto/pb"
+	"math/rand"
+	"strconv"
+	"time"
 )
 
 var countryMgr = &countryMgrSt{}
@@ -44,10 +44,10 @@ func (cm *countryMgrSt) initialize() {
 
 	timer.RunEveryDay(0, 0, 0, cm.onProduction)
 	//timer.AddTicker(5 * time.Minute, cm.onProduction)
-	timer.AddTicker(time.Duration(rand.Intn(20) + 290) * time.Second, func() {
+	timer.AddTicker(time.Duration(rand.Intn(20)+290)*time.Second, func() {
 		cm.save(false)
 	})
-	timer.AddTicker(10 * time.Second, cm.calcPerContribution)
+	timer.AddTicker(10*time.Second, cm.calcPerContribution)
 
 	eventhub.Subscribe(evWarReady, cm.onWarReady)
 	eventhub.Subscribe(evWarEnd, cm.onWarEnd)
@@ -152,20 +152,20 @@ func (cm *countryMgrSt) calcPerContribution() {
 }
 
 type country struct {
-	id uint32
-	attr *attribute.AttrMgr
+	id            uint32
+	attr          *attribute.AttrMgr
 	warRecordAttr *attribute.MapAttr
 
 	citys common.IntSet
 	// 国家的玩家
 	uid2Player map[common.UUid]*player
-	players []*player
+	players    []*player
 	// 国家职位的玩家
-	job2Players map[pb.CampaignJob][]*player
+	job2Players    map[pb.CampaignJob][]*player
 	playerNeedSort bool
 	// 这个城获得战功的玩家
 	addContributionPlayers map[common.UUid]float64
-	addContributions float64
+	addContributions       float64
 }
 
 func newCountry(name, flag string, cty *city) (*country, error) {
@@ -184,12 +184,12 @@ func newCountry(name, flag string, cty *city) (*country, error) {
 
 func newCountryByAttr(countryID uint32, attr *attribute.AttrMgr) *country {
 	c := &country{
-		id: countryID,
-		attr: attr,
-		citys: common.IntSet{},
-		uid2Player: map[common.UUid]*player{},
-		job2Players: map[pb.CampaignJob][]*player{},
-		warRecordAttr: attr.GetMapAttr("warRecord"),
+		id:                     countryID,
+		attr:                   attr,
+		citys:                  common.IntSet{},
+		uid2Player:             map[common.UUid]*player{},
+		job2Players:            map[pb.CampaignJob][]*player{},
+		warRecordAttr:          attr.GetMapAttr("warRecord"),
 		addContributionPlayers: map[common.UUid]float64{},
 	}
 
@@ -430,13 +430,13 @@ func (c *country) getSalaryByJob(job pb.CampaignJob) int {
 		switch job {
 		case pb.CampaignJob_YourMajesty:
 			g, _ := cty.getCurBusinessGold()
-			gold += int( paramGameData.KingSalary * float64(g) )
+			gold += int(paramGameData.KingSalary * float64(g))
 		case pb.CampaignJob_Counsellor:
 			g, _ := cty.getCurBusinessGold()
-			gold += int( paramGameData.JunshiSalary * float64(g) )
+			gold += int(paramGameData.JunshiSalary * float64(g))
 		case pb.CampaignJob_General:
 			g, _ := cty.getCurBusinessGold()
-			gold += int( paramGameData.ZhonglangjiangSalary * float64(g) )
+			gold += int(paramGameData.ZhonglangjiangSalary * float64(g))
 		}
 	})
 	return gold
@@ -453,8 +453,8 @@ func (c *country) getPlayerAmount() int {
 func (c *country) packSimpleMsg() *pb.CountrySimpleData {
 	return &pb.CountrySimpleData{
 		CountryID: c.id,
-		Name: c.getName(),
-		Flag: c.getFlag(),
+		Name:      c.getName(),
+		Flag:      c.getFlag(),
 	}
 }
 
@@ -622,7 +622,8 @@ func (c *country) chooseNewYourMajesty() *player {
 	var newYourMajesty *player
 
 	jobs := campaignMgr.getCountryJobs()
-L:	for _, job := range jobs {
+L:
+	for _, job := range jobs {
 		if job == pb.CampaignJob_YourMajesty {
 			continue
 		}
@@ -720,7 +721,7 @@ func (c *country) onProduction() {
 					gold2 = paramGameData.ZhonglangjiangSalary * cityGold
 				}
 				gold += gold2
-				cityMgr.getCity(cityID).modifyResource(resGold, - gold2)
+				cityMgr.getCity(cityID).modifyResource(resGold, -gold2)
 			}
 		}
 
@@ -737,12 +738,12 @@ func (c *country) onProduction() {
 				gold2 = paramGameData.XiaoweiSalary * cityGold
 			}
 			gold += gold2
-			cityMgr.getCity(cityID).modifyResource(resGold, - gold2)
+			cityMgr.getCity(cityID).modifyResource(resGold, -gold2)
 		}
 
 		if gold > 0 {
 			utils.PlayerMqPublish(p.getUid(), pb.RmqType_Bonus, &pb.RmqBonus{
-				ChangeRes: []*pb.Resource{ &pb.Resource{Type: int32(consts.Gold), Amount: int32(gold)} },
+				ChangeRes: []*pb.Resource{&pb.Resource{Type: int32(consts.Gold), Amount: int32(gold)}},
 			})
 		}
 
@@ -766,7 +767,7 @@ func (c *country) randomCity() *city {
 	if len(cityIDs) <= 0 {
 		return nil
 	}
-	return cityMgr.getCity( cityIDs[rand.Intn(len(cityIDs))] )
+	return cityMgr.getCity(cityIDs[rand.Intn(len(cityIDs))])
 }
 
 func (c *country) onPlayerAddContribution(p *player, val float64) {
@@ -782,8 +783,8 @@ func (c *country) calcPerContribution() {
 
 	for _, ps := range c.job2Players {
 		for _, p := range ps {
-			p.addContribution( (c.addContributions - c.addContributionPlayers[p.getUid()]) *
-				campaignMgr.getContributionPerByJob(p.getCountryJob()), false, false )
+			p.addContribution((c.addContributions-c.addContributionPlayers[p.getUid()])*
+				campaignMgr.getContributionPerByJob(p.getCountryJob()), false, false)
 		}
 	}
 
@@ -801,7 +802,7 @@ func (c *country) surrender(p *player, targetCry *country) error {
 		cty.doSurrender(p, targetCry, pb.CampaignNoticeType_SurrenderCountry1Nt)
 	})
 
-	p.subContribution(p.getMaxContribution() * 0.2, true)
+	p.subContribution(p.getMaxContribution()*0.2, true)
 	c.setDestory()
 	p.setLastCountryID(0, true)
 	glog.Infof("country surrender, countryID=%d, uid=%d", c.id, p.getUid())

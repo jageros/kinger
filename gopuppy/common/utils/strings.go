@@ -5,7 +5,7 @@ func EditDistance(s1, s2 string) int {
 	r2 := []rune(s2)
 	len1 := len(r1)
 	len2 := len(r2)
-	cache := make([]int, len2 + 1)
+	cache := make([]int, len2+1)
 
 	for i := 0; i <= len2; i++ {
 		cache[i] = i

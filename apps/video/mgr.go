@@ -1,50 +1,50 @@
 package main
 
 import (
-	"kinger/gopuppy/common/lru"
+	"kinger/common/config"
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common"
-	"kinger/proto/pb"
 	"kinger/gopuppy/common/evq"
-	"kinger/gamedata"
-	"kinger/common/consts"
-	"time"
+	"kinger/gopuppy/common/lru"
 	"kinger/gopuppy/common/timer"
+	"kinger/proto/pb"
 	"math/rand"
-	"kinger/common/config"
+	"time"
 )
 
 const (
-	topVideoMaxAmount = 20
-	newVideoMinAmount = 20
-	videoMaxLife      = 7 * 24 * 60 * 60
-	newVideoLimitTime = 2 * 60 * 60
-	pageCommentsAmount = 10
+	topVideoMaxAmount    = 20
+	newVideoMinAmount    = 20
+	videoMaxLife         = 7 * 24 * 60 * 60
+	newVideoLimitTime    = 2 * 60 * 60
+	pageCommentsAmount   = 10
 	topCommentsLikeLimit = 20
 )
 
 var videoMgr *videoMgrSt
 
 type videoMgrSt struct {
-	videoItemCache     *lru.LruCache
-	videoDataCache     *lru.LruCache
+	videoItemCache *lru.LruCache
+	videoDataCache *lru.LruCache
 
-	topOrNewItems map[common.UUid]*videoItem  // 所有区最新或热度变化最大的录像
+	topOrNewItems     map[common.UUid]*videoItem // 所有区最新或热度变化最大的录像
 	loadingVideoItems map[common.UUid]chan struct{}
 
-	areaToTopVideos     map[int]*topVideoItemList  // 热度变化最大的录像
-	areaToNewVideos     map[int]*newVideoItemList  // 最新录像
+	areaToTopVideos map[int]*topVideoItemList // 热度变化最大的录像
+	areaToNewVideos map[int]*newVideoItemList // 最新录像
 
 	players map[common.UUid]*playerSt
 }
 
 func newVideoMgr() {
 	videoMgr = &videoMgrSt{
-		topOrNewItems: map[common.UUid]*videoItem{},
+		topOrNewItems:     map[common.UUid]*videoItem{},
 		loadingVideoItems: map[common.UUid]chan struct{}{},
-		areaToTopVideos: map[int]*topVideoItemList{},
-		areaToNewVideos: map[int]*newVideoItemList{},
-		players: map[common.UUid]*playerSt{},
+		areaToTopVideos:   map[int]*topVideoItemList{},
+		areaToNewVideos:   map[int]*newVideoItemList{},
+		players:           map[common.UUid]*playerSt{},
 	}
 	videoMgr.initCache()
 	videoMgr.loadVideoItemList()
@@ -54,7 +54,7 @@ func newVideoMgr() {
 func (vm *videoMgrSt) addTimer() {
 	timer.AddTicker(5*time.Minute, vm.checkNewVideoTimeout)
 	timer.RunEveryHour(0, 0, vm.onTopVideosRefresh)
-	timer.AddTicker(6 * time.Minute, vm.save)
+	timer.AddTicker(6*time.Minute, vm.save)
 }
 
 func (vm *videoMgrSt) checkNewVideoTimeout() {
@@ -64,7 +64,7 @@ func (vm *videoMgrSt) checkNewVideoTimeout() {
 }
 
 func (vm *videoMgrSt) onTopVideosRefresh() {
-	if time.Now().Hour() % 3 != 0 {
+	if time.Now().Hour()%3 != 0 {
 		return
 	}
 	for _, tl := range vm.areaToTopVideos {
@@ -173,7 +173,7 @@ func (vm *videoMgrSt) addTopOrNewVideoItem(vi *videoItem) {
 	battleID := vi.getBattleID()
 	vm.videoItemCache.Remove(battleID)
 	vm.topOrNewItems[battleID] = vi
-	vi.setRef( vi.getRef() + 1 )
+	vi.setRef(vi.getRef() + 1)
 }
 
 func (vm *videoMgrSt) cacheVideoItem(vi *videoItem) {
@@ -209,7 +209,7 @@ func (vm *videoMgrSt) loadVideoItem(battleID common.UUid, justFromCache bool, ig
 
 	if loading, ok := vm.loadingVideoItems[battleID]; ok {
 		evq.Await(func() {
-			<- loading
+			<-loading
 		})
 		return vm.loadVideoItem(battleID, true)
 	}

@@ -2,20 +2,20 @@ package gamedata
 
 import (
 	"encoding/json"
+	"kinger/common/consts"
 	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common/glog"
-	"kinger/common/consts"
 )
 
 type RewardItem struct {
-	ID int `json:"__id__"`
-	Type string `json:"type"`
-	ItemID string `json:"itemID"`
-	Amount int `json:"amount"`
-	Pro int `json:"pro"`
-	Team int `json:"team"`
-	Version int `json:"version"`
-	Areas          [][]int    `json:"areas"`
+	ID        int     `json:"__id__"`
+	Type      string  `json:"type"`
+	ItemID    string  `json:"itemID"`
+	Amount    int     `json:"amount"`
+	Pro       int     `json:"pro"`
+	Team      int     `json:"team"`
+	Version   int     `json:"version"`
+	Areas     [][]int `json:"areas"`
 	AreaLimit *AreaLimitConfig
 }
 
@@ -24,7 +24,7 @@ func (r *RewardItem) init() {
 }
 
 type RewardItemList struct {
-	Rewards []*RewardItem
+	Rewards  []*RewardItem
 	TotalPro int
 }
 
@@ -69,12 +69,12 @@ func (gd *RewardTblGameData) init(d []byte) error {
 		rlist.Rewards = append(rlist.Rewards, r)
 		rlist.TotalPro += r.Pro
 		area := GetGameData(consts.AreaConfig).(*AreaConfigGameData)
-		area.ForEachOpenedArea(func(config *AreaConfig){
+		area.ForEachOpenedArea(func(config *AreaConfig) {
 			if v, ok := ver[config.Area]; ok {
 				if v < r.Version {
 					ver[config.Area] = r.Version
 				}
-			}else {
+			} else {
 				ver[config.Area] = r.Version
 			}
 		})

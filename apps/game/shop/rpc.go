@@ -1,22 +1,22 @@
 package shop
 
 import (
+	"crypto"
+	"crypto/rsa"
+	"crypto/sha1"
+	"encoding/base64"
 	"encoding/json"
-	"kinger/gopuppy/apps/logic"
-	"kinger/gopuppy/common/glog"
+	"fmt"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/config"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/common/glog"
 	"kinger/proto/pb"
-	"time"
-	"fmt"
-	"encoding/base64"
-	"crypto/rsa"
-	"crypto/sha1"
-	"crypto"
 	"strconv"
+	"time"
 )
 
 func rpc_C2S_FetchShopData(agent *logic.PlayerAgent, arg interface{}) (interface{}, error) {
@@ -144,7 +144,7 @@ func rpc_C2S_SdkCreateOrder(agent *logic.PlayerAgent, arg interface{}) (interfac
 		}
 	}
 
-	orderID := fmt.Sprintf("%d%d", uid, time.Now().UnixNano() / 1000)
+	orderID := fmt.Sprintf("%d%d", uid, time.Now().UnixNano()/1000)
 	order := newOrder(orderID, arg2.GoodsID, "", player)
 	order.setPrice(price)
 	return &pb.SdkCreateOrderReply{OrderID: orderID}, order.save(true)
@@ -241,7 +241,7 @@ func rpc_C2S_BuyOneGaChaByJade(agent *logic.PlayerAgent, arg interface{}) (inter
 
 	jade := gdata.JadePrice
 	bowlder := gdata.BowlderPrice
-	if jade <= 0{
+	if jade <= 0 {
 		return nil, gamedata.GameError(5)
 	}
 
@@ -275,9 +275,9 @@ func rpc_C2S_BuyOneGaChaByJade(agent *logic.PlayerAgent, arg interface{}) (inter
 }
 
 type googlePlayPurchaseData struct {
-	OrderId string `json:"orderId"`
-	PurchaseState int `json:"purchaseState"`
-	ProductId string `json:"productId"`
+	OrderId          string `json:"orderId"`
+	PurchaseState    int    `json:"purchaseState"`
+	ProductId        string `json:"productId"`
 	DeveloperPayload string `json:"developerPayload"`
 }
 
@@ -334,7 +334,7 @@ func rpc_C2S_GooglePlayRecharge(agent *logic.PlayerAgent, arg interface{}) (inte
 
 	shopCpt := player.GetComponent(consts.ShopCpt).(*shopComponent)
 	if !isTest && shopCpt.isGooglePlayOrderComplete(payData.OrderId) {
-		glog.Errorf("rpc_C2S_GooglePlayRecharge google order isComplete, uid=%d, orderID=%s, InappPurchaseData=%s, " +
+		glog.Errorf("rpc_C2S_GooglePlayRecharge google order isComplete, uid=%d, orderID=%s, InappPurchaseData=%s, "+
 			"isTest=%v", uid, payData.OrderId, arg2.InappPurchaseData, isTest)
 		return reply, nil
 	}
@@ -346,14 +346,14 @@ func rpc_C2S_GooglePlayRecharge(agent *logic.PlayerAgent, arg interface{}) (inte
 		return reply, nil
 	}
 	if order.isComplete() {
-		glog.Errorf("rpc_C2S_GooglePlayRecharge cp order isComplete, uid=%d, cpOrderID=%s, InappPurchaseData=%s, " +
+		glog.Errorf("rpc_C2S_GooglePlayRecharge cp order isComplete, uid=%d, cpOrderID=%s, InappPurchaseData=%s, "+
 			"isTest=%v", uid, payData.DeveloperPayload, arg2.InappPurchaseData, isTest)
 		return reply, nil
 	}
 
 	order.setChannelOrderID(payData.OrderId)
 	order.setCurrency(arg2.Currency)
-	reply = mod.payment.onRecharge(player, order, "play.google.com", float64(arg2.Money) / 1000000.0, false)
+	reply = mod.payment.onRecharge(player, order, "play.google.com", float64(arg2.Money)/1000000.0, false)
 	if !isTest && reply.Errcode == pb.SdkRechargeResult_Success {
 		shopCpt.googlePlayOrderComplete(payData.OrderId)
 	}
@@ -410,7 +410,7 @@ func rpc_C2S_BuyVipCard(agent *logic.PlayerAgent, arg interface{}) (interface{},
 		vipSt.Over(funcPrice.VipContinuedTime)
 	}
 
-	headFrame := ""  //vipCardGameData.HeadFrame
+	headFrame := "" //vipCardGameData.HeadFrame
 	//if headFrame != "" {
 	//	if !module.Bag.HasItem(player, consts.ItHeadFrame, headFrame) {
 	//		module.Bag.AddHeadFrame(player, vipCardGameData.HeadFrame)
@@ -420,7 +420,7 @@ func rpc_C2S_BuyVipCard(agent *logic.PlayerAgent, arg interface{}) (interface{},
 	//}
 
 	reply := &pb.BuyVipCardReply{
-		HeadFrame: headFrame,
+		HeadFrame:  headFrame,
 		RemainTime: -1,
 	}
 
@@ -505,7 +505,6 @@ func rpc_C2S_BuyRandomShop(agent *logic.PlayerAgent, arg interface{}) (interface
 	return player.GetComponent(consts.ShopCpt).(*shopComponent).getRandomShop().buy(arg.(*pb.BuyRandomShopArg))
 }
 
-
 func rpc_C2S_IosRecharge(agent *logic.PlayerAgent, arg interface{}) (interface{}, error) {
 	uid := agent.GetUid()
 	player := module.Player.GetPlayer(uid)
@@ -531,7 +530,7 @@ func rpc_C2S_TestRecharge(agent *logic.PlayerAgent, arg interface{}) (interface{
 	uid := agent.GetUid()
 	player := module.Player.GetPlayer(uid)
 	arg2 := arg.(*pb.IosRechargeArg)
-	orderID := fmt.Sprintf("%d%d", uid, time.Now().UnixNano() / 1000)
+	orderID := fmt.Sprintf("%d%d", uid, time.Now().UnixNano()/1000)
 	order := newOrder(orderID, arg2.GoodsID, "", player)
 	order.setIsTest()
 	return mod.payment.onRecharge(player, order, player.GetChannel(), 0, false), nil
@@ -592,8 +591,8 @@ func registerRpc() {
 	logic.RegisterAgentRpcHandler(pb.MessageID_C2S_FETCH_SHOP_DATA, rpc_C2S_FetchShopData)
 	logic.RegisterAgentRpcHandler(pb.MessageID_C2S_BUY_SOLDTREASURE, rpc_C2S_BuySoldTreasure)
 	logic.RegisterAgentRpcHandler(pb.MessageID_C2S_BUY_GOLD, rpc_C2S_BuyGold)
-	logic.RegisterAgentRpcHandler(pb.MessageID_C2S_BUY_JADE, rpc_C2S_BuyJade)  // 已废弃
-	logic.RegisterAgentRpcHandler(pb.MessageID_C2S_BUY_LIMIT_GITF, rpc_C2S_BuyLimitGift)  // 已废弃
+	logic.RegisterAgentRpcHandler(pb.MessageID_C2S_BUY_JADE, rpc_C2S_BuyJade)            // 已废弃
+	logic.RegisterAgentRpcHandler(pb.MessageID_C2S_BUY_LIMIT_GITF, rpc_C2S_BuyLimitGift) // 已废弃
 	logic.RegisterAgentRpcHandler(pb.MessageID_C2S_WATCH_SHOP_FREE_ADS, rpc_C2S_WatchShopAddGoldAds)
 	logic.RegisterAgentRpcHandler(pb.MessageID_C2S_SDK_CREATE_ORDER, rpc_C2S_SdkCreateOrder)
 	logic.RegisterAgentRpcHandler(pb.MessageID_C2S_IOS_PRE_PAY, rpc_C2S_IosPrePay)

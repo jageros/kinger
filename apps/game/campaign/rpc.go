@@ -1,16 +1,16 @@
 package campaign
 
 import (
-	gconsts "kinger/gopuppy/common/consts"
-	"kinger/gopuppy/apps/logic"
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common/wordfilter"
-	"kinger/gopuppy/network"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/config"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	gconsts "kinger/gopuppy/common/consts"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/wordfilter"
+	"kinger/gopuppy/network"
 	"kinger/proto/pb"
 )
 
@@ -34,10 +34,10 @@ func rpc_C2S_FetchCamoaignInfo(agent *logic.PlayerAgent, arg interface{}) (inter
 	}
 
 	return agent.CallBackend(pb.MessageID_G2CA_FETCH_CAMPAIGN_INFO, &pb.CampaignSimplePlayer{
-		Name: player.GetName(),
-		HeadImg: player.GetHeadImgUrl(),
+		Name:      player.GetName(),
+		HeadImg:   player.GetHeadImgUrl(),
 		HeadFrame: player.GetHeadFrame(),
-		PvpScore: int32(module.Player.GetResource(player, consts.Score)),
+		PvpScore:  int32(module.Player.GetResource(player, consts.Score)),
 	})
 }
 
@@ -50,10 +50,10 @@ func rpc_C2S_SettleCity(agent *logic.PlayerAgent, arg interface{}) (interface{},
 
 	arg2 := arg.(*pb.TargetCity)
 	playerArg := &pb.CampaignSimplePlayer{
-		Name: player.GetName(),
-		HeadImg: player.GetHeadImgUrl(),
+		Name:      player.GetName(),
+		HeadImg:   player.GetHeadImgUrl(),
 		HeadFrame: player.GetHeadFrame(),
-		PvpScore: int32(module.Player.GetResource(player, consts.Score)),
+		PvpScore:  int32(module.Player.GetResource(player, consts.Score)),
 	}
 	return agent.CallBackend(pb.MessageID_G2CA_SETTLE_CITY, &pb.GSettleCityArg{
 		CityID: arg2.CityID,
@@ -74,7 +74,7 @@ func rpc_C2S_CreateCountry(agent *logic.PlayerAgent, arg interface{}) (interface
 		return nil, gamedata.GameError(1)
 	}
 
-	resCpt.ModifyResource(consts.Gold, - int(arg2.Gold), consts.RmrCreateCountry)
+	resCpt.ModifyResource(consts.Gold, -int(arg2.Gold), consts.RmrCreateCountry)
 	glog.Infof("rpc_C2S_CreateCountry, uid=%d, gold=%d", uid, arg2.Gold)
 
 	reply, err := agent.CallBackend(pb.MessageID_G2CA_CREATE_COUNTRY, arg)
@@ -175,7 +175,7 @@ func rpc_C2S_CityCapitalInjection(agent *logic.PlayerAgent, arg interface{}) (in
 	if !resCpt.HasResource(consts.Gold, int(arg2.Gold)) {
 		return nil, gamedata.GameError(2)
 	}
-	resCpt.ModifyResource(consts.Gold, - int(arg2.Gold), consts.RmrCityCapitalInjection)
+	resCpt.ModifyResource(consts.Gold, -int(arg2.Gold), consts.RmrCityCapitalInjection)
 
 	reply, err := agent.CallBackend(pb.MessageID_G2CA_CITY_CAPITAL_INJECTION, arg)
 	if err != nil {
@@ -212,7 +212,7 @@ func rpc_C2S_MoveCity(agent *logic.PlayerAgent, arg interface{}) (interface{}, e
 		if !resCpt.HasResource(consts.Gold, int(arg2.Gold)) {
 			return nil, gamedata.GameError(3)
 		}
-		resCpt.ModifyResource(consts.Gold, - int(arg2.Gold), consts.RmrMoveCity)
+		resCpt.ModifyResource(consts.Gold, -int(arg2.Gold), consts.RmrMoveCity)
 	}
 
 	reply, err = agent.CallBackend(pb.MessageID_G2CA_MOVE_CITY, &pb.TargetCity{
@@ -245,7 +245,7 @@ func rpc_C2S_CountryModifyName(agent *logic.PlayerAgent, arg interface{}) (inter
 	if !resCpt.HasResource(consts.Jade, jade) {
 		return nil, gamedata.GameError(1)
 	}
-	resCpt.ModifyResource(consts.Jade, - jade, consts.RmrCountryModifyName)
+	resCpt.ModifyResource(consts.Jade, -jade, consts.RmrCountryModifyName)
 
 	_, err := agent.CallBackend(pb.MessageID_G2CA_COUNTRY_MODIFY_NAME, arg)
 	if err != nil {
@@ -335,7 +335,7 @@ func rpc_C2S_EscapedFromJail(agent *logic.PlayerAgent, arg interface{}) (interfa
 		return nil, gamedata.GameError(100)
 	}
 
-	resCpt.ModifyResource(consts.Gold, - gold, consts.RmrEscapedFromJail)
+	resCpt.ModifyResource(consts.Gold, -gold, consts.RmrEscapedFromJail)
 	reply, err := agent.CallBackend(pb.MessageID_G2CA_ESCAPED_FROM_JAIL, nil)
 	if err != nil {
 		resCpt.ModifyResource(consts.Gold, gold, consts.RmrUnknownOutput)
@@ -361,7 +361,7 @@ func rpc_C2S_CampaignBuyGoods(agent *logic.PlayerAgent, arg interface{}) (interf
 		return nil, gamedata.GameError(2)
 	}
 
-	if !player.GetComponent(consts.CampaignCpt).(*campaignComponent).modifyContribution(- goods.getPrice()) {
+	if !player.GetComponent(consts.CampaignCpt).(*campaignComponent).modifyContribution(-goods.getPrice()) {
 		return nil, gamedata.GameError(3)
 	}
 

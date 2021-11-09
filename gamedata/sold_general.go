@@ -1,15 +1,15 @@
 package gamedata
 
 import (
-	"kinger/common/consts"
 	"encoding/json"
+	"kinger/common/consts"
 )
 
 type RebornSoldCard struct {
-	ID int `json:"__id__"`
-	CardID uint32 `json:"cardId"`
-	HonorPrice int `json:"honorPrice"`
-	Cnt int `json:"cnt"`
+	ID         int    `json:"__id__"`
+	CardID     uint32 `json:"cardId"`
+	HonorPrice int    `json:"honorPrice"`
+	Cnt        int    `json:"cnt"`
 }
 
 type RebornSoldCardGameData struct {

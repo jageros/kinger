@@ -1,12 +1,12 @@
 package cardpool
 
 import (
-	"kinger/gopuppy/apps/logic"
-	"kinger/gopuppy/network"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/network"
 	"kinger/proto/pb"
 	"strconv"
 )
@@ -187,7 +187,7 @@ func rpc_C2S_UnlockCardLevel(agent *logic.PlayerAgent, arg interface{}) (interfa
 	}
 
 	level := int(arg2.Level)
-	cardData := gamedata.GetGameData(consts.Pool).(*gamedata.PoolGameData).GetCard(arg2.CardID, level - 1)
+	cardData := gamedata.GetGameData(consts.Pool).(*gamedata.PoolGameData).GetCard(arg2.CardID, level-1)
 	if cardData == nil || cardData.ConsumeBook <= 0 {
 		return nil, gamedata.GameError(1)
 	}
@@ -202,7 +202,7 @@ func rpc_C2S_UnlockCardLevel(agent *logic.PlayerAgent, arg interface{}) (interfa
 		return nil, gamedata.GameError(4)
 	}
 
-	resCpt.ModifyResource(consts.SkyBook, - cardData.ConsumeBook, consts.RmrUnlockCardLevel)
+	resCpt.ModifyResource(consts.SkyBook, -cardData.ConsumeBook, consts.RmrUnlockCardLevel)
 	card2.setMaxUnlockLevel(level)
 
 	card2.pushClient(player)
@@ -257,7 +257,7 @@ func rpc_C2S_BackCardUnlock(agent *logic.PlayerAgent, arg interface{}) (interfac
 
 	for resType, resAmount := range needRes {
 		reply.Resources = append(reply.Resources, &pb.Resource{
-			Type: int32(resType),
+			Type:   int32(resType),
 			Amount: int32(resAmount),
 		})
 	}
@@ -322,7 +322,7 @@ func rpc_G2G_GetCardLevelLog(_ *network.Session, arg interface{}) (interface{}, 
 		}
 
 		if arg2.CardID > 0 {
-			packLevelLog( log.getCardLog(arg2.CardID) )
+			packLevelLog(log.getCardLog(arg2.CardID))
 		} else {
 			log.forEachCardLog(packLevelLog)
 		}

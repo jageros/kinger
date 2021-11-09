@@ -1,10 +1,10 @@
 package main
 
 import (
-	"kinger/gamedata"
 	"kinger/common/consts"
-	"time"
+	"kinger/gamedata"
 	"kinger/gopuppy/common"
+	"time"
 	//"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/timer"
 )
@@ -14,14 +14,14 @@ import (
 type foolRuleSt struct {
 	matchAiData *gamedata.AiMatchGameData
 	uid2Player  map[common.UUid]*matchPlayer
-	uid2Robot map[common.UUid]iMatchRobot
+	uid2Robot   map[common.UUid]iMatchRobot
 }
 
 func newFoolRule() iMatchRule {
 	return &foolRuleSt{
 		matchAiData: gamedata.GetGameData(consts.AiMatch).(*gamedata.AiMatchGameData),
 		uid2Player:  map[common.UUid]*matchPlayer{},
-		uid2Robot: map[common.UUid]iMatchRobot{},
+		uid2Robot:   map[common.UUid]iMatchRobot{},
 	}
 }
 

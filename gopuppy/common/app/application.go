@@ -14,8 +14,8 @@ import (
 	"kinger/gopuppy/common/glog"
 
 	"github.com/sevlyar/go-daemon"
-	"kinger/gopuppy/db"
 	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/db"
 )
 
 type IService interface {

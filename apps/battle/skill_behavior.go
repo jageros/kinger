@@ -1,22 +1,22 @@
 package main
 
 import (
-	"kinger/gamedata"
-	"kinger/proto/pb"
 	"fmt"
-	"strconv"
-	"strings"
-	"kinger/gopuppy/common/glog"
 	"kinger/common/consts"
-	"math"
+	"kinger/common/utils"
+	"kinger/gamedata"
 	"kinger/gopuppy/common"
 	"kinger/gopuppy/common/evq"
-	"kinger/common/utils"
+	"kinger/gopuppy/common/glog"
+	"kinger/proto/pb"
+	"math"
+	"strconv"
+	"strings"
 )
 
 var (
 	allSkillBehaviors = map[int32]*skillBehavior{}
-	drawnGameAction iSkillAction
+	drawnGameAction   iSkillAction
 )
 
 type targetAmountCondition struct {
@@ -48,7 +48,7 @@ func newTargetAmountCondition(condition string) *targetAmountCondition {
 		return nil
 	}
 
-	return &targetAmountCondition {
+	return &targetAmountCondition{
 		operator: op,
 		left:     strings.TrimSpace(condition[:i]),
 		right:    strings.TrimSpace(condition[i+len(op):]),
@@ -106,7 +106,7 @@ type iSkillAction interface {
 }
 
 type baseSkillAction struct {
-	targetIDs   []int
+	targetIDs []int
 }
 
 func (at *baseSkillAction) getTargetIDs() []int {
@@ -116,8 +116,8 @@ func (at *baseSkillAction) getTargetIDs() []int {
 type valueAction struct {
 	baseSkillAction
 	value       string
-	modifyType    int    // 1:minValue  2:changeToMax
-	mcMovieID string
+	modifyType  int // 1:minValue  2:changeToMax
+	mcMovieID   string
 	textMovieID int
 }
 
@@ -159,10 +159,10 @@ func newValueAction(skillData *gamedata.Skill, valueInfo []string, movieInfo []s
 
 	return &valueAction{
 		baseSkillAction: baseSkillAction{targetIDs: targetIDs},
-		value:       value,
-		modifyType:    modifyType,
-		mcMovieID: mcMovieID,
-		textMovieID: textMovieID,
+		value:           value,
+		modifyType:      modifyType,
+		mcMovieID:       mcMovieID,
+		textMovieID:     textMovieID,
 	}
 }
 
@@ -201,10 +201,10 @@ func (at *valueAction) preModifyValue(variableAmount int, actionTargets []iTarge
 	if value < 0 {
 		preModifyValueTriggerType = preSubValueTrigger
 	}
-	acts, triggerRes, _ = situation.getTriggerMgr().trigger(map[int][]iTarget{preModifyValueTriggerType:actionTargets}, &triggerContext{
-		triggerType: preModifyValueTriggerType,
+	acts, triggerRes, _ = situation.getTriggerMgr().trigger(map[int][]iTarget{preModifyValueTriggerType: actionTargets}, &triggerContext{
+		triggerType:        preModifyValueTriggerType,
 		modifyValueTargets: actionTargets,
-		modifyValue: value,
+		modifyValue:        value,
 	})
 	return
 }
@@ -259,17 +259,17 @@ func (at *valueAction) invoke(sk *skill, skOwner iCaster, triggerType int, trigg
 	}
 
 	modifyValueAct := &pb.ModifyValueAct{
-		McMovieID: at.mcMovieID,
+		McMovieID:   at.mcMovieID,
 		TextMovieID: int32(at.textMovieID),
-		ModifyType: int32(at.modifyType),
-		OwnerObjID: int32(skOwner.getObjID()),
+		ModifyType:  int32(at.modifyType),
+		OwnerObjID:  int32(skOwner.getObjID()),
 	}
 	if at.modifyType != 2 {
 
 		for v, ts := range value2Targets {
 			modifyValueAct.Items = append(modifyValueAct.Items, &pb.ModifyValueActItem{
-				Value:      int32(v),
-				Targets:    ts,
+				Value:   int32(v),
+				Targets: ts,
 			})
 
 			for _, objID := range ts {
@@ -285,7 +285,7 @@ func (at *valueAction) invoke(sk *skill, skOwner iCaster, triggerType int, trigg
 			v, ok := target2MaxValue[int(objID)]
 			if ok {
 				modifyValueAct.Items = append(modifyValueAct.Items, &pb.ModifyValueActItem{
-					Value: int32(v),
+					Value:   int32(v),
 					Targets: []int32{objID},
 				})
 			}
@@ -307,7 +307,7 @@ func (at *valueAction) invoke(sk *skill, skOwner iCaster, triggerType int, trigg
 	}
 
 	action := &clientAction{
-		actID: pb.ClientAction_ModifyValue,
+		actID:  pb.ClientAction_ModifyValue,
 		actMsg: modifyValueAct,
 	}
 
@@ -323,7 +323,7 @@ func (at *valueAction) invoke(sk *skill, skOwner iCaster, triggerType int, trigg
 
 type textMovieAction struct {
 	baseSkillAction
-	movieID int
+	movieID  int
 	playType int
 	boutTime int
 }
@@ -351,9 +351,9 @@ func newTextMovieAction(skillData *gamedata.Skill, textMovieInfo []int) *textMov
 
 	return &textMovieAction{
 		baseSkillAction: baseSkillAction{targetIDs: targetIDs},
-		movieID:    movieID,
-		playType:    playerType,
-		boutTime:    boutTime,
+		movieID:         movieID,
+		playType:        playerType,
+		boutTime:        boutTime,
 	}
 }
 
@@ -371,7 +371,7 @@ func (at *textMovieAction) invoke(sk *skill, skOwner iCaster, triggerType int, t
 		act, ok := value2Act[value]
 		if !ok {
 			act = &clientAction{
-				actID:  pb.ClientAction_TextMovie,
+				actID: pb.ClientAction_TextMovie,
 				actMsg: &pb.TextMovieAct{
 					MovieID:     int32(at.movieID),
 					PlayType:    int32(at.playType),
@@ -398,7 +398,7 @@ func (at *textMovieAction) invoke(sk *skill, skOwner iCaster, triggerType int, t
 
 type mcMovieAction struct {
 	baseSkillAction
-	movieID string
+	movieID  string
 	playType int
 	boutTime int
 }
@@ -428,9 +428,9 @@ func newMcMovieAction(skillData *gamedata.Skill, movieInfo []string) *mcMovieAct
 
 	return &mcMovieAction{
 		baseSkillAction: baseSkillAction{targetIDs: targetIDs},
-		movieID:    movieID,
-		playType:    playerType,
-		boutTime:    boutTime,
+		movieID:         movieID,
+		playType:        playerType,
+		boutTime:        boutTime,
 	}
 }
 
@@ -455,9 +455,9 @@ func (at *mcMovieAction) invoke(sk *skill, skOwner iCaster, triggerType int, tri
 	skillActs = []*clientAction{&clientAction{
 		actID: pb.ClientAction_Movie,
 		actMsg: &pb.MovieAct{
-			MovieID: at.movieID,
-			PlayType: int32(at.playType),
-			Targets: targets,
+			MovieID:    at.movieID,
+			PlayType:   int32(at.playType),
+			Targets:    targets,
 			OwnerObjID: int32(ownerObjID),
 		},
 	}}
@@ -538,7 +538,7 @@ func (at *turnOverAction) invoke(sk *skill, skOwner iCaster, triggerType int, tr
 		return
 	}
 
-// --------------------------- 翻面前 -------------------------------
+	// --------------------------- 翻面前 -------------------------------
 	triggerCxt2 := &triggerContext{
 		triggerType: preBeTurnTrigger,
 	}
@@ -559,11 +559,11 @@ func (at *turnOverAction) invoke(sk *skill, skOwner iCaster, triggerType int, tr
 		skillActs, _, _ = triggerMgr.trigger(map[int][]iTarget{preBeTurnTrigger: preTurnOvers}, triggerCxt2)
 	}
 
-// --------------------------- 翻面后 -------------------------------
+	// --------------------------- 翻面后 -------------------------------
 	var turnOvers []iTarget
 	turnOverAct := &pb.TurnOverAct{}
 	skillActs = append(skillActs, &clientAction{
-		actID: pb.ClientAction_TurnOver,
+		actID:  pb.ClientAction_TurnOver,
 		actMsg: turnOverAct,
 	})
 	triggerCxt2.triggerType = turnTrigger
@@ -641,13 +641,13 @@ func newSkillChangeAction(skillData *gamedata.Skill, skillChangeInfo []int) *ski
 	}
 
 	sk := &skillChange{
-		skillID: skillID,
+		skillID:     skillID,
 		boutTimeout: boutTimeout,
 	}
 	if modifyType == 1 {
-		act.addSkills = []*skillChange{ sk }
+		act.addSkills = []*skillChange{sk}
 	} else {
-		act.delSkills = []*skillChange{ sk }
+		act.delSkills = []*skillChange{sk}
 	}
 
 	return act
@@ -655,7 +655,8 @@ func newSkillChangeAction(skillData *gamedata.Skill, skillChangeInfo []int) *ski
 
 func newSkillChangeActions(skillData *gamedata.Skill) []*skillChangeAction {
 	var actions []*skillChangeAction
-L:	for _, skillChangeInfo := range skillData.SkillChange {
+L:
+	for _, skillChangeInfo := range skillData.SkillChange {
 		action := newSkillChangeAction(skillData, skillChangeInfo)
 		if action == nil {
 			glog.Errorf("newSkillChangeActions error skillID=%d %v", skillData.ID, skillChangeInfo)
@@ -706,7 +707,7 @@ func (at *skillChangeAction) invoke(sk *skill, skOwner iCaster, triggerType int,
 			preAddSkillIDs = append(preAddSkillIDs, sc.skillID)
 		}
 		acts, triggerRes, _ = situation.getTriggerMgr().trigger(map[int][]iTarget{preAddSkillTrigger: actionTargets}, &triggerContext{
-			triggerType: preAddSkillTrigger,
+			triggerType:    preAddSkillTrigger,
 			preAddSkillIDs: preAddSkillIDs,
 		})
 	}
@@ -752,7 +753,7 @@ func (at *skillChangeAction) invoke(sk *skill, skOwner iCaster, triggerType int,
 
 type disCardAction struct {
 	baseSkillAction
-	targetID2Amount map[int]string
+	targetID2Amount  map[int]string
 	targetID2MovieID map[int]int
 }
 
@@ -805,9 +806,9 @@ func newDisCardAction(skillData *gamedata.Skill, disCardInfos [][]string) *disCa
 	}
 
 	return &disCardAction{
-		baseSkillAction: baseSkillAction{targetIDs: targetIDSet.ToList()},
+		baseSkillAction:  baseSkillAction{targetIDs: targetIDSet.ToList()},
 		targetID2MovieID: targetID2MovieID,
-		targetID2Amount: targetID2Amount,
+		targetID2Amount:  targetID2Amount,
 	}
 }
 
@@ -850,16 +851,16 @@ func (at *disCardAction) invoke(sk *skill, skOwner iCaster, triggerType int, tri
 
 		if len(cardObjIds) > 0 {
 			disCardAct.Items = append(disCardAct.Items, &pb.DisCardActItem{
-				Uid: uint64(f.getUid()),
+				Uid:        uint64(f.getUid()),
 				CardObjIDs: cardObjIds,
-				MovieID: int32(at.targetID2MovieID[targetID]),
+				MovieID:    int32(at.targetID2MovieID[targetID]),
 			})
 		}
 	}
 
 	if len(disCardAct.Items) > 0 {
 		skillActs = append(skillActs, &clientAction{
-			actID: pb.ClientAction_DisCard,
+			actID:  pb.ClientAction_DisCard,
 			actMsg: disCardAct,
 		})
 	}
@@ -869,14 +870,14 @@ func (at *disCardAction) invoke(sk *skill, skOwner iCaster, triggerType int, tri
 
 type drawCardAction struct {
 	baseSkillAction
-	targetID2Amount map[int]string
+	targetID2Amount  map[int]string
 	targetID2MovieID map[int]int
 }
 
 func newDrawCardAction(skillData *gamedata.Skill, drawCardInfos [][]string) *drawCardAction {
 	var targetIDs []int
 	act := &drawCardAction{
-		targetID2Amount: map[int]string{},
+		targetID2Amount:  map[int]string{},
 		targetID2MovieID: map[int]int{},
 	}
 
@@ -966,9 +967,9 @@ func (at *drawCardAction) invoke(sk *skill, skOwner iCaster, triggerType int, tr
 
 		if len(cardMsg) > 0 {
 			drawCardAct.Items = append(drawCardAct.Items, &pb.DrawCardItem{
-				Uid: uint64(f.getUid()),
-				Cards: cardMsg,
-				MovieID: int32(at.targetID2MovieID[targetID]),
+				Uid:        uint64(f.getUid()),
+				Cards:      cardMsg,
+				MovieID:    int32(at.targetID2MovieID[targetID]),
 				OwnerObjID: int32(skOwner.getObjID()),
 			})
 
@@ -978,7 +979,7 @@ func (at *drawCardAction) invoke(sk *skill, skOwner iCaster, triggerType int, tr
 
 	if len(drawCardAct.Items) > 0 {
 		skillActs = append(skillActs, &clientAction{
-			actID: pb.ClientAction_DrawCard,
+			actID:  pb.ClientAction_DrawCard,
 			actMsg: drawCardAct,
 		})
 	}
@@ -1004,7 +1005,7 @@ func newPointChangeActions(skillData *gamedata.Skill) []*pointChangeAction {
 		for _, targetID := range skillData.TargetAct {
 			var action *pointChangeAction
 			for _, act := range actions {
-				if act.targetIDs[0] == 	targetID {
+				if act.targetIDs[0] == targetID {
 					action = act
 					break
 				}
@@ -1095,10 +1096,10 @@ func (at *pointChangeAction) invoke(sk *skill, skOwner iCaster, triggerType int,
 
 type moveAction struct {
 	baseSkillAction
-	fromTargetID int  // 相对于谁移
-	moveType int   // 1.靠近fromTargetID  2.远离fromTargetID  3.移到fromTargetID那个格子
-	movieID string
-	n int   // 移多少格
+	fromTargetID int // 相对于谁移
+	moveType     int // 1.靠近fromTargetID  2.远离fromTargetID  3.移到fromTargetID那个格子
+	movieID      string
+	n            int // 移多少格
 }
 
 func newMoveAction(skillData *gamedata.Skill, moveInfo []string) *moveAction {
@@ -1148,11 +1149,11 @@ func newMoveAction(skillData *gamedata.Skill, moveInfo []string) *moveAction {
 	}
 
 	return &moveAction{
-		baseSkillAction: baseSkillAction{targetIDs:targetIDs},
-		fromTargetID: fromTargetID,
-		moveType:     moveType,
-		movieID:     movieID,
-		n:          n,
+		baseSkillAction: baseSkillAction{targetIDs: targetIDs},
+		fromTargetID:    fromTargetID,
+		moveType:        moveType,
+		movieID:         movieID,
+		n:               n,
 	}
 }
 
@@ -1176,7 +1177,7 @@ func (at *moveAction) moveToTargetGrid(skOwner iCaster, toTarget *deskGrid, acti
 
 		var result *triggerResult
 		acts, result, _ = situation.getTriggerMgr().trigger(map[int][]iTarget{beforeMoveTrigger: []iTarget{targetCard}},
-			&triggerContext{triggerType:beforeMoveTrigger, preMoveCards:[]iTarget{targetCard}})
+			&triggerContext{triggerType: beforeMoveTrigger, preMoveCards: []iTarget{targetCard}})
 
 		if !result.canMove(targetCard) {
 			break
@@ -1191,10 +1192,10 @@ func (at *moveAction) moveToTargetGrid(skOwner iCaster, toTarget *deskGrid, acti
 
 		moveTargets = []iTarget{targetCard}
 		moveActs = []*pb.MoveAct{&pb.MoveAct{
-			Target: int32(targetCard.getObjID()),
+			Target:     int32(targetCard.getObjID()),
 			TargetGrid: int32(newGridObjId),
-			MovieID: at.movieID,
-			MovePos: consts.UP,
+			MovieID:    at.movieID,
+			MovePos:    consts.UP,
 			OwnerObjID: int32(ownerObjID),
 		}}
 		break
@@ -1249,7 +1250,7 @@ func (at *moveAction) moveFromTarget(skOwner iCaster, fromTarget *fightCard, act
 					}
 
 					if canMove {
-						newGrid = situation.getTargetInGrid(fromGrid-column).(*deskGrid)
+						newGrid = situation.getTargetInGrid(fromGrid - column).(*deskGrid)
 					}
 				} else if targetGrid > fromGrid {
 					// 下
@@ -1266,7 +1267,7 @@ func (at *moveAction) moveFromTarget(skOwner iCaster, fromTarget *fightCard, act
 					}
 
 					if canMove {
-						newGrid = situation.getTargetInGrid(fromGrid+column).(*deskGrid)
+						newGrid = situation.getTargetInGrid(fromGrid + column).(*deskGrid)
 					}
 				} else {
 					continue
@@ -1289,7 +1290,7 @@ func (at *moveAction) moveFromTarget(skOwner iCaster, fromTarget *fightCard, act
 					}
 
 					if canMove {
-						newGrid = situation.getTargetInGrid(fromGrid-1).(*deskGrid)
+						newGrid = situation.getTargetInGrid(fromGrid - 1).(*deskGrid)
 					}
 				} else if targetGrid > fromGrid {
 					// 右
@@ -1306,7 +1307,7 @@ func (at *moveAction) moveFromTarget(skOwner iCaster, fromTarget *fightCard, act
 					}
 
 					if canMove {
-						newGrid = situation.getTargetInGrid(fromGrid+1).(*deskGrid)
+						newGrid = situation.getTargetInGrid(fromGrid + 1).(*deskGrid)
 					}
 				} else {
 					continue
@@ -1412,10 +1413,10 @@ func (at *moveAction) moveFromTarget(skOwner iCaster, fromTarget *fightCard, act
 			moveTargetNewGird[c.getObjID()] = newGrid
 		} else {
 			moveActs = append(moveActs, &pb.MoveAct{
-				Target: int32(c.getObjID()),
+				Target:     int32(c.getObjID()),
 				TargetGrid: -1,
-				MovieID: at.movieID,
-				MovePos: int32(movePos),
+				MovieID:    at.movieID,
+				MovePos:    int32(movePos),
 				OwnerObjID: int32(ownerObjID),
 			})
 		}
@@ -1425,7 +1426,7 @@ func (at *moveAction) moveFromTarget(skOwner iCaster, fromTarget *fightCard, act
 	var triggerRes *triggerResult
 	if len(preMoveTargets) > 0 {
 		acts, triggerRes, _ = situation.getTriggerMgr().trigger(map[int][]iTarget{beforeMoveTrigger: preMoveTargets},
-			&triggerContext{triggerType:beforeMoveTrigger, preMoveCards: preMoveTargets})
+			&triggerContext{triggerType: beforeMoveTrigger, preMoveCards: preMoveTargets})
 	}
 
 	for _, t := range preMoveTargets {
@@ -1446,10 +1447,10 @@ func (at *moveAction) moveFromTarget(skOwner iCaster, fromTarget *fightCard, act
 		moveTargets = append(moveTargets, c)
 		movePos := moveTargetPos[c.getObjID()]
 		moveActs = append(moveActs, &pb.MoveAct{
-			Target: int32(c.getObjID()),
+			Target:     int32(c.getObjID()),
 			TargetGrid: int32(newGridObjID),
-			MovieID: at.movieID,
-			MovePos: int32(movePos),
+			MovieID:    at.movieID,
+			MovePos:    int32(movePos),
 			OwnerObjID: int32(ownerObjID),
 		})
 	}
@@ -1495,7 +1496,7 @@ func (at *moveAction) invoke(sk *skill, skOwner iCaster, triggerType int, trigge
 	if len(moveTargets) > 0 {
 		afterMoveActs, _, _ = situation.getTriggerMgr().trigger(map[int][]iTarget{afterMoveTrigger: moveTargets}, &triggerContext{
 			triggerType: afterMoveTrigger,
-			moveCards: moveTargets,
+			moveCards:   moveTargets,
 		})
 
 		result.moveCards = moveTargets
@@ -1525,7 +1526,7 @@ func newDestroyActions(skillData *gamedata.Skill) ([]*destroyAction, []*reEnterB
 			}
 			reEnterBattleActions = append(reEnterBattleActions, &reEnterBattleAction{
 				baseSkillAction: baseSkillAction{[]int{destroyInfo[1]}},
-				gridTargetID: girdTargetID,
+				gridTargetID:    girdTargetID,
 			})
 			isCleanDestory = false
 		}
@@ -1575,15 +1576,15 @@ func (at *destroyAction) invoke(sk *skill, skOwner iCaster, triggerType int, tri
 
 		if at.isClean {
 			acts2, _, _ = situation.getTriggerMgr().trigger(map[int][]iTarget{afterCleanDestroyTrigger: targets}, &triggerContext{
-				triggerType: afterCleanDestroyTrigger,
-				destoryer: skOwner,
+				triggerType:  afterCleanDestroyTrigger,
+				destoryer:    skOwner,
 				beDestoryers: targets,
 			})
 			acts = append(acts, acts2...)
 		}
 
 		skillActs = []*clientAction{&clientAction{
-			actID: pb.ClientAction_Destroy,
+			actID:  pb.ClientAction_Destroy,
 			actMsg: &pb.DestroyAct{Targets: targetIDs},
 		}}
 	}
@@ -1667,7 +1668,7 @@ func (at *reEnterBattleAction) invoke(sk *skill, skOwner iCaster, triggerType in
 		enterBattleActions = append(enterBattleActions, func() {
 
 			skillActs = append(skillActs, &clientAction{
-				actID: pb.ClientAction_Destroy,
+				actID:  pb.ClientAction_Destroy,
 				actMsg: &pb.DestroyAct{Targets: []int32{int32(targetCard.getObjID())}},
 			})
 
@@ -1677,10 +1678,10 @@ func (at *reEnterBattleAction) invoke(sk *skill, skOwner iCaster, triggerType in
 			skillActs = append(skillActs, &clientAction{
 				actID: pb.ClientAction_Summon,
 				actMsg: &pb.SummonAct{
-					Uid: uint64(fighter.getUid()),
-					GridObjID: int32(gridObj.getObjID()),
-					Card: cardMsg,
-					IsInFog: isInFog,
+					Uid:           uint64(fighter.getUid()),
+					GridObjID:     int32(gridObj.getObjID()),
+					Card:          cardMsg,
+					IsInFog:       isInFog,
 					IsPublicEnemy: isPublicEnemy,
 				},
 			})
@@ -1756,9 +1757,9 @@ func (at *returnAction) invoke(sk *skill, skOwner iCaster, triggerType int, trig
 		skillActs = append(skillActs, &clientAction{
 			actID: pb.ClientAction_Return,
 			actMsg: &pb.ReturnAct{
-				Uid: uint64(f.getUid()),
+				Uid:       uint64(f.getUid()),
 				CardObjID: int32(card.getObjID()),
-				Card: reCard.packMsg(),
+				Card:      reCard.packMsg(),
 			},
 		})
 	}
@@ -1785,14 +1786,14 @@ func (at *returnAction) invoke(sk *skill, skOwner iCaster, triggerType int, trig
 
 type summonAction struct {
 	baseSkillAction
-	cardID   uint32
-	side     int
+	cardID uint32
+	side   int
 }
 
 func newSummonAction(skillData *gamedata.Skill, summonInfo []int) *summonAction {
 	act := &summonAction{
-		baseSkillAction: baseSkillAction{targetIDs:[]int{summonInfo[1]}},
-		cardID:   uint32(summonInfo[0]),
+		baseSkillAction: baseSkillAction{targetIDs: []int{summonInfo[1]}},
+		cardID:          uint32(summonInfo[0]),
 	}
 	if summonInfo[2] == 1 {
 		act.side = sEnemy
@@ -1898,10 +1899,10 @@ func (at *summonAction) invoke(sk *skill, skOwner iCaster, triggerType int, trig
 		skillActs = append(skillActs, &clientAction{
 			actID: pb.ClientAction_Summon,
 			actMsg: &pb.SummonAct{
-				Uid: uint64(ownerFighter.getUid()),
-				GridObjID: int32(gridObj.getObjID()),
-				Card: cardMsg,
-				IsInFog: isInFog,
+				Uid:           uint64(ownerFighter.getUid()),
+				GridObjID:     int32(gridObj.getObjID()),
+				Card:          cardMsg,
+				IsInFog:       isInFog,
 				IsPublicEnemy: isPublicEnemy,
 			},
 		})
@@ -2021,7 +2022,8 @@ func (at *attackAction) invoke(sk *skill, skOwner iCaster, triggerType int, trig
 			}
 
 			targets := situation.getTargetMgr().findTarget(sk, skOwner, atkTargetID, triggerCxt, cacheTargets)
-L:			for _, target := range targets {
+		L:
+			for _, target := range targets {
 				for _, t := range attackTargets {
 					if t.getObjID() == target.getObjID() {
 						continue L
@@ -2094,7 +2096,7 @@ func (at *copyAction) invoke(sk *skill, skOwner iCaster, triggerType int, trigge
 		skillActs = append(skillActs, &clientAction{
 			actID: pb.ClientAction_Copy,
 			actMsg: &pb.CopyAct{
-				Target: int32(c.getObjID()),
+				Target:   int32(c.getObjID()),
 				CopyCard: c.packMsg(),
 				OwnerUid: uint64(c.getControllerUid()),
 			},
@@ -2105,8 +2107,8 @@ func (at *copyAction) invoke(sk *skill, skOwner iCaster, triggerType int, trigge
 
 type goldGobAction struct {
 	baseSkillAction
-	gobType int    // 1:获得，2:失去
-	money int
+	gobType int // 1:获得，2:失去
+	money   int
 }
 
 func newGoldGobAction(skillData *gamedata.Skill, goldGobInfo []int) *goldGobAction {
@@ -2138,7 +2140,7 @@ func (at *goldGobAction) invoke(sk *skill, skOwner iCaster, triggerType int, tri
 		return
 	}
 	if at.gobType == 2 {
-		gold = - gold
+		gold = -gold
 	}
 	isLadder := situation.battleType == consts.BtPvp || situation.battleType == consts.BtCampaign
 
@@ -2153,8 +2155,8 @@ func (at *goldGobAction) invoke(sk *skill, skOwner iCaster, triggerType int, tri
 		acts = append(acts, &clientAction{
 			actID: pb.ClientAction_GoldGob,
 			actMsg: &pb.GoldGobAct{
-				Uid: uid,
-				Gold: int32(gold),
+				Uid:      uid,
+				Gold:     int32(gold),
 				IsLadder: isLadder,
 			},
 		})
@@ -2164,7 +2166,7 @@ func (at *goldGobAction) invoke(sk *skill, skOwner iCaster, triggerType int, tri
 		evq.CallLater(func() {
 			uids.ForEach(func(uid uint64) bool {
 				utils.PlayerMqPublish(common.UUid(uid), pb.RmqType_Bonus, &pb.RmqBonus{
-					ChangeRes: []*pb.Resource{ &pb.Resource{Type: int32(consts.Gold), Amount: int32(gold)} },
+					ChangeRes: []*pb.Resource{&pb.Resource{Type: int32(consts.Gold), Amount: int32(gold)}},
 				})
 				return true
 			})
@@ -2196,7 +2198,7 @@ func (at *changeBoutTimeAction) invoke(sk *skill, skOwner iCaster, triggerType i
 		if !ok {
 			continue
 		}
-		f.setBoutTimeout( f.getBoutTimeout() + at.change )
+		f.setBoutTimeout(f.getBoutTimeout() + at.change)
 	}
 	return
 }
@@ -2227,7 +2229,7 @@ func (at *removeEquipAction) invoke(sk *skill, skOwner iCaster, triggerType int,
 
 	if len(delEquipAct.CardObjIDs) > 0 {
 		skillActs = append(skillActs, &clientAction{
-			actID: pb.ClientAction_DelEquip,
+			actID:  pb.ClientAction_DelEquip,
 			actMsg: delEquipAct,
 		})
 	}
@@ -2293,7 +2295,7 @@ func (at *switchPosAction) invoke(sk *skill, skOwner iCaster, triggerType int, t
 	moveTargets := []iTarget{targetCard, c}
 	var triggerRes *triggerResult
 	skillActs, triggerRes, _ = situation.getTriggerMgr().trigger(map[int][]iTarget{beforeMoveTrigger: moveTargets},
-		&triggerContext{triggerType:beforeMoveTrigger, preMoveCards:moveTargets})
+		&triggerContext{triggerType: beforeMoveTrigger, preMoveCards: moveTargets})
 
 	if !(triggerRes.canMove(targetCard) && triggerRes.canMove(c)) {
 		return
@@ -2308,26 +2310,26 @@ func (at *switchPosAction) invoke(sk *skill, skOwner iCaster, triggerType int, t
 	skillActs = append(skillActs, &clientAction{
 		actID: pb.ClientAction_SwitchPos,
 		actMsg: &pb.SwitchPosAct{
-			Target: int32(c.getObjID()),
+			Target:       int32(c.getObjID()),
 			SwitchTarget: int32(targetCard.getObjID()),
 		},
 	})
 
 	afterMoveActs, _, _ = situation.getTriggerMgr().trigger(map[int][]iTarget{afterMoveTrigger: moveTargets}, &triggerContext{
-		triggerType:afterMoveTrigger, moveCards:moveTargets})
+		triggerType: afterMoveTrigger, moveCards: moveTargets})
 	result.moveCards = moveTargets
 	return
 }
 
 type switchHandCardAction struct {
 	baseSkillAction
-	targetID2McMovieID map[int]string
+	targetID2McMovieID   map[int]string
 	targetID2TextMovieID map[int]int
 }
 
 func newSwitchHandCardAction(switchCardInfos [][]string) *switchHandCardAction {
 	act := &switchHandCardAction{
-		targetID2McMovieID: map[int]string{},
+		targetID2McMovieID:   map[int]string{},
 		targetID2TextMovieID: map[int]int{},
 	}
 
@@ -2377,17 +2379,17 @@ func (at *switchHandCardAction) invoke(sk *skill, skOwner iCaster, triggerType i
 		f.addHandCard(drawCard)
 		targetID := triggerCxt.getActonTargetID(t)
 		switchHandCardAct.Items = append(switchHandCardAct.Items, &pb.SwitchHandCardItem{
-			Uid: uint64(f.getUid()),
+			Uid:          uint64(f.getUid()),
 			DisCardObjID: int32(disCardObjID),
-			DrawCard: drawCard.packMsg(),
-			McMovieID: at.targetID2McMovieID[targetID],
-			TextMovieID: int32(at.targetID2TextMovieID[targetID]),
+			DrawCard:     drawCard.packMsg(),
+			McMovieID:    at.targetID2McMovieID[targetID],
+			TextMovieID:  int32(at.targetID2TextMovieID[targetID]),
 		})
 	}
 
 	if len(switchHandCardAct.Items) > 0 {
 		skillActs = append(skillActs, &clientAction{
-			actID: pb.ClientAction_SwitchHandCard,
+			actID:  pb.ClientAction_SwitchHandCard,
 			actMsg: switchHandCardAct,
 		})
 	}
@@ -2491,9 +2493,9 @@ func (at *tianxiangAction) invoke(sk *skill, skOwner iCaster, triggerType int, t
 		skillActs = []*clientAction{&clientAction{
 			actID: pb.ClientAction_TextMovie,
 			actMsg: &pb.TextMovieAct{
-				MovieID: int32(at.movieID),
-				PlayType: 1,
-				Targets: []int32{int32(skOwner.getObjID())},
+				MovieID:    int32(at.movieID),
+				PlayType:   1,
+				Targets:    []int32{int32(skOwner.getObjID())},
 				OwnerObjID: int32(skOwner.getObjID()),
 			},
 		}}
@@ -2554,9 +2556,9 @@ func (at *guoseAction) invoke(sk *skill, skOwner iCaster, triggerType int, trigg
 		skillActs = []*clientAction{&clientAction{
 			actID: pb.ClientAction_TextMovie,
 			actMsg: &pb.TextMovieAct{
-				MovieID: int32(at.movieID),
-				PlayType: 1,
-				Targets: []int32{int32(skOwner.getObjID())},
+				MovieID:    int32(at.movieID),
+				PlayType:   1,
+				Targets:    []int32{int32(skOwner.getObjID())},
 				OwnerObjID: int32(skOwner.getObjID()),
 			},
 		}}
@@ -2680,7 +2682,7 @@ func (at *forbidAddSkillAction) invoke(sk *skill, skOwner iCaster, triggerType i
 type attackBuffAction struct {
 	baseSkillAction
 	buff string
-	arg int
+	arg  int
 }
 
 func (at *attackBuffAction) invoke(sk *skill, skOwner iCaster, triggerType int, triggerTargets, actionTargets []iTarget,
@@ -2783,7 +2785,7 @@ func newOthAction(sb *skillBehavior, skillData *gamedata.Skill, othActionInfo []
 		sb.hasMoveAction = true
 		return &switchPosAction{
 			baseSkillAction: baseSkillAction{targetIDs: targetIDs},
-			switchTargetID: arg,
+			switchTargetID:  arg,
 		}, 0
 	case "biyue":
 		return &biyueAction{
@@ -2812,7 +2814,7 @@ func newOthAction(sb *skillBehavior, skillData *gamedata.Skill, othActionInfo []
 	case "forbidAddSkill":
 		return &forbidAddSkillAction{
 			baseSkillAction: baseSkillAction{targetIDs: targetIDs},
-			skillID: int32(arg),
+			skillID:         int32(arg),
 		}, int32(arg)
 
 	case "buff_arrow":
@@ -2836,8 +2838,8 @@ func newOthAction(sb *skillBehavior, skillData *gamedata.Skill, othActionInfo []
 	case "buff_scuffle":
 		return &attackBuffAction{
 			baseSkillAction: baseSkillAction{targetIDs: targetIDs},
-			buff: othName,
-			arg: arg,
+			buff:            othName,
+			arg:             arg,
 		}, 0
 	case "force_attack":
 		sb.isForceAttack = true
@@ -2865,28 +2867,28 @@ func newOthAction(sb *skillBehavior, skillData *gamedata.Skill, othActionInfo []
 }
 
 type skillBehavior struct {
-	data  *gamedata.Skill
-	targetIDs []int   // 技能所有的目标
-	usefulTargetIDs []int   // 不包括只用于展示的目标
+	data            *gamedata.Skill
+	targetIDs       []int // 技能所有的目标
+	usefulTargetIDs []int // 不包括只用于展示的目标
 	conditions      []*targetAmountCondition
-	actions []iSkillAction
+	actions         []iSkillAction
 
-	cantDel bool
-	isTurnRecover bool
-	isTurnDel bool
-	totalTimes int
-	round int
-	forbidAddSkillIDs []int32
-	isForceAttack bool
-	isPublicEnemy bool
+	cantDel                bool
+	isTurnRecover          bool
+	isTurnDel              bool
+	totalTimes             int
+	round                  int
+	forbidAddSkillIDs      []int32
+	isForceAttack          bool
+	isPublicEnemy          bool
 	isAwaysTriggerFogSkill bool
-	hasMoveAction bool
-	effectiveBout int    // 1:我方回合有效，2.地方回合有效
+	hasMoveAction          bool
+	effectiveBout          int // 1:我方回合有效，2.地方回合有效
 }
 
 func newSkillBehavior(skillData *gamedata.Skill) *skillBehavior {
 	sb := &skillBehavior{
-		data:   skillData,
+		data: skillData,
 	}
 	for _, condition := range skillData.Condition {
 		c := newTargetAmountCondition(condition)
@@ -2920,7 +2922,7 @@ func newSkillBehavior(skillData *gamedata.Skill) *skillBehavior {
 	var lastValueEffect []string
 	var valueEffect []string
 	for i, valueInfo := range skillData.ActionValue {
-		if i + 1 > len(skillData.ValueEffect) {
+		if i+1 > len(skillData.ValueEffect) {
 			valueEffect = lastValueEffect
 		} else {
 			valueEffect = skillData.ValueEffect[i]
@@ -3107,7 +3109,8 @@ func initSkill() {
 }
 
 func (sb *skillBehavior) addTargetIDs(targetIDs []int) {
-L:	for _, targetID := range targetIDs {
+L:
+	for _, targetID := range targetIDs {
 		for _, id := range sb.targetIDs {
 			if id == targetID {
 				continue L
@@ -3119,7 +3122,8 @@ L:	for _, targetID := range targetIDs {
 
 func (sb *skillBehavior) addUsefulTargetIDs(targetIDs []int) {
 	sb.addTargetIDs(targetIDs)
-L:	for _, targetID := range targetIDs {
+L:
+	for _, targetID := range targetIDs {
 		for _, id := range sb.usefulTargetIDs {
 			if id == targetID {
 				continue L

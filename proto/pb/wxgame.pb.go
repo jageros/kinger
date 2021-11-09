@@ -534,10 +534,12 @@ type G2GReplyWxInviteBattleArg struct {
 	BeInviter *FighterData `protobuf:"bytes,2,opt,name=BeInviter" json:"BeInviter,omitempty"`
 }
 
-func (m *G2GReplyWxInviteBattleArg) Reset()                    { *m = G2GReplyWxInviteBattleArg{} }
-func (m *G2GReplyWxInviteBattleArg) String() string            { return proto.CompactTextString(m) }
-func (*G2GReplyWxInviteBattleArg) ProtoMessage()               {}
-func (*G2GReplyWxInviteBattleArg) Descriptor() ([]byte, []int) { return fileDescriptorWxgame, []int{19} }
+func (m *G2GReplyWxInviteBattleArg) Reset()         { *m = G2GReplyWxInviteBattleArg{} }
+func (m *G2GReplyWxInviteBattleArg) String() string { return proto.CompactTextString(m) }
+func (*G2GReplyWxInviteBattleArg) ProtoMessage()    {}
+func (*G2GReplyWxInviteBattleArg) Descriptor() ([]byte, []int) {
+	return fileDescriptorWxgame, []int{19}
+}
 
 func (m *G2GReplyWxInviteBattleArg) GetInviteUid() uint64 {
 	if m != nil {

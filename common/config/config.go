@@ -3,11 +3,11 @@ package config
 import (
 	"github.com/BurntSushi/toml"
 	"github.com/pkg/errors"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
 	"kinger/proto/pb"
 	"strconv"
 	"strings"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common"
 )
 
 var (
@@ -17,49 +17,49 @@ var (
 
 type VersionConfig struct {
 	AccountType string
-	Version string
+	Version     string
 }
 
 type KingwarConfig struct {
-	Debug    bool
-	IsPC     bool
-	HttpPort int
-	AppStoreCanTest bool
-	Wxgame   *WxGameConfig
-	Channels []*ChannelConfig
-	Ver      *pb.Version
-	IsMultiLan bool
-	IsXfMultiLan bool
-	GmtoolKey string
-	HostID int
-	IsBanShu bool
-	Versions  []*VersionConfig
-	GmUids []common.UUid
-	GmChannels []string
+	Debug            bool
+	IsPC             bool
+	HttpPort         int
+	AppStoreCanTest  bool
+	Wxgame           *WxGameConfig
+	Channels         []*ChannelConfig
+	Ver              *pb.Version
+	IsMultiLan       bool
+	IsXfMultiLan     bool
+	GmtoolKey        string
+	HostID           int
+	IsBanShu         bool
+	Versions         []*VersionConfig
+	GmUids           []common.UUid
+	GmChannels       []string
 	IsServerMaintain bool
 
 	accountType2Version map[pb.AccountTypeEnum]*pb.Version
 }
 
 type ChannelConfig struct {
-	Channel string
-	Tdkey string
+	Channel       string
+	Tdkey         string
 	LoginChannels []*LoginChannelConfig
 }
 
 type LoginChannelConfig struct {
-	Channel string
-	AppID string
-	LoginKey string
-	PayKey string
-	LoginSecret string
-	PaySecret string
+	Channel      string
+	AppID        string
+	LoginKey     string
+	PayKey       string
+	LoginSecret  string
+	PaySecret    string
 	MidasOfferID string
-	MidasAppKey string
+	MidasAppKey  string
 }
 
 type WxGameConfig struct {
-	IsExamined               bool `toml:"isExamined"`
+	IsExamined                bool `toml:"isExamined"`
 	AccTreasureCnt            int  `toml:"accTreasureCnt"`
 	NotSubStarCnt             int  `toml:"notSubStarCnt"`
 	AccTreasureTime           int  `toml:"accTreasureTime"`

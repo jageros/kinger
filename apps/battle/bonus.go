@@ -1,18 +1,18 @@
 package main
 
 import (
-	"kinger/gopuppy/common"
 	"kinger/common/consts"
-	"kinger/gopuppy/common/utils"
-	"math/rand"
-	"kinger/gamedata"
-	"kinger/proto/pb"
-	"sort"
-	"strings"
-	"strconv"
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common/evq"
 	kutils "kinger/common/utils"
+	"kinger/gamedata"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/utils"
+	"kinger/proto/pb"
+	"math/rand"
+	"sort"
+	"strconv"
+	"strings"
 )
 
 var bonusPriorityList bonusLists
@@ -225,16 +225,16 @@ func (bl bonusLists) Less(i, j int) bool {
 }
 
 type bonus struct {
-	type_ int
+	type_     int
 	situation *battleSituation
-	cxt1 *bonusContext
-	cxt2 *bonusContext
+	cxt1      *bonusContext
+	cxt2      *bonusContext
 }
 
 func newBonus(type_ int, situation *battleSituation) *bonus {
 	if type_ == pvpBonus || type_ == campaignBonus {
 		return &bonus{
-			type_: type_,
+			type_:     type_,
 			situation: situation,
 		}
 	}
@@ -250,11 +250,11 @@ func (b *bonus) onTurnOver(beTurner *fightCard) {
 	}
 
 	if beTurner.getControllerUid() == b.cxt1.ownerUid {
-		b.cxt1.turnCnt ++
-		b.cxt2.beTurnCnt ++
+		b.cxt1.turnCnt++
+		b.cxt2.beTurnCnt++
 	} else {
-		b.cxt2.turnCnt ++
-		b.cxt1.beTurnCnt ++
+		b.cxt2.turnCnt++
+		b.cxt1.beTurnCnt++
 	}
 }
 
@@ -300,7 +300,7 @@ func (b *bonus) boutEnd(winUid common.UUid) ([]*clientAction, bool, bool) {
 				if act1 == nil {
 					act1 = &pb.BonusAct{}
 					actions = append(actions, &clientAction{
-						actID: pb.ClientAction_Bonus,
+						actID:  pb.ClientAction_Bonus,
 						actMsg: act1,
 					})
 				}
@@ -319,7 +319,7 @@ func (b *bonus) boutEnd(winUid common.UUid) ([]*clientAction, bool, bool) {
 				if act2 == nil {
 					act2 = &pb.BonusAct{}
 					actions = append(actions, &clientAction{
-						actID: pb.ClientAction_Bonus,
+						actID:  pb.ClientAction_Bonus,
 						actMsg: act2,
 					})
 				}

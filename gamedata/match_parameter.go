@@ -7,31 +7,31 @@ import (
 )
 
 type MatchParam struct {
-	ID string `json:"__id__"`
+	ID    string  `json:"__id__"`
 	Value float64 `json:"para_value"`
 }
 
 type MatchParamGameData struct {
 	baseGameData
 
-	CardStreWeight        float64       // 卡等权重
-	StarWeight            float64       // 星数权重
-	WinRateWeight         float64       // 胜率权重
-	RebornWeight          float64       // 下野次数权重
-	EquipWeight           float64       // 宝物权重
-	AreaRevise            float64       // 跨区修正
-	IndexInterval         float64       // 匹配区间
-	IndexRedLine          float64       // 同区指数红线
-	TimeInterval          time.Duration // 时间间隔
-	SameAreaReborn        int           // 同区下野跨度
-	CrossAreaReborn       int           // 跨区下野跨度
-	RecentlyOpponentIndex float64       // 上局对手提高的匹配指数
-	WinningStreakIndex    float64       // 每连胜一场提高的匹配指数
-	CrossAreaIndexRedLine float64       // 跨区指数红线
-	RechargeRevise float64              // 充值修正比
-	RechargeReviseLimit float64         // 充值修正负限
-	WinRevise float64
-	LoseRevise float64
+	CardStreWeight         float64       // 卡等权重
+	StarWeight             float64       // 星数权重
+	WinRateWeight          float64       // 胜率权重
+	RebornWeight           float64       // 下野次数权重
+	EquipWeight            float64       // 宝物权重
+	AreaRevise             float64       // 跨区修正
+	IndexInterval          float64       // 匹配区间
+	IndexRedLine           float64       // 同区指数红线
+	TimeInterval           time.Duration // 时间间隔
+	SameAreaReborn         int           // 同区下野跨度
+	CrossAreaReborn        int           // 跨区下野跨度
+	RecentlyOpponentIndex  float64       // 上局对手提高的匹配指数
+	WinningStreakIndex     float64       // 每连胜一场提高的匹配指数
+	CrossAreaIndexRedLine  float64       // 跨区指数红线
+	RechargeRevise         float64       // 充值修正比
+	RechargeReviseLimit    float64       // 充值修正负限
+	WinRevise              float64
+	LoseRevise             float64
 	RechargeReviseRecovery int
 }
 
@@ -85,7 +85,7 @@ func (md *MatchParamGameData) init(d []byte) error {
 		case "recharge_revise":
 			md.RechargeRevise = m.Value
 		case "recharge_revise_limit":
-			md.RechargeReviseLimit = - m.Value
+			md.RechargeReviseLimit = -m.Value
 		case "win_revise":
 			md.WinRevise = m.Value
 		case "lose_revise":

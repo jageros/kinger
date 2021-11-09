@@ -12,12 +12,12 @@ type ActivityFightReward struct {
 
 type ActivityFightRewardGameData struct {
 	baseGameData
-	name_ string
+	name_                  string
 	ActivityFightRewardMap map[int]*ActivityFightReward
 }
 
 func newActivityFightRewardGameData(name_ string) *ActivityFightRewardGameData {
-	c := &ActivityFightRewardGameData{name_:name_}
+	c := &ActivityFightRewardGameData{name_: name_}
 	c.i = c
 	return c
 }

@@ -2,30 +2,30 @@ package main
 
 import (
 	"kinger/gopuppy/attribute"
-	"sort"
 	"kinger/gopuppy/common"
 	"kinger/proto/pb"
+	"sort"
 	"time"
 )
 
 type comments struct {
-	attr *attribute.MapAttr
+	attr        *attribute.MapAttr
 	battleIDKey string
 }
 
 func (c *comments) packMsg(uid common.UUid) *pb.VideoComments {
 	p := videoMgr.getPlayer(uid)
 	return &pb.VideoComments{
-		ID: int32(c.getID()),
-		Name: c.getName(),
-		Content: c.getContent(),
-		Like: int32(c.getLike()),
-		HeadImgUrl: c.getHeadImgUrl(),
-		Time: int32(c.getTime()),
-		Country: c.getCountry(),
-		Uid: uint64(c.getUid()),
-		HeadFrame: c.getHeadFrame(),
-		IsLike: p.isLikeComments(c.battleIDKey, c.getID()),
+		ID:          int32(c.getID()),
+		Name:        c.getName(),
+		Content:     c.getContent(),
+		Like:        int32(c.getLike()),
+		HeadImgUrl:  c.getHeadImgUrl(),
+		Time:        int32(c.getTime()),
+		Country:     c.getCountry(),
+		Uid:         uint64(c.getUid()),
+		HeadFrame:   c.getHeadFrame(),
+		IsLike:      p.isLikeComments(c.battleIDKey, c.getID()),
 		CountryFlag: c.getCountryFlag(),
 	}
 }
@@ -76,17 +76,16 @@ func (c *comments) getHeadFrame() string {
 type baseCommentsList struct {
 	battleIDKey string
 	id2Comments map[int]*comments
-	list []*comments
+	list        []*comments
 }
 
 func (tl *baseCommentsList) getComments(id int) *comments {
 	return tl.id2Comments[id]
 }
 
-
 func (tl *baseCommentsList) newCommentsByAttr(attr *attribute.MapAttr) *comments {
 	return &comments{
-		attr: attr,
+		attr:        attr,
 		battleIDKey: tl.battleIDKey,
 	}
 }
@@ -114,7 +113,7 @@ func (tl *baseCommentsList) newComments(id int, uid common.UUid, name, content, 
 	attr.SetStr("headFrame", headFrame)
 	attr.SetUInt64("uid", uint64(uid))
 	return &comments{
-		attr: attr,
+		attr:        attr,
 		battleIDKey: tl.battleIDKey,
 	}
 }
@@ -177,7 +176,7 @@ func (tl *topCommentsList) getPageComments(uid common.UUid, begin, amount int) [
 
 	var ret []*pb.VideoComments
 	for _, c := range l {
-		msg :=  c.packMsg(uid)
+		msg := c.packMsg(uid)
 		ret = append(ret, msg)
 	}
 	return ret

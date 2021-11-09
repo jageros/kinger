@@ -1,29 +1,29 @@
 package huodong
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/apps/game/module/types"
-	"kinger/apps/game/module"
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common/timer"
-	"time"
-	"kinger/gopuppy/common/evq"
-	"kinger/common/consts"
-	"kinger/proto/pb"
-	"kinger/gamedata"
-	htypes "kinger/apps/game/huodong/types"
+	"fmt"
+	"kinger/apps/game/huodong/event"
 	"kinger/apps/game/huodong/seasonpvp"
 	"kinger/apps/game/huodong/spring"
-	"kinger/apps/game/huodong/event"
 	"kinger/apps/game/huodong/springskin"
-	"fmt"
+	htypes "kinger/apps/game/huodong/types"
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
+	"kinger/proto/pb"
+	"time"
 )
 
 var mod *huodongModule
 
 type huodongModule struct {
-	allHuodong map[int]map[pb.HuodongTypeEnum]htypes.IHuodong
+	allHuodong        map[int]map[pb.HuodongTypeEnum]htypes.IHuodong
 	refreshingHuodong map[int]map[pb.HuodongTypeEnum]chan struct{}
 }
 
@@ -186,7 +186,7 @@ func (m *huodongModule) initAreaHuodong(area int) {
 		}
 
 		if len(eventArgs) > 0 {
-			timer.AfterFunc(2 * time.Second, func() {
+			timer.AfterFunc(2*time.Second, func() {
 				for _, arg := range eventArgs {
 					logic.BroadcastBackend(pb.MessageID_G2G_ON_HUODONG_EVENT, arg)
 				}
@@ -216,7 +216,7 @@ func (m *huodongModule) initializeHuodong() {
 
 	if module.Service.GetAppID() == 1 {
 		areaGameData.AddReloadCallback(m.initAllAreaHuodong)
-		timer.AddTicker(10 * time.Second, onHeartBeat)
+		timer.AddTicker(10*time.Second, onHeartBeat)
 	}
 }
 
@@ -299,7 +299,7 @@ func (m *huodongModule) refreshHuodong(area int, htype pb.HuodongTypeEnum) {
 	c := make(chan struct{})
 	type2refreshing, ok := m.refreshingHuodong[area]
 	if !ok {
-		type2refreshing = map[pb.HuodongTypeEnum]chan struct{} {}
+		type2refreshing = map[pb.HuodongTypeEnum]chan struct{}{}
 		m.refreshingHuodong[area] = type2refreshing
 	}
 	type2refreshing[htype] = c
@@ -408,7 +408,7 @@ func onHeartBeat() {
 			if arg == nil {
 				arg = &pb.HuodongEvent{
 					HdType: htype,
-					Event: eventType,
+					Event:  eventType,
 				}
 			}
 			arg.Areas = append(arg.Areas, int32(area))

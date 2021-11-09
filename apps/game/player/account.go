@@ -1,27 +1,27 @@
 package player
 
 import (
-	"kinger/gopuppy/attribute"
-	"time"
+	"crypto/md5"
+	"errors"
 	"fmt"
-	"math/rand"
+	"io"
 	"kinger/apps/game/module"
+	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/timer"
 	"kinger/proto/pb"
+	"math/rand"
 	"strconv"
-	"kinger/gamedata"
-	"crypto/md5"
-	"io"
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common"
-	"errors"
-	"kinger/gopuppy/apps/logic"
+	"time"
 )
 
 type accountSt struct {
 	accountID string
-	attr *attribute.AttrMgr
-	isNew bool
+	attr      *attribute.AttrMgr
+	isNew     bool
 }
 
 func genAccountID(channel, loginChannel, channelID string, isTourist bool) string {
@@ -44,8 +44,8 @@ func loadAccountByAccountID(accountID string, regionArg ...uint32) (*accountSt, 
 	err := accountAttr.Load()
 	return &accountSt{
 		accountID: accountID,
-		attr: accountAttr,
-		isNew: err != nil,
+		attr:      accountAttr,
+		isNew:     err != nil,
 	}, err
 }
 
@@ -59,7 +59,7 @@ func md5HashPassword(password string) string {
 	return fmt.Sprintf("%x", md5Writer.Sum(nil))
 }
 
-func doRegistAccount(channel , account, password string) (*accountSt, error) {
+func doRegistAccount(channel, account, password string) (*accountSt, error) {
 	a, err := loadAccount(channel, "", account, false)
 	if err == nil {
 		return nil, gamedata.GameError(1)
@@ -185,7 +185,7 @@ func (a *accountSt) backupArc() error {
 	}
 	a.attr.Del("1")
 	arcBak := attribute.NewMapAttr()
-	arcBak.AssignMap( arc.ToMap() )
+	arcBak.AssignMap(arc.ToMap())
 	a.attr.SetMapAttr("1bak", arcBak)
 	return a.save(true)
 }
@@ -211,7 +211,7 @@ func (a *accountSt) bindOthAccount(oth *accountSt) error {
 	}
 
 	newArc := attribute.NewMapAttr()
-	newArc.AssignMap( arc.ToMap() )
+	newArc.AssignMap(arc.ToMap())
 	err = a.setArchive(1, newArc)
 	if err != nil {
 		return err
@@ -222,7 +222,7 @@ func (a *accountSt) bindOthAccount(oth *accountSt) error {
 	othRegion := logic.GetAgentRegion(othUid)
 	if othRegion != module.Service.GetRegion() {
 		newAccountAttr := attribute.NewAttrMgr("account", accountID, false, othRegion)
-		newAccountAttr.AssignMap( a.attr.ToMap() )
+		newAccountAttr.AssignMap(a.attr.ToMap())
 		if err := newAccountAttr.Insert(); err != nil {
 			return err
 		}

@@ -4,38 +4,38 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/base64"
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common/eventhub"
 	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/timer"
-	"kinger/apps/game/module"
-	"kinger/apps/game/module/types"
-	"kinger/common/consts"
-	"time"
-	"kinger/gamedata"
 	"kinger/proto/pb"
+	"time"
 )
 
 var (
-	mod *shopModule
-	googlePlayPublicKey *rsa.PublicKey
-	strGooglePlayPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgN8kCwQMXe59knh6SzdL"+
-"56gl2hMYH9BudVqQmvzqFkKFNYD2Fe7MLJ6Zj4+2WlJsLAs/8kDvHduYsxlPy8dr"+
-"dE8og6PicoYF3LZcwOfE1FiidrW2cWbtvaznO5MX9mCyEdsnqDy699uD7rYPyut7"+
-"HnMps8DMhSAucBDJ1eNFLg93/m35Tev6u3EzsXlnmJGTC29L723Tbznw1vKd+3r1"+
-"k8FyWa8RlmpnEhvsuURur7c2AB7JfBTXOynzBR6Qq8I04Bpcxf6qZPHUk5N9ifHw"+
-"QMHuNZpyPW5YO3/3tBSGjTgfImGb+CaIGKoKcMP+CIHF64NFqClJQge0mNvBgWsYLwIDAQAB"
+	mod                    *shopModule
+	googlePlayPublicKey    *rsa.PublicKey
+	strGooglePlayPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgN8kCwQMXe59knh6SzdL" +
+		"56gl2hMYH9BudVqQmvzqFkKFNYD2Fe7MLJ6Zj4+2WlJsLAs/8kDvHduYsxlPy8dr" +
+		"dE8og6PicoYF3LZcwOfE1FiidrW2cWbtvaznO5MX9mCyEdsnqDy699uD7rYPyut7" +
+		"HnMps8DMhSAucBDJ1eNFLg93/m35Tev6u3EzsXlnmJGTC29L723Tbznw1vKd+3r1" +
+		"k8FyWa8RlmpnEhvsuURur7c2AB7JfBTXOynzBR6Qq8I04Bpcxf6qZPHUk5N9ifHw" +
+		"QMHuNZpyPW5YO3/3tBSGjTgfImGb+CaIGKoKcMP+CIHF64NFqClJQge0mNvBgWsYLwIDAQAB"
 )
 
 type shopModule struct {
 	type2Shop map[string]*shopSt
-	payment *basePayment
+	payment   *basePayment
 }
 
 func newShopModule() *shopModule {
 	m := &shopModule{
 		type2Shop: map[string]*shopSt{},
-		payment: &basePayment{},
+		payment:   &basePayment{},
 	}
 
 	s := newCardPieceShop()
@@ -75,7 +75,7 @@ func (sm *shopModule) LogShopBuyItem(player types.IPlayer, itemID, itemName stri
 	glog.JsonInfo("shop", glog.Uint64("uid", uint64(player.GetUid())), glog.String("itemID", itemID),
 		glog.String("itemName", itemName), glog.Int("amount", amount), glog.String("shopName", shopName),
 		glog.String("logMsg", msg), glog.String("accountType", player.GetLogAccountType().String()), glog.String(
-		"channel", player.GetChannel()), glog.String("resType", resType), glog.String("resName", resName),
+			"channel", player.GetChannel()), glog.String("resType", resType), glog.String("resName", resName),
 		glog.Int("resAmount", resAmount), glog.Int("area", player.GetArea()), glog.String("subChannel", player.GetSubChannel()))
 }
 
@@ -99,7 +99,7 @@ func (sm *shopModule) GetRecruitCurIDs(player types.IPlayer) []int32 {
 		return nil
 	}
 	tbName := p.getRecruitTreasure().getTreasureTblName()
-	_, ids, _  := crd.getRecruitIDs(player.GetArea(), tbName)
+	_, ids, _ := crd.getRecruitIDs(player.GetArea(), tbName)
 	return ids
 }
 
@@ -129,13 +129,13 @@ func (s *shopModule) GM_setRecruitVer(cmd string, player types.IPlayer) {
 	}
 }
 
-func onMaxPvpLevelUpdate(args ...interface{})  {
+func onMaxPvpLevelUpdate(args ...interface{}) {
 	player := args[0].(types.IPlayer)
 	maxPvpLevel := args[2].(int)
 	player.GetComponent(consts.ShopCpt).(*shopComponent).onMaxPvpLevelUpdate(maxPvpLevel)
 }
 
-func onPvpLevelUpdate(args ...interface{})  {
+func onPvpLevelUpdate(args ...interface{}) {
 	player := args[0].(types.IPlayer)
 	player.GetComponent(consts.ShopCpt).(*shopComponent).getSoldTreasure().onPvpLevelUpdate()
 }
@@ -201,7 +201,7 @@ func Initialize() {
 	eventhub.Subscribe(consts.EvMaxPvpLevelUpdate, onMaxPvpLevelUpdate)
 	eventhub.Subscribe(consts.EvPvpLevelUpdate, onPvpLevelUpdate)
 	eventhub.Subscribe(consts.EvReborn, onReborn)
-	timer.AddTicker(5 * time.Minute, heartBeat)
+	timer.AddTicker(5*time.Minute, heartBeat)
 	crdInitialized()
 	initRandShop()
 
@@ -213,14 +213,14 @@ func Initialize() {
 		[]pb.AccountTypeEnum{pb.AccountTypeEnum_Android}))
 	gamedata.GetGameData(consts.WxLimitGift).AddReloadCallback(genAccountTypeShopDataUpdater(
 		[]pb.UpdateShopDataArg_DataType{pb.UpdateShopDataArg_LimitGift, pb.UpdateShopDataArg_Vip},
-		[]pb.AccountTypeEnum{pb.AccountTypeEnum_Wxgame, pb.AccountTypeEnum_WxgameIos}) )
+		[]pb.AccountTypeEnum{pb.AccountTypeEnum_Wxgame, pb.AccountTypeEnum_WxgameIos}))
 	gamedata.GetGameData(consts.IosRecharge).AddReloadCallback(genAccountTypeShopDataUpdater(
 		[]pb.UpdateShopDataArg_DataType{pb.UpdateShopDataArg_Jade}, []pb.AccountTypeEnum{pb.AccountTypeEnum_Ios}))
 	gamedata.GetGameData(consts.AndroidRecharge).AddReloadCallback(genAccountTypeShopDataUpdater(
 		[]pb.UpdateShopDataArg_DataType{pb.UpdateShopDataArg_Jade}, []pb.AccountTypeEnum{pb.AccountTypeEnum_Android}))
 	gamedata.GetGameData(consts.WxRecharge).AddReloadCallback(genAccountTypeShopDataUpdater(
 		[]pb.UpdateShopDataArg_DataType{pb.UpdateShopDataArg_Jade},
-		[]pb.AccountTypeEnum{pb.AccountTypeEnum_Wxgame, pb.AccountTypeEnum_WxgameIos}) )
+		[]pb.AccountTypeEnum{pb.AccountTypeEnum_Wxgame, pb.AccountTypeEnum_WxgameIos}))
 
 	gamedata.GetSoldTreasureGameData().AddReloadCallback(genShopDataUpdater(pb.UpdateShopDataArg_SoldTreasure))
 	gamedata.GetGameData(consts.RecruitTreausre).AddReloadCallback(genShopDataUpdater(pb.UpdateShopDataArg_RecruitTreasure))

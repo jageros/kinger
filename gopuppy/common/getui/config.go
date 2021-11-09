@@ -7,14 +7,14 @@ const (
 )
 
 var (
-	API_URL = BASE_API_URL
-	config *GetuiConfig
+	API_URL       = BASE_API_URL
+	config        *GetuiConfig
 	noConfigError = errors.New("getui no config")
 )
 
 type GetuiConfig struct {
-	AppId string
-	AppKey string
+	AppId        string
+	AppKey       string
 	MasterSecret string
 }
 

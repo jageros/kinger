@@ -17,7 +17,6 @@ type ICardComponent interface {
 	//统计指定星的卡
 	GetCollectCardNumByStar(star int) int
 
-
 	// 批量修改卡
 	//@param  cardsChange map[cardID]*pb.CardInfo  要修改的卡
 	//@return  卡的改变

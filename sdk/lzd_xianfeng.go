@@ -1,25 +1,25 @@
 package sdk
 
 import (
-	"net/http"
-	"io/ioutil"
-	"kinger/gopuppy/common/glog"
-	"github.com/pkg/errors"
+	"crypto/md5"
 	"encoding/json"
 	"fmt"
-	"net/url"
-	"sort"
-	"strings"
-	"crypto/md5"
+	"github.com/pkg/errors"
 	"io"
-	"strconv"
+	"io/ioutil"
 	"kinger/common/config"
 	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
+	"net/http"
+	"net/url"
+	"sort"
+	"strconv"
+	"strings"
 )
 
 var (
-	xianFengSuccess = []byte("SUCCESS")
-	xianFengErr = []byte("FAILURE")
+	xianFengSuccess     = []byte("SUCCESS")
+	xianFengErr         = []byte("FAILURE")
 	xianFengAuthNullErr = errors.New("null channelID")
 )
 
@@ -28,21 +28,21 @@ type iXianfengSdkAuthor interface {
 }
 
 type xianFengLoginReply struct {
-	Errorcode int `json:"errorcode"`
-	Msg string `json:"msg"`
+	Errorcode int    `json:"errorcode"`
+	Msg       string `json:"msg"`
 }
 
 type xianFeng struct {
-	author iXianfengSdkAuthor
-	appID string
-	appKey string
+	author    iXianfengSdkAuthor
+	appID     string
+	appKey    string
 	appSecret string
 }
 
 func newXianFeng(cfg *config.LoginChannelConfig) ISdk {
 	s := &xianFeng{
-		appID: cfg.AppID,
-		appKey: cfg.LoginKey,
+		appID:     cfg.AppID,
+		appKey:    cfg.LoginKey,
 		appSecret: cfg.LoginSecret,
 	}
 	s.author = s
@@ -88,12 +88,12 @@ func (s *xianFeng) LoginAuth(channelUid, token string) error {
 		var resp *http.Response
 		resp, err = http.PostForm(s.author.getAuthUrl(), url.Values{
 			"appId": {s.appID},
-			"uid": {channelUid},
+			"uid":   {channelUid},
 			"token": {token},
 			"sign": {
 				s.getSign(map[string]string{
 					"appId": s.appID,
-					"uid": channelUid,
+					"uid":   channelUid,
 					"token": token,
 				}),
 			},
@@ -150,15 +150,15 @@ func (s *xianFeng) RechargeAuthSign(request *http.Request) (uid uint64, channelU
 	sign := request.Form.Get("sign")
 
 	mySign := s.getSign(map[string]string{
-		"appId": appId,
-		"packageId": packageId,
-		"uid": channelUid,
-		"sdkId": sdkId,
-		"orderId": channelOrderID,
-		"money": money,
-		"way": way,
-		"ext": ext,
-		"status": status,
+		"appId":      appId,
+		"packageId":  packageId,
+		"uid":        channelUid,
+		"sdkId":      sdkId,
+		"orderId":    channelOrderID,
+		"money":      money,
+		"way":        way,
+		"ext":        ext,
+		"status":     status,
 		"createTime": createTime,
 	})
 
@@ -175,9 +175,9 @@ func (s *xianFeng) RechargeAuthSign(request *http.Request) (uid uint64, channelU
 	uid, cpOrderID = parseExt(ext)
 	if strings.HasPrefix(cpOrderID, "ios") {
 		http.PostForm("http://10.10.26.218:6667/test_recharge", url.Values{
-			"uid": []string{strconv.FormatUint(uid, 10)},
-			"cpOrderID": []string{cpOrderID},
-			"channelUid": []string{channelUid},
+			"uid":            []string{strconv.FormatUint(uid, 10)},
+			"cpOrderID":      []string{cpOrderID},
+			"channelUid":     []string{channelUid},
 			"channelOrderID": []string{channelOrderID},
 		})
 		return

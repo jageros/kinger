@@ -1,17 +1,17 @@
 package pvp
 
 import (
-	"kinger/gopuppy/apps/logic"
-	"kinger/gopuppy/network"
+	"fmt"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
+	"kinger/common/aicardpool"
 	"kinger/common/consts"
 	"kinger/gamedata"
-	"kinger/proto/pb"
+	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/common/evq"
 	"kinger/gopuppy/common/glog"
-	"kinger/common/aicardpool"
-	"fmt"
+	"kinger/gopuppy/network"
+	"kinger/proto/pb"
 	"math/rand"
 	"strconv"
 )
@@ -32,7 +32,7 @@ func rpc_C2S_BeginMatch(agent *logic.PlayerAgent, arg interface{}) (interface{},
 	if module.Player.GetResource(player, consts.GuidePro) < consts.MaxGuidePro {
 		// 新手的5场战斗
 		strategy = guideMatchStrategy
-	} else  {
+	} else {
 		pvpCpt := player.GetComponent(consts.PvpCpt).(*pvpComponent)
 		newbiePvpCamp, _ := pvpCpt.getNewbiePvpEnemyCamp()
 		if newbiePvpCamp > 0 {
@@ -143,8 +143,8 @@ func rpc_L2G_GetPvpFighterData(agent *logic.PlayerAgent, arg interface{}) (inter
 
 			reply.HandCards = append(reply.HandCards, &pb.SkinGCard{
 				GCardID: card.GetCardGameData().GetGCardID(),
-				Skin: card.GetSkin(),
-				Equip: card.GetEquip(),
+				Skin:    card.GetSkin(),
+				Equip:   card.GetEquip(),
 			})
 		}
 	}
@@ -181,16 +181,16 @@ func rpc_C2S_BeginTrainingBattle(agent *logic.PlayerAgent, arg interface{}) (int
 	}
 
 	fighter2 := &pb.FighterData{
-		Uid:          1,
-		HandCards:    robotHandCards,
-		Camp:         int32(camp),
-		PvpScore:     int32(player.GetPvpScore()),
-		HeadImgUrl:   headImgUrl,
-		HeadFrame:    "1",
-		Area: int32(player.GetArea()),
-		Region: module.Service.GetRegion(),
-		NameText: 70426,
-		IsRobot: true,
+		Uid:        1,
+		HandCards:  robotHandCards,
+		Camp:       int32(camp),
+		PvpScore:   int32(player.GetPvpScore()),
+		HeadImgUrl: headImgUrl,
+		HeadFrame:  "1",
+		Area:       int32(player.GetArea()),
+		Region:     module.Service.GetRegion(),
+		NameText:   70426,
+		IsRobot:    true,
 	}
 
 	logic.PushBackend("", 0, pb.MessageID_M2B_BEGIN_BATTLE, &pb.BeginBattleArg{

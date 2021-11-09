@@ -1,14 +1,14 @@
 package main
 
 import (
-	"kinger/gamedata"
 	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/attribute"
 	"kinger/proto/pb"
 )
 
 type equipment struct {
-	data *gamedata.Equip
+	data   *gamedata.Equip
 	skills []*skill
 }
 
@@ -116,7 +116,8 @@ func (eq *equipment) setPlayCardIdx(idx int) {
 
 func (eq *equipment) packMsg() *pb.BattleEquip {
 	e := &pb.BattleEquip{EquipID: eq.data.ID}
-L:	for _, sk := range eq.skills {
+L:
+	for _, sk := range eq.skills {
 		for _, skID := range e.Skills {
 			if sk.getID() == skID {
 				continue L

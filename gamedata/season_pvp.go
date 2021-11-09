@@ -1,13 +1,13 @@
 package gamedata
 
 import (
-	"time"
-	"kinger/common/consts"
 	"encoding/json"
-	"kinger/gopuppy/common/utils"
-	"kinger/gopuppy/common/glog"
 	"github.com/pkg/errors"
 	"kinger/common/config"
+	"kinger/common/consts"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/utils"
+	"time"
 )
 
 var _ ISeasonPvp = &SeasonPvp{}
@@ -43,10 +43,10 @@ type SeasonPvp struct {
 	ChangeHandType []int   `json:"again"`
 	Areas          [][]int `json:"areas"`
 
-	StartTime time.Time
-	StopTime time.Time
-	areaLimit *AreaLimitConfig
-	equalSeason []int
+	StartTime      time.Time
+	StopTime       time.Time
+	areaLimit      *AreaLimitConfig
+	equalSeason    []int
 	notEqualSeason []int
 }
 
@@ -342,7 +342,7 @@ func (s *MultiLanSeasonPvp) GetStopTime() time.Time {
 	}
 
 	date := time.Date(now.Year(), month, s.EndDay, 0, 0, 0, 0, now.Location())
-	return time.Unix(date.Unix() - 1, 0)
+	return time.Unix(date.Unix()-1, 0)
 }
 
 func (s *MultiLanSeasonPvp) GetLimitPvpTeam() int {

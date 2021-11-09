@@ -1,13 +1,13 @@
 package mission
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/proto/pb"
-	"kinger/gamedata"
-	"kinger/common/consts"
-	"math/rand"
 	"kinger/apps/game/module/types"
+	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common/glog"
+	"kinger/proto/pb"
+	"math/rand"
 )
 
 type treasure struct {
@@ -53,7 +53,7 @@ func newTreasure(player types.IPlayer) *treasure {
 func (t *treasure) packMsg() *pb.MissionTreasure {
 	return &pb.MissionTreasure{
 		TreasureModelID: t.attr.GetStr("id"),
-		CurCnt: int32(t.attr.GetInt("cnt")),
+		CurCnt:          int32(t.attr.GetInt("cnt")),
 	}
 }
 
@@ -70,7 +70,7 @@ func (t *treasure) getReward(player types.IPlayer) (*pb.OpenTreasureReply, *trea
 	mtdata := gdata.ID2MissionTreasures[loopID]
 	loopIdx := t.attr.GetInt("loopIdx")
 	var newT *treasure
-	if loopIdx >= len(mtdata.RareLoop) - 1 {
+	if loopIdx >= len(mtdata.RareLoop)-1 {
 		newT = newTreasure(player)
 		if newT == nil {
 			return nil, nil, gamedata.GameError(2)

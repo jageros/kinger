@@ -90,10 +90,12 @@ type StartTutorialBattleReply struct {
 	Ok bool `protobuf:"varint,1,opt,name=ok,proto3" json:"ok,omitempty"`
 }
 
-func (m *StartTutorialBattleReply) Reset()                    { *m = StartTutorialBattleReply{} }
-func (m *StartTutorialBattleReply) String() string            { return proto.CompactTextString(m) }
-func (*StartTutorialBattleReply) ProtoMessage()               {}
-func (*StartTutorialBattleReply) Descriptor() ([]byte, []int) { return fileDescriptorTutorial, []int{5} }
+func (m *StartTutorialBattleReply) Reset()         { *m = StartTutorialBattleReply{} }
+func (m *StartTutorialBattleReply) String() string { return proto.CompactTextString(m) }
+func (*StartTutorialBattleReply) ProtoMessage()    {}
+func (*StartTutorialBattleReply) Descriptor() ([]byte, []int) {
+	return fileDescriptorTutorial, []int{5}
+}
 
 func (m *StartTutorialBattleReply) GetOk() bool {
 	if m != nil {

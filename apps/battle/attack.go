@@ -9,14 +9,14 @@ var (
 	allAttackPos = []int{consts.LEFT, consts.RIGHT, consts.UP, consts.DOWN}
 
 	normalAttackTargetFinder iAttackTargetFinder = &normalAttackTargetFinderSt{}
-	_ iAttackTargetFinder = &arrowAttackTargetFinderSt{}
-	_ iAttackTargetFinder = &peerlessAttackTargetFinderSt{}
-	_ iAttackTargetFinder = &lightningAttackTargetFinderSt{}
-	_ iAttackTargetFinder = &riprapAttackTargetFinderSt{}
-	_ iAttackTargetFinder = &breakthroughAttackTargetFinderSt{}
-	_ iAttackTargetFinder = &appointAttackTargetFinderSt{}
-	_ iAttackTargetFinder = &buffAppointAttackTargetFinderSt{}
-	_ iAttackTargetFinder = &aoeAttackTargetFinderSt{}
+	_                        iAttackTargetFinder = &arrowAttackTargetFinderSt{}
+	_                        iAttackTargetFinder = &peerlessAttackTargetFinderSt{}
+	_                        iAttackTargetFinder = &lightningAttackTargetFinderSt{}
+	_                        iAttackTargetFinder = &riprapAttackTargetFinderSt{}
+	_                        iAttackTargetFinder = &breakthroughAttackTargetFinderSt{}
+	_                        iAttackTargetFinder = &appointAttackTargetFinderSt{}
+	_                        iAttackTargetFinder = &buffAppointAttackTargetFinderSt{}
+	_                        iAttackTargetFinder = &aoeAttackTargetFinderSt{}
 
 	normalAttacker iAttacker = &normalAttackerSt{}
 	pierceAttacker iAttacker = &pierceAttackerSt{}
@@ -292,7 +292,7 @@ func (atf *arrowAttackTargetFinderSt) findTarget(situation *battleSituation, att
 
 	for _, pos := range allAttackPos {
 		for i := 0; i <= atf.n; i++ {
-			t := situation.getPosTargetByGrid(grid, pos, 1 + i)
+			t := situation.getPosTargetByGrid(grid, pos, 1+i)
 			if t == nil {
 				break
 			}
@@ -364,7 +364,7 @@ func (atf *riprapAttackTargetFinderSt) findTarget(situation *battleSituation, at
 	grid := attackCard.getGrid()
 	for _, pos := range allAttackPos {
 		for i := 1; i <= atf.n; i++ {
-			t := situation.getPosTargetByGrid(grid, pos, 1 + i)
+			t := situation.getPosTargetByGrid(grid, pos, 1+i)
 			if t == nil {
 				break
 			}
@@ -454,7 +454,7 @@ func (atf *breakthroughAttackTargetFinderSt) findTarget(situation *battleSituati
 	grid := attackCard.getGrid()
 	for _, pos := range allAttackPos {
 		for i := 0; true; i++ {
-			t := situation.getPosTargetByGrid(grid, pos, 1 + i)
+			t := situation.getPosTargetByGrid(grid, pos, 1+i)
 			if t == nil {
 				break
 			}

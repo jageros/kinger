@@ -1,8 +1,8 @@
 package main
 
 import (
-	"kinger/gopuppy/apps/logic"
 	"kinger/common/consts"
+	"kinger/gopuppy/apps/logic"
 	"kinger/proto/pb"
 )
 
@@ -22,7 +22,7 @@ type matchRoom struct {
 	upperType    int
 	isFirstPvp   bool
 	seasonDataID int
-	indexDiff int
+	indexDiff    int
 	player1      iMatchPlayer
 	player2      iMatchPlayer
 }
@@ -31,8 +31,8 @@ func newMatchRoom(roomID int32, battleType, upperType, indexDiff int) *matchRoom
 	return &matchRoom{
 		roomID:     roomID,
 		battleType: battleType,
-		upperType: upperType,
-		indexDiff: indexDiff,
+		upperType:  upperType,
+		indexDiff:  indexDiff,
 	}
 }
 
@@ -52,12 +52,12 @@ func (mr *matchRoom) beginBattle() {
 		Fighter1:           mr.player1.packFighterData(),
 		Fighter2:           mr.player2.packFighterData(),
 		NeedFortifications: true,
-		BonusType:             2,
+		BonusType:          2,
 		NeedVideo:          true,
-		UpperType: int32(mr.upperType),
-		IsFirstPvp: mr.isFirstPvp,
-		SeasonPvpSession: int32(mr.seasonDataID),
-		IndexDiff: int32(mr.indexDiff),
+		UpperType:          int32(mr.upperType),
+		IsFirstPvp:         mr.isFirstPvp,
+		SeasonPvpSession:   int32(mr.seasonDataID),
+		IndexDiff:          int32(mr.indexDiff),
 	}, region)
 
 	if !mr.player1.getAgent().IsRobot() {

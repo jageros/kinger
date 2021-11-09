@@ -24,8 +24,8 @@ func (ad *attrData) GetData() map[string]interface{} {
 }
 
 type MongoDBEngine struct {
-	session *mgo.Session
-	database string
+	session    *mgo.Session
+	database   string
 	pingTicker *timer.Timer
 }
 
@@ -45,13 +45,13 @@ func OpenMongoDB(addr, dbname, user, passowrd string) (*MongoDBEngine, error) {
 
 	session.SetMode(mgo.Strong, true)
 
-	pingTicker := timer.AddTicker(10 * time.Second, func() {
+	pingTicker := timer.AddTicker(10*time.Second, func() {
 		session.Ping()
 	})
 
 	return &MongoDBEngine{
-		session: session,
-		database: dbname,
+		session:    session,
+		database:   dbname,
 		pingTicker: pingTicker,
 	}, nil
 }

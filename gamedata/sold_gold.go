@@ -1,19 +1,19 @@
 package gamedata
 
 import (
-	"kinger/common/consts"
-	"encoding/json"
-	"kinger/common/config"
 	"bytes"
+	"encoding/json"
 	"errors"
+	"kinger/common/config"
+	"kinger/common/consts"
 )
 
 type SoldGold struct {
-	GoodsID string `json:"__id__"`
-	Gold int `json:"soldGold"`
-	JadePrice int `json:"jadePrice"`
-	BowlderPrice int `json:"bowlderPrice"`
-	Areas [][]int `json:"areas"`
+	GoodsID      string  `json:"__id__"`
+	Gold         int     `json:"soldGold"`
+	JadePrice    int     `json:"jadePrice"`
+	BowlderPrice int     `json:"bowlderPrice"`
+	Areas        [][]int `json:"areas"`
 
 	areaLimit *AreaLimitConfig
 }
@@ -29,8 +29,8 @@ type ISoldGoldGameData interface {
 
 type SoldGoldGameData struct {
 	baseGameData
-	areaVersion int
-	rawData []byte
+	areaVersion     int
+	rawData         []byte
 	areaToGoodsList map[int][]*SoldGold
 }
 

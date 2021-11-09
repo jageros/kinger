@@ -156,7 +156,7 @@ func RandFewNumberWithSum(sum, n int) []int {
 		return numList
 	}
 	var l []int
-	for i := 1; i<sum; i++ {
+	for i := 1; i < sum; i++ {
 		l = append(l, i)
 	}
 	ls := RandIntSample(l, n-1, false)
@@ -177,9 +177,9 @@ func RandFewIntWithLimit(sum, n, max int) []int {
 	//max := sum / n * 3   //int(math.Floor(float64(sum) / float64(n) * 3))  可取浮点型的3倍平均数
 
 	// 最大值不能小于等于平均数
-	min := float64(sum)/float64(n)
+	min := float64(sum) / float64(n)
 	if float64(max) <= min {
-		max = int(math.Floor(min))+1
+		max = int(math.Floor(min)) + 1
 	}
 
 	if max < sum {
@@ -240,7 +240,7 @@ func randIntsDelSum(sum, min int, nums []int) (sum2 int, nums2 []int) {
 			flag = 1
 		}
 	}
-	if sum > 0 && flag == 1{
+	if sum > 0 && flag == 1 {
 		return randIntsDelSum(sum, min, nums)
 	}
 	return sum, nums
@@ -280,7 +280,7 @@ func UnixToTime(t int64) (time.Time, error) {
 
 func HourToTodayTime(hour int) (time.Time, error) {
 	h := hour
-	if h < 0 || h >= 24{
+	if h < 0 || h >= 24 {
 		h = 0
 	}
 	y, m, d := time.Now().Date()
@@ -299,7 +299,7 @@ func HourToTodayTime(hour int) (time.Time, error) {
 	timeStr := strconv.Itoa(y) + "-" + month + "-" + day + " " + strconv.Itoa(h) + ":00:00"
 	times, err := StringToTime(timeStr, TimeFormat2)
 	if hour == 24 {
-		times = times.AddDate(0,0,1)
+		times = times.AddDate(0, 0, 1)
 	}
 	return times, err
 }

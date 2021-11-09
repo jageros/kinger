@@ -57,7 +57,7 @@ type Transmission struct {
 
 //样式模版
 type Style struct {
-	Type  int		`json:"type"`
-	Text  string 	`json:"text"`
-	Title string 	`json:"title"`
+	Type  int    `json:"type"`
+	Text  string `json:"text"`
+	Title string `json:"title"`
 }

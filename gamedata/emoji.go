@@ -6,9 +6,9 @@ import (
 )
 
 type Emoji struct {
-	ID string `json:"__id__"`
-	Team int `json:"team"`
-	TeamName int `json:"teamName"`
+	ID       string `json:"__id__"`
+	Team     int    `json:"team"`
+	TeamName int    `json:"teamName"`
 }
 
 func (e *Emoji) GetTeamName() string {

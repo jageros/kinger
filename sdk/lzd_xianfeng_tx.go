@@ -1,21 +1,21 @@
 package sdk
 
 import (
-	"kinger/gopuppy/common/glog"
-	"kinger/common/config"
-	"net/http"
 	"crypto/md5"
-	"fmt"
-	"strconv"
-	"io/ioutil"
-	"github.com/pkg/errors"
 	"encoding/json"
-	"time"
+	"fmt"
+	"github.com/pkg/errors"
+	"io/ioutil"
+	"kinger/common/config"
 	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
+	"net/http"
+	"strconv"
+	"time"
 )
 
 type tencentYSDKLoginReply struct {
-	Ret int `json:"ret"`
+	Ret int    `json:"ret"`
 	Msg string `json:"msg"`
 }
 
@@ -25,8 +25,8 @@ type iTencentYSDKLoginAuther interface {
 
 type tencentYSDK struct {
 	loginAuther iTencentYSDKLoginAuther
-	appID string
-	appKey string
+	appID       string
+	appKey      string
 }
 
 type tencentQQYSDK struct {

@@ -1,36 +1,36 @@
 package shop
 
 import (
-	"kinger/gopuppy/attribute"
+	"fmt"
 	"kinger/apps/game/module/types"
+	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common/timer"
 	"kinger/proto/pb"
-	"time"
-	"strings"
 	"net/url"
-	"fmt"
+	"strings"
+	"time"
 	//"crypto/hmac"
 	//"crypto/sha1"
 	//"encoding/base64"
-	"sort"
-	"kinger/common/config"
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/base64"
-	"net/http"
-	"strconv"
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common/evq"
+	"encoding/json"
 	"github.com/pkg/errors"
 	"io/ioutil"
-	"encoding/json"
+	"kinger/common/config"
 	"kinger/common/consts"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
+	"net/http"
+	"sort"
+	"strconv"
 )
 
 type midasPayReply struct {
-	Ret int `json:"ret"`
-	Msg string `json:"msg"`
-	Billno string `json:"billno"`
+	Ret     int     `json:"ret"`
+	Msg     string  `json:"msg"`
+	Billno  string  `json:"billno"`
 	Balance float64 `json:"balance"`
 }
 
@@ -41,11 +41,11 @@ func (mpr *midasPayReply) String() string {
 
 // 米大师充值，麻烦死
 type midasPaymentSt struct {
-	player types.IPlayer
-	cptAttr *attribute.MapAttr
+	player            types.IPlayer
+	cptAttr           *attribute.MapAttr
 	pendingOrdersAttr *attribute.MapAttr
-	doingOrdersAttr map[string]*attribute.MapAttr
-	channelCfg *config.LoginChannelConfig
+	doingOrdersAttr   map[string]*attribute.MapAttr
+	channelCfg        *config.LoginChannelConfig
 }
 
 func newMidasPayment(player types.IPlayer, cptAttr *attribute.MapAttr) *midasPaymentSt {
@@ -60,11 +60,11 @@ func newMidasPayment(player types.IPlayer, cptAttr *attribute.MapAttr) *midasPay
 	}
 
 	return &midasPaymentSt{
-		player: player,
-		cptAttr: cptAttr,
+		player:            player,
+		cptAttr:           cptAttr,
 		pendingOrdersAttr: cptAttr.GetMapAttr("midasOrders"),
-		channelCfg: channelCfg,
-		doingOrdersAttr: map[string]*attribute.MapAttr{},
+		channelCfg:        channelCfg,
+		doingOrdersAttr:   map[string]*attribute.MapAttr{},
 	}
 }
 
@@ -114,8 +114,8 @@ func (mp *midasPaymentSt) getMidasOrderAttr(orderID string) *attribute.MapAttr {
 }
 
 func (mp *midasPaymentSt) makeSig(method, urlPath string, params map[string]string) string {
-	mk := mp.makeSource(method, "/v3/r" + urlPath, params)
-	h := hmac.New(sha1.New, []byte(mp.channelCfg.MidasAppKey + "&"))
+	mk := mp.makeSource(method, "/v3/r"+urlPath, params)
+	h := hmac.New(sha1.New, []byte(mp.channelCfg.MidasAppKey+"&"))
 	h.Write(mk)
 	return base64.StdEncoding.EncodeToString(h.Sum(nil))
 }
@@ -161,14 +161,14 @@ func (mp *midasPaymentSt) doRecharge(player types.IPlayer, order *orderSt, tryCn
 	}
 
 	params := map[string]string{
-		"openid": player.GetChannelUid(),
+		"openid":  player.GetChannelUid(),
 		"openkey": midasOrder.GetStr("openkey"),
-		"appid": mp.channelCfg.MidasOfferID,
-		"ts": strconv.FormatInt(time.Now().Unix(), 10),
-		"pf": midasOrder.GetStr("pf"),
-		"pfkey": midasOrder.GetStr("pfkey"),
-		"zoneid": "1",
-		"amt": strconv.Itoa(order.getPrice() * 10),
+		"appid":   mp.channelCfg.MidasOfferID,
+		"ts":      strconv.FormatInt(time.Now().Unix(), 10),
+		"pf":      midasOrder.GetStr("pf"),
+		"pfkey":   midasOrder.GetStr("pfkey"),
+		"zoneid":  "1",
+		"amt":     strconv.Itoa(order.getPrice() * 10),
 	}
 	sign := mp.makeSig("GET", "/mpay/pay_m", params)
 
@@ -269,8 +269,8 @@ func (mp *midasPaymentSt) doRecharge(player types.IPlayer, order *orderSt, tryCn
 			})
 		}
 	} else {
-		timer.AfterFunc(time.Duration(tryCnt / 2 + 1) * time.Second, func() {
-			mp.doRecharge(player, order, tryCnt + 1)
+		timer.AfterFunc(time.Duration(tryCnt/2+1)*time.Second, func() {
+			mp.doRecharge(player, order, tryCnt+1)
 		})
 	}
 }

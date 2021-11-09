@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_FETCH_VIDEO_LIST    resp: VideoList
@@ -703,4 +703,3 @@ func (m *G2V_FETCH_VIDEO_LIST_Meta) DecodeReply(data []byte) (interface{}, error
 }
 
 //------------------------------------ G2V_FETCH_VIDEO_LIST END ----------------------------------------
-

@@ -1,10 +1,10 @@
 package spring
 
 import (
+	"kinger/apps/game/huodong/event"
+	htypes "kinger/apps/game/huodong/types"
 	"kinger/gopuppy/attribute"
 	"kinger/proto/pb"
-	htypes "kinger/apps/game/huodong/types"
-	"kinger/apps/game/huodong/event"
 )
 
 func Initialize() {

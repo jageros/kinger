@@ -1,23 +1,23 @@
 package huodong
 
 import (
-	"kinger/gopuppy/attribute"
+	htypes "kinger/apps/game/huodong/types"
+	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
-	"strconv"
+	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common/glog"
-	htypes "kinger/apps/game/huodong/types"
 	"kinger/proto/pb"
-	"kinger/apps/game/module"
+	"strconv"
 )
 
 var _ types.IPlayerComponent = &huodongComponent{}
 var _ htypes.IHuodongComponent = &huodongComponent{}
 
 type huodongComponent struct {
-	attr *attribute.MapAttr
+	attr   *attribute.MapAttr
 	player types.IPlayer
-	id2Hd map[pb.HuodongTypeEnum]htypes.IHdPlayerData
+	id2Hd  map[pb.HuodongTypeEnum]htypes.IHdPlayerData
 }
 
 func (hc *huodongComponent) ComponentID() string {

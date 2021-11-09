@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_FETCH_LEVEL_INFO    resp: LevelInfo
@@ -628,4 +628,3 @@ func (m *S2C_LEVEL_ON_RECHARGE_Meta) DecodeReply(data []byte) (interface{}, erro
 }
 
 //------------------------------------ S2C_LEVEL_ON_RECHARGE END ----------------------------------------
-

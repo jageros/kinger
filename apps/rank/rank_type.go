@@ -17,31 +17,27 @@ type iRankType interface {
 	clear(rb *rankBoard, ri *rankItem)
 }
 
-type rtLadderst struct {}
+type rtLadderst struct{}
 
-type rtSeason struct {}
+type rtSeason struct{}
 
-type rtCrossArea struct {}
+type rtCrossArea struct{}
 
 func getIRankType(rankType pb.RankType) iRankType {
 	var r iRankType
 	switch rankType {
 	case pb.RankType_RtLadder:
-		r = &rtLadderst{
-		}
+		r = &rtLadderst{}
 	case pb.RankType_RtSeason:
-		r = &rtSeason{
-		}
+		r = &rtSeason{}
 	case pb.RankType_RtCrossArea:
-		r = &rtCrossArea{
-		}
+		r = &rtCrossArea{}
 
 	default:
 		r = nil
 	}
 	return r
 }
-
 
 func (rl *rtLadderst) getRank(ri *rankItem, isTotalBoard bool) int {
 	if isTotalBoard {
@@ -53,7 +49,7 @@ func (rl *rtLadderst) getRank(ri *rankItem, isTotalBoard bool) int {
 
 func (rl *rtLadderst) clear(rb *rankBoard, ri *rankItem) {}
 
-func (rl *rtLadderst) getMsgData(ri *rankItem, msg *pb.RankItem, isTotalBoard bool) *pb.RankItem{
+func (rl *rtLadderst) getMsgData(ri *rankItem, msg *pb.RankItem, isTotalBoard bool) *pb.RankItem {
 	if isTotalBoard {
 		msg.Rank = int32(ri.getTodayTotalRank())
 		msg.LastRank = int32(ri.getLastTotalRank())
@@ -127,7 +123,7 @@ func (rs *rtSeason) getRank(ri *rankItem, isTotalBoard bool) int {
 	return ri.getTodaySeasonRank()
 }
 
-func (rs *rtSeason) getMsgData(ri *rankItem, msg *pb.RankItem, isTotalBoard bool) *pb.RankItem{
+func (rs *rtSeason) getMsgData(ri *rankItem, msg *pb.RankItem, isTotalBoard bool) *pb.RankItem {
 	msg.Rank = int32(ri.getTodaySeasonRank())
 	msg.LastRank = int32(ri.getLastSeasonRank())
 	return msg
@@ -180,7 +176,7 @@ func (rc *rtCrossArea) getRank(ri *rankItem, isTotalBoard bool) int {
 	return ri.getTodayCrossAreaRank()
 }
 
-func (rc *rtCrossArea) getMsgData(ri *rankItem, msg *pb.RankItem, isTotalBoard bool) *pb.RankItem{
+func (rc *rtCrossArea) getMsgData(ri *rankItem, msg *pb.RankItem, isTotalBoard bool) *pb.RankItem {
 	msg.Rank = int32(ri.getTodayCrossAreaRank())
 	msg.LastRank = int32(ri.getLastCrossAreaRank())
 	return msg
@@ -200,13 +196,13 @@ func (rc *rtCrossArea) rankLess(rankList *rankList, i, j int) bool {
 	crossAreaHonor1 := it1.getCrossAreaHonor()
 	crossAreaHonor2 := it2.getCrossAreaHonor()
 
-	if crossAreaHonor1 > 0 || crossAreaHonor2 > 0{
+	if crossAreaHonor1 > 0 || crossAreaHonor2 > 0 {
 		if crossAreaHonor1 > crossAreaHonor2 {
 			return true
 		} else if crossAreaHonor1 < crossAreaHonor2 {
 			return false
 		}
-	}else if crossAreaHonor1 < 0 && crossAreaHonor2 < 0{
+	} else if crossAreaHonor1 < 0 && crossAreaHonor2 < 0 {
 		if crossAreaHonor1 > crossAreaHonor2 {
 			return false
 		} else if crossAreaHonor1 < crossAreaHonor2 {

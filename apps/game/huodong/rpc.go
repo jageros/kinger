@@ -1,10 +1,10 @@
 package huodong
 
 import (
-	"kinger/gopuppy/apps/logic"
-	"kinger/proto/pb"
-	"kinger/gopuppy/network"
 	"kinger/apps/game/module"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/network"
+	"kinger/proto/pb"
 )
 
 func rpc_G2G_OnHuodongEvent(_ *network.Session, arg interface{}) (interface{}, error) {

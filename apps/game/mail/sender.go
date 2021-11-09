@@ -1,24 +1,24 @@
 package mail
 
 import (
-	"kinger/gopuppy/common"
 	"kinger/apps/game/module/types"
+	"kinger/gopuppy/common"
 	"kinger/proto/pb"
 )
 
 var _ types.IMailSender = &mailSender{}
 
 type mailSender struct {
-	uid common.UUid
-	isSend bool
-	reward types.IMailReward
-	accountType pb.AccountTypeEnum
-	mailType pb.MailTypeEnum
-	title string
-	content string
+	uid            common.UUid
+	isSend         bool
+	reward         types.IMailReward
+	accountType    pb.AccountTypeEnum
+	mailType       pb.MailTypeEnum
+	title          string
+	content        string
 	newbieDeadLine int64
-	area int
-	args []interface{}
+	area           int
+	args           []interface{}
 }
 
 func (ms *mailSender) SetArea(area int) {
@@ -102,13 +102,13 @@ func (ms *mailSender) encodeArgs() []byte {
 	case pb.MailTypeEnum_CampaignUnified:
 		arg, _ := (&pb.MailCampaignUnifiedArg{
 			YourMajestyName: ms.args[0].(string),
-			CountryName: ms.args[1].(string),
+			CountryName:     ms.args[1].(string),
 		}).Marshal()
 		return arg
 
 	case pb.MailTypeEnum_RankHonorReward:
 		arg, _ := (&pb.MailRankHonorRewardArg{
-			Rank: int32(ms.args[0].(int)),
+			Rank:  int32(ms.args[0].(int)),
 			Honor: ms.args[1].(int32),
 		}).Marshal()
 		return arg
@@ -121,7 +121,7 @@ func (ms *mailSender) encodeArgs() []byte {
 		arg, _ := (&pb.LeagueSeasonEndArg{
 			OldScore: int32(ms.args[0].(int)),
 			NewScore: int32(ms.args[1].(int)),
-			Rank: int32(ms.args[2].(int)),
+			Rank:     int32(ms.args[2].(int)),
 		}).Marshal()
 		return arg
 	default:

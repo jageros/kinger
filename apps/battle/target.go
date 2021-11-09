@@ -1,15 +1,15 @@
 package main
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/gamedata"
-	"strings"
-	"strconv"
-	"kinger/gopuppy/common/glog"
 	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common"
-	"kinger/proto/pb"
+	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/utils"
+	"kinger/proto/pb"
+	"strconv"
+	"strings"
 )
 
 var allTargetFilters = map[int]*targetFilter{}
@@ -18,7 +18,7 @@ var allTargetFilters = map[int]*targetFilter{}
 type iTarget interface {
 	getObjID() int // 当前战斗中的唯一id
 	getType() int
-	getSit() int                             // 座位，判断是否跟我同边
+	getSit() int // 座位，判断是否跟我同边
 	getGrid() int
 	getCamp() int
 	getInitSit() int
@@ -37,16 +37,16 @@ type iTarget interface {
 }
 
 type mcMovieEffect struct {
-	movieID string
-	playType int
+	movieID     string
+	playType    int
 	invalidBout int
-	ownerObjID int
+	ownerObjID  int
 }
 
-func (m * mcMovieEffect) packMsg() *pb.MovieEffect {
+func (m *mcMovieEffect) packMsg() *pb.MovieEffect {
 	return &pb.MovieEffect{
-		MovieID: m.movieID,
-		PlayType: int32(m.playType),
+		MovieID:    m.movieID,
+		PlayType:   int32(m.playType),
 		OwnerObjID: int32(m.ownerObjID),
 	}
 }
@@ -68,21 +68,21 @@ func (m *mcMovieEffect) restoredFromAttr(attr *attribute.MapAttr) {
 }
 
 type baseTarget struct {
-	objID int
+	objID      int
 	targetType int
-	sit int
-	gridID int
-	camp int
-	initSit int
+	sit        int
+	gridID     int
+	camp       int
+	initSit    int
 	//buffs []iBuff
-	effects []*mcMovieEffect
+	effects   []*mcMovieEffect
 	situation *battleSituation
 }
 
 func newBaseTarget(situation *battleSituation) *baseTarget {
 	return &baseTarget{
 		situation: situation,
-		gridID: -1,
+		gridID:    -1,
 	}
 }
 
@@ -215,8 +215,8 @@ func (bt *baseTarget) boutBegin() []*clientAction {
 			actions = append(actions, &clientAction{
 				actID: pb.ClientAction_Movie,
 				actMsg: &pb.MovieAct{
-					MovieID: e.movieID,
-					Targets: []int32{int32(bt.getObjID())},
+					MovieID:  e.movieID,
+					Targets:  []int32{int32(bt.getObjID())},
 					PlayType: 0,
 				},
 			})
@@ -231,18 +231,18 @@ func (bt *baseTarget) addEffect(ownerObjID int, movieID string, playType, boutTi
 	if boutTimeout > 0 {
 		boutTimeout += bt.situation.getCurBout()
 	}
-	bt.effects = append(bt.effects, &mcMovieEffect {
-		movieID: movieID,
-		playType: playType,
+	bt.effects = append(bt.effects, &mcMovieEffect{
+		movieID:     movieID,
+		playType:    playType,
 		invalidBout: boutTimeout,
-		ownerObjID: ownerObjID,
+		ownerObjID:  ownerObjID,
 	})
 	return &clientAction{
 		actID: pb.ClientAction_Movie,
 		actMsg: &pb.MovieAct{
-			MovieID: movieID,
-			Targets: []int32{int32(bt.getObjID())},
-			PlayType: int32(playType),
+			MovieID:    movieID,
+			Targets:    []int32{int32(bt.getObjID())},
+			PlayType:   int32(playType),
 			OwnerObjID: int32(ownerObjID),
 		},
 	}
@@ -255,8 +255,8 @@ func (bt *baseTarget) delEffect(movieID string) *clientAction {
 			return &clientAction{
 				actID: pb.ClientAction_Movie,
 				actMsg: &pb.MovieAct{
-					MovieID: movieID,
-					Targets: []int32{int32(bt.getObjID())},
+					MovieID:  movieID,
+					Targets:  []int32{int32(bt.getObjID())},
 					PlayType: 0,
 				},
 			}
@@ -268,7 +268,7 @@ func (bt *baseTarget) delEffect(movieID string) *clientAction {
 type targetCondition struct {
 	operator string
 	targetID int
-	amount int
+	amount   int
 }
 
 func newTargetCondition(condition string) *targetCondition {
@@ -310,7 +310,7 @@ func newTargetCondition(condition string) *targetCondition {
 	return &targetCondition{
 		operator: op,
 		targetID: targetID,
-		amount: amount,
+		amount:   amount,
 	}
 }
 
@@ -355,8 +355,8 @@ func (c *targetCondition) check(sk *skill, skillOwner iTarget, triggerCxt *trigg
 }
 
 type targetFilter struct {
-	data *gamedata.Target
-	matchers []iTargetMatcher
+	data       *gamedata.Target
+	matchers   []iTargetMatcher
 	conditions []*targetCondition
 }
 
@@ -366,43 +366,43 @@ func newTargetFilter(data *gamedata.Target) *targetFilter {
 	}
 
 	if data.TargetSummon != 0 {
-		tf.matchers = append(tf.matchers, &targetSummonMatcher{summon:data.TargetSummon})
+		tf.matchers = append(tf.matchers, &targetSummonMatcher{summon: data.TargetSummon})
 	}
 	if data.TargetClean != 0 {
-		tf.matchers = append(tf.matchers, &targetCleanDestoryMatcher{clean:data.TargetClean})
+		tf.matchers = append(tf.matchers, &targetCleanDestoryMatcher{clean: data.TargetClean})
 	}
 	if len(data.TargetCard) > 0 {
-		tf.matchers = append(tf.matchers, &targetCardMatcher{cardIDs:data.TargetCard})
+		tf.matchers = append(tf.matchers, &targetCardMatcher{cardIDs: data.TargetCard})
 	}
 	if len(data.NotargetCard) > 0 {
-		tf.matchers = append(tf.matchers, &targetNoCardMatcher{cardIDs:data.NotargetCard})
+		tf.matchers = append(tf.matchers, &targetNoCardMatcher{cardIDs: data.NotargetCard})
 	}
 	if data.Side != 0 {
-		tf.matchers = append(tf.matchers, &targetSideMatcher{side:data.Side})
+		tf.matchers = append(tf.matchers, &targetSideMatcher{side: data.Side})
 	}
 	if data.PreTurnSide != 0 {
-		tf.matchers = append(tf.matchers, &targetPreTurnSideMatcher{preTurnSide:data.PreTurnSide})
+		tf.matchers = append(tf.matchers, &targetPreTurnSideMatcher{preTurnSide: data.PreTurnSide})
 	}
 	if len(data.InitSide) > 0 {
-		tf.matchers = append(tf.matchers, &targetInitSideMatcher{initSides:data.InitSide})
+		tf.matchers = append(tf.matchers, &targetInitSideMatcher{initSides: data.InitSide})
 	}
 	if len(data.Types) > 0 {
-		tf.matchers = append(tf.matchers, &targetTypeMatcher{types:data.Types})
+		tf.matchers = append(tf.matchers, &targetTypeMatcher{types: data.Types})
 	}
 	if len(data.TargetBat) > 0 {
-		tf.matchers = append(tf.matchers, &targetBatMatcher{bats:data.TargetBat})
+		tf.matchers = append(tf.matchers, &targetBatMatcher{bats: data.TargetBat})
 	}
 	if data.Turn != 0 {
-		tf.matchers = append(tf.matchers, &targetTurnMatcher{turn:data.Turn})
+		tf.matchers = append(tf.matchers, &targetTurnMatcher{turn: data.Turn})
 	}
 	if len(data.Camp) > 0 {
-		tf.matchers = append(tf.matchers, &targetCampMatcher{camps:data.Camp})
+		tf.matchers = append(tf.matchers, &targetCampMatcher{camps: data.Camp})
 	}
 	if len(data.TargetSkill) > 0 {
-		tf.matchers = append(tf.matchers, &targetSkillMatcher{skills:data.TargetSkill})
+		tf.matchers = append(tf.matchers, &targetSkillMatcher{skills: data.TargetSkill})
 	}
 	if len(data.TargetSkillFog) > 0 {
-		tf.matchers = append(tf.matchers, &targetSkillFogMatcher{skills:data.TargetSkillFog})
+		tf.matchers = append(tf.matchers, &targetSkillFogMatcher{skills: data.TargetSkillFog})
 	}
 	if len(data.NoTargetSkill) > 0 {
 		tm := &targetNoSkillMatcher{}
@@ -413,22 +413,22 @@ func newTargetFilter(data *gamedata.Target) *targetFilter {
 		tf.matchers = append(tf.matchers, &targetNoSkillFogMatcher{skills: data.NoTargetSkillFog})
 	}
 	if len(data.TargetAtt) > 0 {
-		tf.matchers = append(tf.matchers, &targetAttackMatcher{attTypes:data.TargetAtt})
+		tf.matchers = append(tf.matchers, &targetAttackMatcher{attTypes: data.TargetAtt})
 	}
 	if data.CardType != 0 {
-		tf.matchers = append(tf.matchers, &targetCardTypeMatcher{cardType:data.CardType})
+		tf.matchers = append(tf.matchers, &targetCardTypeMatcher{cardType: data.CardType})
 	}
 	if len(data.Sequential) > 0 {
-		tf.matchers = append(tf.matchers, &targetSequentialMatcher{sequentials:data.Sequential})
+		tf.matchers = append(tf.matchers, &targetSequentialMatcher{sequentials: data.Sequential})
 	}
 	if len(data.Poses) > 0 {
-		tf.matchers = append(tf.matchers, &targetPosMatcher{posTypes:data.Poses})
+		tf.matchers = append(tf.matchers, &targetPosMatcher{posTypes: data.Poses})
 	}
 	if len(data.Type2) > 0 {
-		tf.matchers = append(tf.matchers, &targetType2Matcher{targetIDs:data.Type2})
+		tf.matchers = append(tf.matchers, &targetType2Matcher{targetIDs: data.Type2})
 	}
 	if data.Surrender > 0 {
-		tf.matchers = append(tf.matchers, &targetSurrenderMatcher{isSurrenderor:data.Surrender == surrenderor})
+		tf.matchers = append(tf.matchers, &targetSurrenderMatcher{isSurrenderor: data.Surrender == surrenderor})
 	}
 	if data.TargetEquip != 0 {
 		tf.matchers = append(tf.matchers, &targetEquipMatcher{hasEquip: data.TargetEquip == 1})
@@ -975,7 +975,6 @@ type targetNoSkillMatcher struct {
 	targetNoSkillFogMatcher
 }
 
-
 func (tm *targetNoSkillMatcher) checkMatch(sk *skill, skillOwner, relative, target iTarget, triggerCxt *triggerContext,
 	situation *battleSituation, cacheTargets map[int][]iTarget) (iTarget, bool) {
 
@@ -1134,7 +1133,8 @@ func (tm *targetPosMatcher) checkMatch(sk *skill, skillOwner, relative, target i
 	}
 	column := situation.getGridColumn()
 
-L:	for _, posType := range tm.posTypes {
+L:
+	for _, posType := range tm.posTypes {
 		switch posType {
 		case pAll:
 			return target, true
@@ -1144,12 +1144,12 @@ L:	for _, posType := range tm.posTypes {
 			}
 		case pAdjoin:
 			if grid+column == relativeGrid || grid-column == relativeGrid ||
-				(grid+1 == relativeGrid && grid / column == relativeGrid / column) ||
-				(grid-1 == relativeGrid && grid / column == relativeGrid / column) {
+				(grid+1 == relativeGrid && grid/column == relativeGrid/column) ||
+				(grid-1 == relativeGrid && grid/column == relativeGrid/column) {
 				return target, true
 			}
 		case pApart:
-			if grid / column == relativeGrid / column {
+			if grid/column == relativeGrid/column {
 				apartGrids := grid - relativeGrid
 				if apartGrids >= 2 || apartGrids <= -2 {
 					return target, true
@@ -1158,14 +1158,14 @@ L:	for _, posType := range tm.posTypes {
 				targetRow := grid % column
 				relativeRow := relativeGrid % column
 				if targetRow == relativeRow {
-					apartGrids := grid / column - relativeGrid / column
+					apartGrids := grid/column - relativeGrid/column
 					if apartGrids >= 2 || apartGrids <= -2 {
 						return target, true
 					}
 				}
 			}
 		case pApartEmpty:
-			if grid / column == relativeGrid / column {
+			if grid/column == relativeGrid/column {
 				apartGrids := grid - relativeGrid
 				if apartGrids >= 2 || apartGrids <= -2 {
 					grid1 := grid
@@ -1185,14 +1185,14 @@ L:	for _, posType := range tm.posTypes {
 				targetRow := grid % column
 				relativeRow := relativeGrid % column
 				if targetRow == relativeRow {
-					apartGrids := grid / column - relativeGrid / column
+					apartGrids := grid/column - relativeGrid/column
 					if apartGrids >= 2 || apartGrids <= -2 {
 						grid1 := grid
 						grid2 := relativeGrid
 						if grid1 > grid2 {
 							grid1, grid2 = grid2, grid1
 						}
-						for g := grid1 + column; g < grid2; g+=column {
+						for g := grid1 + column; g < grid2; g += column {
 							t := situation.getTargetInGrid(g)
 							if t.getType() != stEmptyGrid {
 								continue L
@@ -1205,8 +1205,8 @@ L:	for _, posType := range tm.posTypes {
 
 		case pNotAdjoin:
 			if !(grid+column == relativeGrid || grid-column == relativeGrid ||
-				(grid+1 == relativeGrid && grid / column == relativeGrid / column) ||
-				(grid-1 == relativeGrid && grid / column == relativeGrid / column)) {
+				(grid+1 == relativeGrid && grid/column == relativeGrid/column) ||
+				(grid-1 == relativeGrid && grid/column == relativeGrid/column)) {
 
 				return target, true
 			}
@@ -1289,23 +1289,23 @@ func initSkillTarget() {
 type skillTargetMgr struct {
 	situation *battleSituation
 	// 当前战斗的所有target
-	allTargets     map[int]iTarget
+	allTargets map[int]iTarget
 	// 可以成为技能目标的target
 	skillTargets map[int]iTarget
 }
 
 func newSkillTargetMgr(situation *battleSituation) *skillTargetMgr {
 	return &skillTargetMgr{
-		situation: situation,
-		allTargets: map[int]iTarget{},
+		situation:    situation,
+		allTargets:   map[int]iTarget{},
 		skillTargets: map[int]iTarget{},
 	}
 }
 
 func (stm *skillTargetMgr) copy(situation *battleSituation) *skillTargetMgr {
 	cpy := &skillTargetMgr{
-		situation: situation,
-		allTargets: map[int]iTarget{},
+		situation:    situation,
+		allTargets:   map[int]iTarget{},
 		skillTargets: map[int]iTarget{},
 	}
 
@@ -1513,12 +1513,12 @@ func (stm *skillTargetMgr) findTarget(sk *skill, skillOwner iTarget, targetID in
 	} else if filter.data.Surrender == surrenderor {
 		allTargets = []iTarget{}
 		if triggerCxt.surrenderor != nil {
-			allTargets = []iTarget{ triggerCxt.surrenderor }
+			allTargets = []iTarget{triggerCxt.surrenderor}
 		}
 	} else if filter.data.Surrender == beSurrenderor {
 		allTargets = []iTarget{}
 		if triggerCxt.beSurrenderor != nil {
-			allTargets = []iTarget{ triggerCxt.beSurrenderor }
+			allTargets = []iTarget{triggerCxt.beSurrenderor}
 		}
 	}
 
@@ -1540,7 +1540,7 @@ func (stm *skillTargetMgr) findTarget(sk *skill, skillOwner iTarget, targetID in
 	} else {
 
 		for _, relative := range relatives {
-			for _, target := range allTargets{
+			for _, target := range allTargets {
 				if target == nil {
 					continue
 				}

@@ -1,17 +1,17 @@
 package level
 
 import (
+	"kinger/apps/game/module"
 	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common"
-	"strconv"
-	"kinger/proto/pb"
-	"kinger/apps/game/module"
 	"kinger/gopuppy/common/evq"
+	"kinger/proto/pb"
+	"strconv"
 )
 
 type helpRecord struct {
-	cptAttr *attribute.MapAttr
-	helpAttr *attribute.MapAttr
+	cptAttr    *attribute.MapAttr
+	helpAttr   *attribute.MapAttr
 	beHelpAttr *attribute.MapAttr
 }
 
@@ -147,7 +147,7 @@ func (hr *helpRecord) packBeHelpMsg(levelID int) *pb.LevelHelpRecord {
 	if len(loadPlayerChans) > 0 {
 		evq.Await(func() {
 			for _, c := range loadPlayerChans {
-				playerInfo := <- c
+				playerInfo := <-c
 				if item, ok := uid2Record[playerInfo.Uid]; ok {
 					item.HelperHeadImgUrl = playerInfo.HeadImgUrl
 					item.HelperName = playerInfo.Name

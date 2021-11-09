@@ -1,19 +1,19 @@
 package pvp
 
 import (
-	"kinger/gopuppy/apps/logic"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/eventhub"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/eventhub"
 	"kinger/proto/pb"
 	"math"
 )
 
 var (
-	mod *pvpModule
+	mod        *pvpModule
 	leagueAttr *leagueSeasonAttr
 )
 
@@ -63,7 +63,7 @@ func (p *pvpModule) getMaxStarByPvpLevel(level int) int {
 }
 
 func (p *pvpModule) GetMinStarByPvpLevel(level int) int {
-	return p.getMaxStarByPvpLevel(level - 1) + 1
+	return p.getMaxStarByPvpLevel(level-1) + 1
 }
 
 func (p *pvpModule) CanPvpMatch(player types.IPlayer) bool {
@@ -83,7 +83,7 @@ func (p *pvpModule) CanPvpMatch(player types.IPlayer) bool {
 	battleID := player.GetBattleID()
 	if battleID > 0 && player.GetBattleType() == consts.BtPvp {
 		_, err := logic.CallBackend(consts.AppBattle, player.GetBattleAppID(), pb.MessageID_G2B_IS_BATTLE_ALIVE, &pb.CancelBattleArg{
-			Uid: uint64(player.GetUid()),
+			Uid:      uint64(player.GetUid()),
 			BattleID: uint64(battleID),
 		})
 		return err != nil
@@ -103,7 +103,7 @@ func (p *pvpModule) CancelPvpBattle(player types.IPlayer) {
 	}
 
 	logic.PushBackend(consts.AppBattle, player.GetBattleAppID(), pb.MessageID_G2B_CANCEL_BATTLE, &pb.CancelBattleArg{
-		Uid: uint64(player.GetUid()),
+		Uid:      uint64(player.GetUid()),
 		BattleID: uint64(battleID),
 	})
 }
@@ -123,7 +123,7 @@ func onRecharge(args ...interface{}) {
 	money := args[1].(int)
 	matchParam := gamedata.GetGameData(consts.MatchParam).(*gamedata.MatchParamGameData)
 	pvpCpt := player.GetComponent(consts.PvpCpt).(*pvpComponent)
-	modifyIndex := - int(math.Ceil(math.Sqrt(float64(money)) * matchParam.RechargeRevise))
+	modifyIndex := -int(math.Ceil(math.Sqrt(float64(money)) * matchParam.RechargeRevise))
 	index := pvpCpt.getRechargeMatchIndex() + modifyIndex
 	if float64(index) < matchParam.RechargeReviseLimit {
 		index = int(matchParam.RechargeReviseLimit)

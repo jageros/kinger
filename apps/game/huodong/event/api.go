@@ -1,16 +1,16 @@
 package event
 
 import (
-	"time"
-	"kinger/proto/pb"
 	htypes "kinger/apps/game/huodong/types"
-	"kinger/gamedata"
-	"kinger/common/consts"
 	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common/glog"
-	"kinger/apps/game/module/types"
-	"kinger/gopuppy/apps/logic"
+	"kinger/proto/pb"
+	"time"
 )
 
 func reloadHuodongConfig(gdata gamedata.IGameData) {
@@ -37,7 +37,7 @@ func reloadHuodongConfig(gdata gamedata.IGameData) {
 
 			if needRefresh {
 				if arg == nil {
-					arg = &pb.HuodongEvent{HdType:htype, Event: pb.HuodongEventType_HetRefresh}
+					arg = &pb.HuodongEvent{HdType: htype, Event: pb.HuodongEventType_HetRefresh}
 				}
 				arg.Areas = append(arg.Areas, int32(area))
 			}
@@ -50,7 +50,7 @@ func reloadHuodongConfig(gdata gamedata.IGameData) {
 	}
 }
 
-func Initialize()  {
+func Initialize() {
 	registerRpc()
 
 	if module.Service.GetAppID() == 1 {

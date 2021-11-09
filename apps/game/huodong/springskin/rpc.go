@@ -1,14 +1,14 @@
 package springskin
 
 import (
+	"fmt"
+	htypes "kinger/apps/game/huodong/types"
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/logic"
 	"kinger/proto/pb"
-	"kinger/apps/game/module"
-	"kinger/gamedata"
-	"kinger/common/consts"
-	"kinger/apps/game/module/types"
-	htypes "kinger/apps/game/huodong/types"
-	"fmt"
 	"strconv"
 )
 
@@ -30,7 +30,7 @@ func rpc_C2S_SpringSkinLottery(agent *logic.PlayerAgent, arg interface{}) (inter
 		return nil, gamedata.GameError(2)
 	}
 
-	resCpt.ModifyResource(consts.Jade, - funcPriceGameData.LuckyBag, consts.RmrLuckBag)
+	resCpt.ModifyResource(consts.Jade, -funcPriceGameData.LuckyBag, consts.RmrLuckBag)
 	reply := lotterySkin(player)
 
 	module.Shop.LogShopBuyItem(player, "luckBag", "luckBag", 1, pb.HuodongTypeEnum_HSpringSkin.String(),

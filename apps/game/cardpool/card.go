@@ -2,12 +2,12 @@ package cardpool
 
 import (
 	"fmt"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/glog"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/glog"
 	"kinger/proto/pb"
 	"time"
 )
@@ -149,7 +149,7 @@ func (c *collectCard) resetNormalCard(data *gamedata.Card, player types.IPlayer)
 	c.attr.SetInt("level", level)
 
 	if c.GetMaxUnlockLevel() > 0 {
-		cardData := gdata.GetCard(cardID, c.GetMaxUnlockLevel() - 1)
+		cardData := gdata.GetCard(cardID, c.GetMaxUnlockLevel()-1)
 		c.setMaxUnlockLevel(0)
 		if cardData != nil && cardData.ConsumeBook > 0 {
 			returnRes[consts.SkyBook] = cardData.ConsumeBook
@@ -235,12 +235,12 @@ func (c *collectCard) Reset(player types.IPlayer) {
 	}
 	if amount > 0 {
 		player.GetComponent(consts.CardCpt).(types.ICardComponent).ModifyCollectCards(map[uint32]*pb.CardInfo{
-			cardID: &pb.CardInfo{Amount:int32(amount)},
+			cardID: &pb.CardInfo{Amount: int32(amount)},
 		})
 	} else if level == 0 {
 		cardCpt := player.GetComponent(consts.CardCpt).(*cardComponent)
 		cardCpt.ModifyCollectCards(map[uint32]*pb.CardInfo{
-			cardID: &pb.CardInfo{Level:int32(- oldLevel)},
+			cardID: &pb.CardInfo{Level: int32(-oldLevel)},
 		})
 		cardCpt.poolDelCard(cardID)
 	}
@@ -263,7 +263,7 @@ func (c *collectCard) GetSkin() string {
 
 func (c *collectCard) IsMaxLevel() bool {
 	gdata := gamedata.GetGameData(consts.Pool).(*gamedata.PoolGameData)
-	return gdata.GetCard(c.GetCardID(), c.GetLevel() + 1) == nil
+	return gdata.GetCard(c.GetCardID(), c.GetLevel()+1) == nil
 }
 
 func (c *collectCard) IsSpCard() bool {
@@ -316,13 +316,13 @@ func (c *collectCard) setMaxUnlockLevel(level int) {
 
 func (c *collectCard) PackMsg() *pb.CardInfo {
 	return &pb.CardInfo{
-		CardId: c.GetCardID(),
-		Level: int32(c.GetLevel()),
-		Amount: int32(c.GetAmount()),
-		Energy: c.GetEnergy(),
-		Skin: c.GetSkin(),
-		Equip: c.GetEquip(),
-		State: c.GetState(),
+		CardId:         c.GetCardID(),
+		Level:          int32(c.GetLevel()),
+		Amount:         int32(c.GetAmount()),
+		Energy:         c.GetEnergy(),
+		Skin:           c.GetSkin(),
+		Equip:          c.GetEquip(),
+		State:          c.GetState(),
 		MaxUnlockLevel: int32(c.GetMaxUnlockLevel()),
 	}
 }

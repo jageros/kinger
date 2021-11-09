@@ -2,23 +2,23 @@ package treasure
 
 import (
 	"github.com/gogo/protobuf/proto"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common"
-	"kinger/gopuppy/common/timer"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/timer"
 	"kinger/proto/pb"
 	"math"
 	"time"
 )
 
 const (
-	maxOpenTime = 2000000000
+	maxOpenTime      = 2000000000
 	ttUnknowTreasure = 1
 	ttRewardTreasure = 2
-	ttDailyTreasure = 3
+	ttDailyTreasure  = 3
 )
 
 type iTreasure interface {
@@ -77,7 +77,7 @@ func (t *treasureSt) setOpenTime(time_ int32) {
 	t.attr.SetInt32("openTime", time_)
 }
 
-func (t *treasureSt) setActivateTime(time_ int32)  {
+func (t *treasureSt) setActivateTime(time_ int32) {
 	t.attr.SetInt32("activateTime", time_)
 }
 
@@ -105,7 +105,6 @@ func (t *treasureSt) getRare() int {
 	}
 	return 0
 }
-
 
 func (t *treasureSt) getOpenNeedTime() int {
 	data := t.getGameData()
@@ -154,7 +153,6 @@ func (t *treasureSt) packMsg(player types.IPlayer) proto.Marshaler {
 func (t *treasureSt) isDobule(player types.IPlayer) bool {
 	return false
 }
-
 
 type dailyTreasureSt struct {
 	treasureSt
@@ -242,17 +240,17 @@ func (t *dailyTreasureSt) packMsg(player types.IPlayer) proto.Marshaler {
 		IsOpen:        t.isOpen(),
 		NextTime:      int32(timer.TimeDelta(0, 0, 0).Seconds()),
 		IsDouble:      t.isDobule(player),
-		RemainAmount: int32(remainAmount),
-		CompletedPro: int32(completedPro),
+		RemainAmount:  int32(remainAmount),
+		CompletedPro:  int32(completedPro),
 	}
 
 	helperUid := t.attr.GetUInt64("helperUid")
 	if helperUid > 0 {
 		msg.ShareInfo = &pb.DailyTreasureShareInfo{
-			HelperUid: helperUid,
-			HelperHeadImg: t.attr.GetStr("helperHeadImg"),
+			HelperUid:       helperUid,
+			HelperHeadImg:   t.attr.GetStr("helperHeadImg"),
 			HelperHeadFrame: t.attr.GetStr("helperHeadFrame"),
-			HelperName: t.attr.GetStr("helperName"),
+			HelperName:      t.attr.GetStr("helperName"),
 		}
 	}
 	return msg

@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_FETCH_ACTIVITY_DETAIL    req: ActivityID    resp: ActivityData
@@ -426,4 +426,3 @@ func (m *S2C_GRANT_ACTIVITY_REWARD_Meta) DecodeReply(data []byte) (interface{}, 
 }
 
 //------------------------------------ S2C_GRANT_ACTIVITY_REWARD END ----------------------------------------
-

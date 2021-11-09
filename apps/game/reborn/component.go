@@ -2,17 +2,17 @@ package reborn
 
 import (
 	"fmt"
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/config"
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common"
 	"kinger/gopuppy/common/eventhub"
 	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/timer"
-	"kinger/apps/game/module"
-	"kinger/apps/game/module/types"
-	"kinger/common/config"
-	"kinger/common/consts"
-	"kinger/gamedata"
 	"kinger/proto/pb"
 	"strconv"
 	"time"
@@ -21,7 +21,7 @@ import (
 var _ types.IPlayerComponent = &rebornComponent{}
 
 type rebornComponent struct {
-	attr *attribute.MapAttr
+	attr   *attribute.MapAttr
 	player types.IPlayer
 }
 
@@ -69,7 +69,7 @@ func (rc *rebornComponent) buyCard(goodsID int) (string, string, int, int, error
 		return "", "", 0, 0, gamedata.GameError(4)
 	}
 
-	resCpt.ModifyResource(consts.Feats, - goodsData.HonorPrice, consts.RmrUnknownConsume)
+	resCpt.ModifyResource(consts.Feats, -goodsData.HonorPrice, consts.RmrUnknownConsume)
 	cardCpt.ModifyCollectCards(map[uint32]*pb.CardInfo{
 		goodsData.CardID: &pb.CardInfo{CardId: goodsData.CardID, Amount: 1},
 	})
@@ -100,7 +100,7 @@ func (rc *rebornComponent) buyPrivilege(goodsID int) (string, string, int, int, 
 		return "", "", 0, 0, gamedata.GameError(4)
 	}
 
-	resCpt.ModifyResource(consts.Prestige, - goodsData.PrestigePrice, consts.RmrUnknownConsume)
+	resCpt.ModifyResource(consts.Prestige, -goodsData.PrestigePrice, consts.RmrUnknownConsume)
 	module.OutStatus.AddStatus(rc.player, statusID, -1)
 
 	itemID := fmt.Sprintf("priv%d", goodsData.PrivID)
@@ -123,7 +123,7 @@ func (rc *rebornComponent) buyCardSkin(goodsID int) (string, string, int, int, e
 		return "", "", 0, 0, gamedata.GameError(4)
 	}
 
-	resCpt.ModifyResource(consts.Prestige, - goodsData.HonorPrice, consts.RmrUnknownConsume)
+	resCpt.ModifyResource(consts.Prestige, -goodsData.HonorPrice, consts.RmrUnknownConsume)
 	it := module.Bag.AddCardSkin(rc.player, goodsData.SkinID)
 	return it.GetGmID(), it.GetName(), consts.Prestige, goodsData.HonorPrice, nil
 }
@@ -144,7 +144,7 @@ func (rc *rebornComponent) buyEquip(goodsID int) (string, string, int, int, erro
 		return "", "", 0, 0, gamedata.GameError(4)
 	}
 
-	resCpt.ModifyResource(consts.Reputation, - goodsData.Price, consts.RmrRebornBuyEquip)
+	resCpt.ModifyResource(consts.Reputation, -goodsData.Price, consts.RmrRebornBuyEquip)
 	glog.Infof("reborn buyEquip, uid=%d, equipID=%s", rc.player.GetUid(), goodsData.EquipID)
 	module.Bag.AddEquip(rc.player, goodsData.EquipID)
 
@@ -157,7 +157,7 @@ func (rc *rebornComponent) buyEquip(goodsID int) (string, string, int, int, erro
 		}
 		return it.GetGmID(), it.GetName(), consts.Reputation, goodsData.Price, nil
 	}
-	
+
 	return "", "", 0, 0, nil
 }
 
@@ -256,7 +256,7 @@ func (rc *rebornComponent) canReborn() (treausreModelID string, gold int, allCol
 		if card.GetMaxUnlockLevel() <= 0 {
 			isAllUnlockMaxLevel = false
 		} else {
-			data := poolGameData.GetCard(card.GetCardID(), card.GetMaxUnlockLevel() - 1)
+			data := poolGameData.GetCard(card.GetCardID(), card.GetMaxUnlockLevel()-1)
 			if data != nil {
 				usedSkyBook += data.ConsumeBook
 			}
@@ -279,7 +279,7 @@ func (rc *rebornComponent) canReborn() (treausreModelID string, gold int, allCol
 	if skyBook < 0 {
 		skyBook = 0
 	}
-	rc.attr.SetInt( "rebornCnt", curCnt )
+	rc.attr.SetInt("rebornCnt", curCnt)
 	return
 }
 
@@ -290,7 +290,7 @@ func (rc *rebornComponent) rebornOneCard(card types.ICollectCard, resetUnlockCar
 	if config.GetConfig().IsXfServer() {
 		// 保留溢出数量，变成1级
 		modifyCards[cardID] = &pb.CardInfo{
-			Level:  1 - int32(card.GetLevel()),
+			Level: 1 - int32(card.GetLevel()),
 		}
 		return 0
 	} else {
@@ -300,13 +300,13 @@ func (rc *rebornComponent) rebornOneCard(card types.ICollectCard, resetUnlockCar
 			// 重生后已解锁，变成3级0张
 			modifyCards[cardID] = &pb.CardInfo{
 				Level:  3 - int32(card.GetLevel()),
-				Amount: - int32(amount),
+				Amount: -int32(amount),
 			}
 
 		} else {
 			// 重生后未解锁，删除
 			modifyCards[cardID] = &pb.CardInfo{
-				Level: - int32(card.GetLevel()),
+				Level: -int32(card.GetLevel()),
 			}
 		}
 		return amount
@@ -350,21 +350,21 @@ func (rc *rebornComponent) reborn() (*pb.RebornReply, error) {
 	}
 
 	cardCpt := rc.player.GetComponent(consts.CardCpt).(types.ICardComponent)
-	prestige := int( float32(gold) / float32(goldCaculGameData.Cacul.Gold) * goldCaculGameData.Cacul.Honor )
+	prestige := int(float32(gold) / float32(goldCaculGameData.Cacul.Gold) * goldCaculGameData.Cacul.Honor)
 
 	/*
-	resetUnlockCards.ForEach(func(cardID uint32) bool {
-		if _, ok := modifyCards[cardID]; ok {
+		resetUnlockCards.ForEach(func(cardID uint32) bool {
+			if _, ok := modifyCards[cardID]; ok {
+				return true
+			}
+			if cardCpt.GetCollectCard(cardID) != nil {
+				return true
+			}
+			modifyCards[cardID] = &pb.CardInfo{
+				Level: 3,
+			}
 			return true
-		}
-		if cardCpt.GetCollectCard(cardID) != nil {
-			return true
-		}
-		modifyCards[cardID] = &pb.CardInfo{
-			Level: 3,
-		}
-		return true
-	})
+		})
 	*/
 
 	glog.Infof("reborn uid=%d, pvpTeam=%d, gold=%d, feats=%d, prestige=%d, skyBook=%d, cards=%v, rewardGold=%d",
@@ -376,7 +376,7 @@ func (rc *rebornComponent) reborn() (*pb.RebornReply, error) {
 		//consts.Prestige: prestige + int(feats),
 		consts.Reputation: reputation,
 		consts.SkyBook:    skyBook,
-		consts.Gold: rewardGold,
+		consts.Gold:       rewardGold,
 	}, consts.RmrReborn)
 	cardCpt.ModifyCollectCards(modifyCards)
 	rc.attr.SetInt("maxPvpLevel", rebornPvpLevel)
@@ -390,8 +390,8 @@ func (rc *rebornComponent) reborn() (*pb.RebornReply, error) {
 		TreasureReward: rc.player.GetComponent(consts.TreasureCpt).(types.ITreasureComponent).OpenTreasureByModelID(
 			treausreModelID, false),
 		Reputation: int32(reputation),
-		NewName: rc.player.GetName(),
-		Gold: int32(rewardGold),
+		NewName:    rc.player.GetName(),
+		Gold:       int32(rewardGold),
 	}, nil
 }
 
@@ -448,7 +448,7 @@ func (rc *rebornComponent) onPvpLevelUpdate(pvpLevel int) {
 }
 
 func (rc *rebornComponent) getRebornCnt() int {
-	return rc.attr.GetInt( "rebornCnt")
+	return rc.attr.GetInt("rebornCnt")
 }
 
 func (rc *rebornComponent) getRebornRemainDay() int {

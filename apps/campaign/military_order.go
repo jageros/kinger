@@ -6,8 +6,8 @@ import (
 )
 
 type militaryOrder struct {
-	attr *attribute.MapAttr
-	cty *city
+	attr     *attribute.MapAttr
+	cty      *city
 	cityPath []int
 }
 
@@ -28,7 +28,7 @@ func newMilitaryOrder(cty *city, moType pb.MilitaryOrderType, forage, amount int
 func newMilitaryOrderByAttr(cty *city, attr *attribute.MapAttr) *militaryOrder {
 	mo := &militaryOrder{
 		attr: attr,
-		cty: cty,
+		cty:  cty,
 	}
 	cityPathAttr := attr.GetListAttr("cityPath")
 	if cityPathAttr != nil {
@@ -42,7 +42,7 @@ func newMilitaryOrderByAttr(cty *city, attr *attribute.MapAttr) *militaryOrder {
 
 func (mo *militaryOrder) cancel() {
 	mo.attr.SetBool("cancel", true)
-	mo.cty.modifyResource(resForage, float64(mo.getAmount() * mo.getForage()))
+	mo.cty.modifyResource(resForage, float64(mo.getAmount()*mo.getForage()))
 }
 
 func (mo *militaryOrder) getType() pb.MilitaryOrderType {
@@ -84,10 +84,10 @@ func (mo *militaryOrder) isCancel() bool {
 
 func (mo *militaryOrder) packMsg() *pb.MilitaryOrder {
 	return &pb.MilitaryOrder{
-		Type: mo.getType(),
-		Forage: int32(mo.getForage()),
-		Amount: int32(mo.getAmount()),
-		MaxAmount: int32(mo.getMaxAmount()),
+		Type:       mo.getType(),
+		Forage:     int32(mo.getForage()),
+		Amount:     int32(mo.getAmount()),
+		MaxAmount:  int32(mo.getMaxAmount()),
 		TargetCity: int32(mo.getTargetCity()),
 	}
 }

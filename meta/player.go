@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_LOGIN    req: LoginArg    resp: LoginReply
@@ -2333,4 +2333,3 @@ func (m *G2G_ON_BIND_ACCOUNT_Meta) DecodeReply(data []byte) (interface{}, error)
 }
 
 //------------------------------------ G2G_ON_BIND_ACCOUNT END ----------------------------------------
-

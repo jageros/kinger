@@ -2,10 +2,10 @@ package outstatus
 
 import (
 	"fmt"
-	"kinger/gopuppy/attribute"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
+	"kinger/gopuppy/attribute"
 )
 
 var mod *outStatusModule
@@ -50,7 +50,7 @@ func (m *outStatusModule) AddForbidStatus(player types.IPlayer, forbidID int, le
 		fmt.Sprintf("%s%d", consts.OtForbid, forbidID), leftTime, args...)
 }
 
-func (m *outStatusModule) DelForbidStatus(player types.IPlayer, forbidID int){
+func (m *outStatusModule) DelForbidStatus(player types.IPlayer, forbidID int) {
 	player.GetComponent(consts.OutStatusCpt).(*outstatusComponent).delStatus(fmt.Sprintf("%s%d", consts.OtForbid, forbidID))
 }
 
@@ -155,7 +155,7 @@ func (m *outStatusModule) BuffPvpNoSubStar(player types.IPlayer, amount int) int
 }
 
 //pvp加一个宝箱
-func (m *outStatusModule)BuffPvpAddTreasure(player types.IPlayer, amount int) int{
+func (m *outStatusModule) BuffPvpAddTreasure(player types.IPlayer, amount int) int {
 	amount2 := float64(amount)
 	pcm := player.GetComponent(consts.OutStatusCpt).(*outstatusComponent)
 	pcm.forEachBuff(func(b iBuff) {
@@ -163,8 +163,9 @@ func (m *outStatusModule)BuffPvpAddTreasure(player types.IPlayer, amount int) in
 	})
 	return int(amount2)
 }
+
 //每日宝箱加金币
-func (m *outStatusModule)BuffDayTreasureGlod(player types.IPlayer, amount int) int{
+func (m *outStatusModule) BuffDayTreasureGlod(player types.IPlayer, amount int) int {
 	amount2 := float64(amount)
 	pcm := player.GetComponent(consts.OutStatusCpt).(*outstatusComponent)
 	pcm.forEachBuff(func(b iBuff) {
@@ -174,7 +175,7 @@ func (m *outStatusModule)BuffDayTreasureGlod(player types.IPlayer, amount int) i
 }
 
 //VIP每日宝箱翻倍
-func (m *outStatusModule)BuffDoubleRewardOfVip(player types.IPlayer, amount int) int {
+func (m *outStatusModule) BuffDoubleRewardOfVip(player types.IPlayer, amount int) int {
 	amount2 := float64(amount)
 	pcm := player.GetComponent(consts.OutStatusCpt).(*outstatusComponent)
 	pcm.forEachBuff(func(b iBuff) {
@@ -184,7 +185,7 @@ func (m *outStatusModule)BuffDoubleRewardOfVip(player types.IPlayer, amount int)
 }
 
 //VIP对战宝箱卡牌+2
-func (m *outStatusModule)BuffAddCardOfVip(player types.IPlayer, amount int) int {
+func (m *outStatusModule) BuffAddCardOfVip(player types.IPlayer, amount int) int {
 	amount2 := float64(amount)
 	pcm := player.GetComponent(consts.OutStatusCpt).(*outstatusComponent)
 	pcm.forEachBuff(func(b iBuff) {

@@ -1,22 +1,22 @@
 package main
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/gamedata"
-	"kinger/common/consts"
 	"fmt"
-	"kinger/gopuppy/common/glog"
-	"kinger/proto/pb"
-	"kinger/gopuppy/common"
-	"sort"
-	"kinger/gopuppy/common/eventhub"
-	"math"
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/center/api"
-	"strconv"
-	gpb "kinger/gopuppy/proto/pb"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/eventhub"
+	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/timer"
-	"time"
+	gpb "kinger/gopuppy/proto/pb"
+	"kinger/proto/pb"
+	"math"
 	"math/rand"
+	"sort"
+	"strconv"
+	"time"
 )
 
 var cityMgr = &cityMgrSt{}
@@ -61,7 +61,7 @@ func (cm *cityMgrSt) initialize() {
 		}
 		cty := newCity(cityID)
 		cty.calcGlory(paramGameData, 0, 0, 0, 0)
-		cty.modifyResource(resDefense, data.DefenseMax * paramGameData.InitialDefense)
+		cty.modifyResource(resDefense, data.DefenseMax*paramGameData.InitialDefense)
 		cm.allCitys[cityID] = cty
 		cty.attr.Save(false)
 	}
@@ -70,14 +70,14 @@ func (cm *cityMgrSt) initialize() {
 	eventhub.Subscribe(evWarEnd, cm.onWarEnd)
 	eventhub.Subscribe(evUnified, cm.onWarEnd)
 	eventhub.Subscribe(evCityChangeCountry, cm.onCityChangeCountry)
-	timer.AddTicker(15 * time.Minute, func() {
+	timer.AddTicker(15*time.Minute, func() {
 		cm.calcGlory()
 	})
-	timer.AddTicker(time.Duration(rand.Intn(20) + 290) * time.Second, func() {
+	timer.AddTicker(time.Duration(rand.Intn(20)+290)*time.Second, func() {
 		cm.save(false)
 	})
 	timer.AddTicker(time.Minute, cm.checkCaptiveTimeout)
-	timer.AddTicker(10 * time.Second, cm.calcPerContribution)
+	timer.AddTicker(10*time.Second, cm.calcPerContribution)
 }
 
 func (cm *cityMgrSt) checkCaptiveTimeout() {
@@ -130,7 +130,7 @@ func (cm *cityMgrSt) onWarBegin(args ...interface{}) {
 	}
 }
 
-func (cm *cityMgrSt) onWarEnd(args ...interface{})  {
+func (cm *cityMgrSt) onWarEnd(args ...interface{}) {
 	for _, cty := range cm.allCitys {
 		cty.onWarEnd()
 		campaignMgr.addSortCity(cty.getCityID())
@@ -190,10 +190,10 @@ func (cm *cityMgrSt) calcPerContribution() {
 }
 
 type city struct {
-	id int
-	attr *attribute.AttrMgr
-	resourceAttr *attribute.MapAttr
-	missionsAttr *attribute.ListAttr
+	id                int
+	attr              *attribute.AttrMgr
+	resourceAttr      *attribute.MapAttr
+	missionsAttr      *attribute.ListAttr
 	militaryOrderAttr *attribute.ListAttr
 	// 注资记录
 	capitalInjectionAttr *attribute.ListAttr
@@ -201,17 +201,17 @@ type city struct {
 	memAttr *attribute.MapAttr
 
 	// 属于这个城的玩家
-	uid2Player map[common.UUid]*player
-	players   []*player
+	uid2Player      map[common.UUid]*player
+	players         []*player
 	playersNeedSort bool
 	// 在这个城的玩家，包括属于这个和不属于这个城
 	uid2InCityPlayer map[common.UUid]*player
-	inCityPlayers   []*player
+	inCityPlayers    []*player
 	// 在这个城的俘虏
 	uid2Captive map[common.UUid]*player
-	captives   []*player
+	captives    []*player
 	// 在这个城申请创建国家
-	ccApplys []*createCountryApply
+	ccApplys    []*createCountryApply
 	uid2CcApply map[common.UUid]*createCountryApply
 	// 已发布的任务
 	missions []*mission
@@ -220,26 +220,26 @@ type city struct {
 	// 正在攻打这个城的队伍
 	attackingTeams common.IntSet
 	// 注资记录
-	capitalInjections []*attribute.MapAttr
+	capitalInjections    []*attribute.MapAttr
 	uid2CapitalInjection map[common.UUid]*attribute.MapAttr
 	// 军令
 	militaryOrders []*militaryOrder
 	// 这个城获得战功的玩家
 	addContributionPlayers map[common.UUid]float64
-	addContributions float64
+	addContributions       float64
 }
 
 func newCityByAttr(cityID int, attr *attribute.AttrMgr) *city {
 	c := &city{
-		id:                   cityID,
-		attr:                 attr,
-		capitalInjectionAttr: attr.GetListAttr("capitalInjection"),
-		uid2Player:           map[common.UUid]*player{},
-		uid2InCityPlayer: map[common.UUid]*player{},
-		uid2Captive: map[common.UUid]*player{},
-		uid2CcApply:          map[common.UUid]*createCountryApply{},
-		job2Players:          map[pb.CampaignJob][]*player{},
-		uid2CapitalInjection: map[common.UUid]*attribute.MapAttr{},
+		id:                     cityID,
+		attr:                   attr,
+		capitalInjectionAttr:   attr.GetListAttr("capitalInjection"),
+		uid2Player:             map[common.UUid]*player{},
+		uid2InCityPlayer:       map[common.UUid]*player{},
+		uid2Captive:            map[common.UUid]*player{},
+		uid2CcApply:            map[common.UUid]*createCountryApply{},
+		job2Players:            map[pb.CampaignJob][]*player{},
+		uid2CapitalInjection:   map[common.UUid]*attribute.MapAttr{},
 		addContributionPlayers: map[common.UUid]float64{},
 	}
 
@@ -259,11 +259,11 @@ func newCityByAttr(cityID int, attr *attribute.AttrMgr) *city {
 	}
 
 	/*
-	c.resourceAttr = attr.GetMapAttr("res")
-	if c.resourceAttr == nil {
-		c.resourceAttr = attribute.NewMapAttr()
-		attr.SetMapAttr("res", c.resourceAttr)
-	}
+		c.resourceAttr = attr.GetMapAttr("res")
+		if c.resourceAttr == nil {
+			c.resourceAttr = attribute.NewMapAttr()
+			attr.SetMapAttr("res", c.resourceAttr)
+		}
 	*/
 
 	// 任务
@@ -338,7 +338,7 @@ func (c *city) checkCaptiveTimeout() {
 				p.setLastCountryID(0, true)
 				p.quitCountry(0)
 			} else {
-				p.subContribution(p.getMaxContribution() * 0.1, true)
+				p.subContribution(p.getMaxContribution()*0.1, true)
 			}
 		}
 	}
@@ -617,8 +617,7 @@ func (c *city) calcGlory(paramGameData *gamedata.CampaignParamGameData, allCount
 		glory = 10.0
 	} else {
 		// 基础荣耀值＊所有势力玩家数／本城市玩家数／总城池数＊（（最大势力人数／本势力人数－1）＊honor_revise＋1）
-		glory = ( data.GloryBase * float64(allCountryPlayerAmount) / float64(playerAmount) / float64(cityAmount) * (
-			(float64(maxCountryPlayerAmount)/float64(myCountryPlayerAmount)-1) * paramGameData.HonorRevise + 1) ) * 10
+		glory = (data.GloryBase * float64(allCountryPlayerAmount) / float64(playerAmount) / float64(cityAmount) * ((float64(maxCountryPlayerAmount)/float64(myCountryPlayerAmount)-1)*paramGameData.HonorRevise + 1)) * 10
 		glory = math.Round(glory)
 		glory /= 10
 	}
@@ -669,7 +668,7 @@ func (c *city) setCountryID(countryID uint32) {
 	eventhub.Publish(evCityChangeCountry, c.id, oldCryID, countryID)
 
 	campaignMgr.broadcastClient(pb.MessageID_S2C_UPDATE_CITY_COUNTRY, &pb.UpdateCityCountryArg{
-		CityID: int32(c.id),
+		CityID:    int32(c.id),
 		CountryID: countryID,
 	})
 }
@@ -719,10 +718,10 @@ func (c *city) autocephaly(isFix bool) error {
 
 	countryID := cry.getID()
 	campaignMgr.broadcastClient(pb.MessageID_S2C_COUNTRY_CREATED, &pb.CountryCreatedArg{
-		CountryID: countryID,
-		Name: cry.getName(),
-		Flag: flag,
-		CityID: int32(c.id),
+		CountryID:   countryID,
+		Name:        cry.getName(),
+		Flag:        flag,
+		CityID:      int32(c.id),
 		YourMajesty: p.packSimpleMsg(),
 	})
 
@@ -737,7 +736,7 @@ func (c *city) autocephaly(isFix bool) error {
 	}
 
 	if !isFix {
-		p.subContribution( p.getMaxContribution() * 0.2, true )
+		p.subContribution(p.getMaxContribution()*0.2, true)
 	}
 	p.setJob(pb.CampaignJob_Prefect, pb.CampaignJob_YourMajesty, true)
 	noticeMgr.sendNoticeToCountry(oldCryID, pb.CampaignNoticeType_AutocephalyNt2, c.id, pb.CampaignJob_Prefect, p.getName(),
@@ -780,7 +779,7 @@ func (c *city) getForagePrice() int {
 	return c.attr.GetInt("foragePrice")
 }
 
-func (c *city) getAllPlayers() []*player  {
+func (c *city) getAllPlayers() []*player {
 	return c.players
 }
 
@@ -788,7 +787,7 @@ func (c *city) getCaptives() []*player {
 	return c.captives
 }
 
-func (c *city) getAllInCityPlayers() []*player  {
+func (c *city) getAllInCityPlayers() []*player {
 	var ps []*player
 	for _, p := range c.inCityPlayers {
 		if _, ok := c.uid2Player[p.getUid()]; !ok {
@@ -901,10 +900,10 @@ func (c *city) createCountry() {
 
 	countryID := cry.getID()
 	campaignMgr.broadcastClient(pb.MessageID_S2C_COUNTRY_CREATED, &pb.CountryCreatedArg{
-		CountryID: countryID,
-		Name: ca.getCountryName(),
-		Flag: flag,
-		CityID: int32(c.id),
+		CountryID:   countryID,
+		Name:        ca.getCountryName(),
+		Flag:        flag,
+		CityID:      int32(c.id),
 		YourMajesty: p.packSimpleMsg(),
 	})
 
@@ -912,7 +911,7 @@ func (c *city) createCountry() {
 	c.ccApplys = []*createCountryApply{}
 	c.uid2CcApply = map[common.UUid]*createCountryApply{}
 	countryMgr.addCountry(cry)
-	c.modifyResource(resGold, float64(ca.getGold()) / 2)
+	c.modifyResource(resGold, float64(ca.getGold())/2)
 
 	for _, p2 := range c.players {
 		p2.delCcApply(p.getUid() != p2.getUid())
@@ -926,14 +925,14 @@ func (c *city) createCountry() {
 
 func (c *city) packMsg(uid common.UUid) *pb.CityData {
 	msg := &pb.CityData{
-		CountryID: c.getCountryID(),
-		PlayerAmount: int32(c.getPlayerAmount()),
-		Agriculture: int32(c.getResource(resAgriculture)),
-		Business: int32(c.getResource(resBusiness)),
-		Defense: int32(c.getResource(resDefense)),
-		Forage: int32(c.getResource(resForage)),
-		Gold: int32(c.getResource(resGold)),
-		Glory: int32(c.getGlory() * 10),
+		CountryID:          c.getCountryID(),
+		PlayerAmount:       int32(c.getPlayerAmount()),
+		Agriculture:        int32(c.getResource(resAgriculture)),
+		Business:           int32(c.getResource(resBusiness)),
+		Defense:            int32(c.getResource(resDefense)),
+		Forage:             int32(c.getResource(resForage)),
+		Gold:               int32(c.getResource(resGold)),
+		Glory:              int32(c.getGlory() * 10),
 		InCityPlayerAmount: int32(c.getInCityPlayerAmount()),
 	}
 
@@ -949,7 +948,7 @@ func (c *city) packMsg(uid common.UUid) *pb.CityData {
 	if cry == nil {
 		msg.ApplyCreateCountry = &pb.ApplyCreateCountryData{
 			RemainTime: int32(createCountryMgr.getApplyCreateCountryRemainTime().Seconds()),
-			Players: c.getCreateCoutryApplysByPage(0),
+			Players:    c.getCreateCoutryApplysByPage(0),
 		}
 		ca := c.getCreateCountryApply(uid)
 		if ca != nil {
@@ -968,10 +967,10 @@ func (c *city) packMsg(uid common.UUid) *pb.CityData {
 
 func (c *city) packSimpleMsg() *pb.CitySimpleData {
 	msg := &pb.CitySimpleData{
-		CityID: int32(c.id),
+		CityID:    int32(c.id),
 		CountryID: c.getCountryID(),
-		Defense: int32(c.getResource(resDefense)),
-		State: pb.CityState_NormalCS,
+		Defense:   int32(c.getResource(resDefense)),
+		State:     pb.CityState_NormalCS,
 	}
 
 	if warMgr.isInWar() {
@@ -987,7 +986,7 @@ func (c *city) packSimpleMsg() *pb.CitySimpleData {
 func (c *city) onMissionCancel(m *playerMission) {
 	for _, ms := range c.missions {
 		if ms.equal(m) {
-			if ms.getAmount() + 1 <= ms.getMaxAmount() {
+			if ms.getAmount()+1 <= ms.getMaxAmount() {
 				ms.setAmount(ms.getAmount() + 1)
 				return
 			} else {
@@ -995,7 +994,7 @@ func (c *city) onMissionCancel(m *playerMission) {
 			}
 		}
 	}
-	c.modifyResource(resGold, float64(m.getGoldReward() + m.getTransportGold()))
+	c.modifyResource(resGold, float64(m.getGoldReward()+m.getTransportGold()))
 	c.modifyResource(resForage, float64(m.getTransportForage()))
 }
 
@@ -1063,7 +1062,7 @@ func (c *city) publishMission(uid common.UUid, msType pb.CampaignMsType, gold, a
 		paramGameData := gamedata.GetGameData(consts.CampaignParam).(*gamedata.CampaignParamGameData)
 		if msType == pb.CampaignMsType_Dispatch {
 
-			dispatchGold = int( paramGameData.TransferCost * float64(distance) )
+			dispatchGold = int(paramGameData.TransferCost * float64(distance))
 		} else {
 			maxTime = int(float64(distance) * paramGameData.TransportTime)
 			if transportType == pb.TransportTypeEnum_ForageTT {
@@ -1092,8 +1091,8 @@ func (c *city) publishMission(uid common.UUid, msType pb.CampaignMsType, gold, a
 		return gamedata.GameError(4)
 	}
 
-	c.modifyResource(resGold, - needGold)
-	c.modifyResource(resForage, - needForage)
+	c.modifyResource(resGold, -needGold)
+	c.modifyResource(resForage, -needForage)
 	ms := newMission(c, msType, amount, gold)
 	ms.setMaxTime(maxTime)
 	ms.setTransportCity(targetCity)
@@ -1104,7 +1103,7 @@ func (c *city) publishMission(uid common.UUid, msType pb.CampaignMsType, gold, a
 	c.missions = append(c.missions, ms)
 	//c.sortMissions()
 
-	glog.Infof("publishMission cityID=%d, uid=%d, msType=%s, gold=%d, transportGold=%d, transportForage=%d, " +
+	glog.Infof("publishMission cityID=%d, uid=%d, msType=%s, gold=%d, transportGold=%d, transportForage=%d, "+
 		"amount=%d, targetCity=%d", c.id, uid, msType, gold, transportGold, transportForage, amount, targetCity)
 	return nil
 }
@@ -1279,7 +1278,7 @@ func (c *city) appointJob(p, targetPlayer *player, job pb.CampaignJob, oldUid co
 			return gamedata.GameError(14)
 		}
 
-		err := c.recallJob(p, oldPlayer, job, false,true, true)
+		err := c.recallJob(p, oldPlayer, job, false, true, true)
 		if err != nil {
 			return err
 		}
@@ -1289,7 +1288,7 @@ func (c *city) appointJob(p, targetPlayer *player, job pb.CampaignJob, oldUid co
 
 	if targetJob != pb.CampaignJob_UnknowJob {
 		// 罢免targetPlayer原来的职位
-		err := c.recallJob(p, targetPlayer, targetJob, false,false, false)
+		err := c.recallJob(p, targetPlayer, targetJob, false, false, false)
 		if err != nil {
 			return err
 		}
@@ -1403,15 +1402,15 @@ func (c *city) beOccupy(t *team) {
 	c.captives = sortPlayers(c.captives)
 
 	campaignMgr.broadcastClient(pb.MessageID_S2C_UPDATE_CITY_STATE, &pb.UpdateCityStateArg{
-		State: pb.CityState_BeOccupyCS,
-		CityID: int32(c.id),
+		State:           pb.CityState_BeOccupyCS,
+		CityID:          int32(c.id),
 		OccupyCountryID: cry.getID(),
 	})
 }
 
-func (c *city) broadcastInCityPlayer(msgID pb.MessageID, arg interface{})  {
+func (c *city) broadcastInCityPlayer(msgID pb.MessageID, arg interface{}) {
 	api.BroadcastClient(msgID, arg, &gpb.BroadcastClientFilter{
-		OP: gpb.BroadcastClientFilter_EQ,
+		OP:  gpb.BroadcastClientFilter_EQ,
 		Key: "campaign_lcity",
 		Val: strconv.Itoa(c.id),
 	})
@@ -1425,7 +1424,7 @@ func (c *city) delAttackTeam(t *team) {
 	c.attackingTeams.Remove(tid)
 	if c.attackingTeams.Size() == 0 && !c.isBeOccupy() {
 		campaignMgr.broadcastClient(pb.MessageID_S2C_UPDATE_CITY_STATE, &pb.UpdateCityStateArg{
-			State: pb.CityState_NormalCS,
+			State:  pb.CityState_NormalCS,
 			CityID: int32(c.id),
 		})
 	}
@@ -1438,7 +1437,7 @@ func (c *city) addAttackTeam(t *team, needSync bool) {
 
 	if c.attackingTeams.Size() == 0 && needSync {
 		campaignMgr.broadcastClient(pb.MessageID_S2C_UPDATE_CITY_STATE, &pb.UpdateCityStateArg{
-			State: pb.CityState_BeAttackCS,
+			State:  pb.CityState_BeAttackCS,
 			CityID: int32(c.id),
 		})
 	}
@@ -1450,9 +1449,9 @@ func (c *city) attack(t *team, defTeamAmount int) bool {
 	c.addAttackTeam(t, true)
 	paramGameData := gamedata.GetGameData(consts.CampaignParam).(*gamedata.CampaignParamGameData)
 	atkTeamAmount := float64(c.attackingTeams.Size())
-	damage := paramGameData.SingleDamage * (1 - paramGameData.DefenseRevise *
-		(1 - atkTeamAmount / (atkTeamAmount + float64(defTeamAmount))))
-	c.modifyResource(resDefense, - damage)
+	damage := paramGameData.SingleDamage * (1 - paramGameData.DefenseRevise*
+		(1-atkTeamAmount/(atkTeamAmount+float64(defTeamAmount))))
+	c.modifyResource(resDefense, -damage)
 	//c.modifyResource(resBusiness, - paramGameData.SingleDamage)
 	//c.modifyResource(resAgriculture, - paramGameData.SingleDamage)
 	if c.getResource(resDefense) <= 0 {
@@ -1476,7 +1475,7 @@ func (c *city) onProduction() float64 {
 	gold, business := c.getCurBusinessGold()
 	c.modifyResource(resGold, gold)
 	if business > 0 {
-		c.modifyResource(resBusiness, - business)
+		c.modifyResource(resBusiness, -business)
 	}
 
 	paramGameData := gamedata.GetGameData(consts.CampaignParam).(*gamedata.CampaignParamGameData)
@@ -1485,7 +1484,7 @@ func (c *city) onProduction() float64 {
 	if agriculture > 0 {
 		forage = agriculture * paramGameData.ForageConversion
 		c.modifyResource(resForage, forage)
-		c.modifyResource(resAgriculture, - agriculture)
+		c.modifyResource(resAgriculture, -agriculture)
 	}
 
 	for _, ps := range c.job2Players {
@@ -1522,7 +1521,7 @@ func (c *city) capitalInjection(p *player, gold int) {
 	}
 
 	attr.SetInt64("time", time.Now().Unix())
-	attr.SetInt("gold", attr.GetInt("gold") + gold)
+	attr.SetInt("gold", attr.GetInt("gold")+gold)
 	c.sortCapitalInjections()
 }
 
@@ -1547,8 +1546,8 @@ func (c *city) getCapitalInjections(page int) []*pb.CapitalInjectionRecord {
 
 		ret = append(ret, &pb.CapitalInjectionRecord{
 			Player: p.packMsg(false),
-			Gold: int32(attr.GetInt("gold")),
-			Time: int32(attr.GetInt64("time")),
+			Gold:   int32(attr.GetInt("gold")),
+			Time:   int32(attr.GetInt64("time")),
 		})
 	}
 	return ret
@@ -1627,7 +1626,7 @@ func (c *city) publishMilitaryOrder(moType pb.MilitaryOrderType, forage, amount 
 				return nil, gamedata.GameError(8)
 			}
 
-			if i <= pathLen - 2 {
+			if i <= pathLen-2 {
 				rs, ok := roadGameData.City2Road[cityID]
 				if !ok {
 					return nil, gamedata.GameError(9)
@@ -1661,7 +1660,7 @@ func (c *city) publishMilitaryOrder(moType pb.MilitaryOrderType, forage, amount 
 		return nil, gamedata.GameError(5)
 	}
 
-	c.modifyResource(resForage, - totalForage)
+	c.modifyResource(resForage, -totalForage)
 	c.cancelMilitaryOrder(moType, targetCityID)
 	mo := newMilitaryOrder(c, moType, forage, amount, cityPath)
 	c.militaryOrders = append(c.militaryOrders, mo)
@@ -1768,7 +1767,6 @@ func (c *city) acceptMilitaryOrder(p *player, moType pb.MilitaryOrderType, targe
 
 	}
 
-
 	if needFighterData {
 		reply, err := p.agent.CallBackend(pb.MessageID_L2G_GET_PVP_FIGHTER_DATA, &pb.GetFighterDataArg{
 			CardIDs: cardIDs,
@@ -1810,7 +1808,7 @@ func (c *city) acceptMilitaryOrder(p *player, moType pb.MilitaryOrderType, targe
 
 	return &pb.AcceptMilitaryOrderReply{
 		State: p.getMyState(),
-		Team: t.packMsg(),
+		Team:  t.packMsg(),
 	}, nil
 }
 
@@ -1837,8 +1835,8 @@ func (c *city) calcPerContribution() {
 
 	for _, ps := range c.job2Players {
 		for _, p := range ps {
-			p.addContribution( (c.addContributions - c.addContributionPlayers[p.getUid()]) *
-				campaignMgr.getContributionPerByJob(p.getCityJob()), false, false )
+			p.addContribution((c.addContributions-c.addContributionPlayers[p.getUid()])*
+				campaignMgr.getContributionPerByJob(p.getCityJob()), false, false)
 		}
 	}
 
@@ -1879,7 +1877,7 @@ func (c *city) onWarBegin() {
 		return
 	}
 
-	c.publishMilitaryOrder(pb.MilitaryOrderType_DefCityMT, 0, amount * 5, []int{})
+	c.publishMilitaryOrder(pb.MilitaryOrderType_DefCityMT, 0, amount*5, []int{})
 	job2Players := cry.getAllJobPlayers()
 	for _, ps := range job2Players {
 		for _, p := range ps {
@@ -1959,7 +1957,7 @@ func (c *city) surrender(p *player, targetCry *country, isFix bool) error {
 	noticeMgr.sendNoticeToCountry(targetCry.getID(), pb.CampaignNoticeType_SurrenderCity2Nt, pName, c.id)
 	c.doSurrender(p, targetCry, pb.CampaignNoticeType_SurrenderCity3Nt)
 	if !isFix {
-		p.subContribution(p.getMaxContribution() * 0.2, true)
+		p.subContribution(p.getMaxContribution()*0.2, true)
 	}
 	noticeMgr.sendNoticeToCountry(cry.getID(), pb.CampaignNoticeType_SurrenderCity1Nt, pName, c.id, targetCry.getName())
 	glog.Infof("city surrender, cityID=%d, uid=%d", c.id, pUid)

@@ -3,10 +3,10 @@ package spring
 import (
 	atypes "kinger/apps/game/activitys/types"
 	"kinger/apps/game/module/types"
-	"kinger/proto/pb"
 	"kinger/common/consts"
-	"time"
 	"kinger/gopuppy/common/timer"
+	"kinger/proto/pb"
+	"time"
 )
 
 func Initialize() {
@@ -21,7 +21,7 @@ func FetchActivityList(player types.IPlayer, aid int) (*pb.ActivityData, error) 
 	detail := &pb.SpringHuodong{}
 	p.forEachExchangeCnt(aid, func(goodsID, cnt int) {
 		detail.ExchangeDatas = append(detail.ExchangeDatas, &pb.SpringExchangeData{
-			GoodsID: int32(goodsID),
+			GoodsID:     int32(goodsID),
 			ExchangeCnt: int32(cnt),
 		})
 	})
@@ -47,7 +47,7 @@ func OnGetTreasureRewardItemType(player types.IPlayer, itemAmount int) int {
 
 		if cpt.ConformTime(aData.ID) && now.Before(data.GetTimeCondition().ItemEndTime) {
 			itemType = consts.EventItem1
-			p.setTreasureRewardItemAmount(aData.ID, todayRewardItemAmount + itemAmount)
+			p.setTreasureRewardItemAmount(aData.ID, todayRewardItemAmount+itemAmount)
 		}
 	})
 

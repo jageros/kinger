@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ S2C_PUSH_TELEVISE   req: Televise
@@ -52,4 +52,3 @@ func (m *S2C_PUSH_TELEVISE_Meta) DecodeReply(data []byte) (interface{}, error) {
 }
 
 //------------------------------------ S2C_PUSH_TELEVISE END ----------------------------------------
-

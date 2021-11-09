@@ -7,17 +7,17 @@ import (
 )
 
 type TreasureEvent struct {
-	Rare         int        `json:"__id__"`
-	UpRarePrice  int     `json:"upRarePrice"`
-	AddCardPrice    int     `json:"addCardPrice"`
-	AddCardCnt     int     `json:"addCardCnt"`
-	UpTreasure int `json:"upTreasure"`
-	Double int `json:"double"`
+	Rare         int `json:"__id__"`
+	UpRarePrice  int `json:"upRarePrice"`
+	AddCardPrice int `json:"addCardPrice"`
+	AddCardCnt   int `json:"addCardCnt"`
+	UpTreasure   int `json:"upTreasure"`
+	Double       int `json:"double"`
 }
 
 type TreasureEventGameData struct {
 	baseGameData
-	configs   []*TreasureEvent
+	configs []*TreasureEvent
 }
 
 func newTreasureEventGameData() *TreasureEventGameData {

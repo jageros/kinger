@@ -1,14 +1,14 @@
 package main
 
 import (
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/logic"
-	"kinger/proto/pb"
 	"kinger/gopuppy/common/eventhub"
 	"kinger/gopuppy/network"
-	"kinger/gamedata"
+	"kinger/proto/pb"
 )
 
-func onLogout(args ...interface{})  {
+func onLogout(args ...interface{}) {
 	agent := args[0].(*logic.PlayerAgent)
 	uid := agent.GetUid()
 	chatMgr.unsubscribeChat(pb.ChatChannel_World, uid, true)

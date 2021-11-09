@@ -1,24 +1,24 @@
 package main
 
 import (
-	"kinger/proto/pb"
-	"kinger/gopuppy/common"
 	"kinger/common/consts"
 	"kinger/common/utils"
 	"kinger/gamedata"
-	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/proto/pb"
 	"time"
 )
 
 var mgr = &battleMgr{
 	uid2Fighter: make(map[common.UUid]*fighter),
-	id2Battle: make(map[common.UUid]iBattle),
+	id2Battle:   make(map[common.UUid]iBattle),
 }
 
 type battleMgr struct {
 	uid2Fighter map[common.UUid]*fighter
-	id2Battle map[common.UUid]iBattle
+	id2Battle   map[common.UUid]iBattle
 }
 
 func (bm *battleMgr) publishBeginBattle(battleObj iBattle) {

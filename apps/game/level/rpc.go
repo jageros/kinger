@@ -1,13 +1,13 @@
 package level
 
 import (
-	"kinger/gopuppy/apps/logic"
 	"kinger/apps/game/module"
 	"kinger/common/consts"
 	"kinger/gamedata"
-	"kinger/proto/pb"
-	"kinger/gopuppy/common"
+	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/proto/pb"
 )
 
 func rpc_C2S_FetchLevelInfo(agent *logic.PlayerAgent, _ interface{}) (interface{}, error) {

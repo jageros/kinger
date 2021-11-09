@@ -12,7 +12,7 @@ type ActivityOnlineReward struct {
 
 type ActivityOnlineRewardGameData struct {
 	baseGameData
-	name_ string
+	name_                   string
 	ActivityOnlineRewardMap map[int]*ActivityOnlineReward
 }
 

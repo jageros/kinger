@@ -12,14 +12,14 @@ import (
 type ActivityGrowPlanReward struct {
 	ID            int      `json:"__id__"`
 	ConditionType int      `json:"condition"`
-	ConditionVal  []int   `json:"value"`
-	Purchase      string  `json:"purchase"`
+	ConditionVal  []int    `json:"value"`
+	Purchase      string   `json:"purchase"`
 	Reward        []string `json:"reward"`
 }
 
 type ActivityGrowPlanRewardGameData struct {
 	baseGameData
-	name_                          string
+	name_                     string
 	ID2ActivityGrowPlanReward map[int]*ActivityGrowPlanReward
 }
 

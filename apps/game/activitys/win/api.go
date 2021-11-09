@@ -1,12 +1,12 @@
 package win
 
 import (
-	"kinger/gopuppy/common/eventhub"
-	"kinger/gopuppy/common/timer"
 	aTypes "kinger/apps/game/activitys/types"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/common/eventhub"
+	"kinger/gopuppy/common/timer"
 	"kinger/proto/pb"
 	"strconv"
 )
@@ -38,9 +38,9 @@ func FetchActivityList(player types.IPlayer, aid int) (*pb.ActivityData, error) 
 			return nil, err
 		}
 		var rwcStr string
-		for i := 0; i < len(camps); i++  {
+		for i := 0; i < len(camps); i++ {
 			rwcStr = rwcStr + strconv.Itoa(camps[i])
-			if i < len(camps) - 1 {
+			if i < len(camps)-1 {
 				rwcStr = rwcStr + ";"
 			}
 		}

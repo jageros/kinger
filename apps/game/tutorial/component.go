@@ -1,14 +1,14 @@
 package tutorial
 
 import (
-	"kinger/gopuppy/apps/logic"
-	"kinger/gopuppy/attribute"
+	"fmt"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
 	"kinger/proto/pb"
-	"fmt"
 )
 
 var _ types.ITutorialComponent = &tutorialComponent{}
@@ -135,30 +135,30 @@ func (tc *tutorialComponent) PackBeginBattleArg() *pb.BeginBattleArg {
 		BattleType: int32(consts.BtGuide),
 		UpperType:  int32(battle.Offensive),
 		Fighter1: &pb.FighterData{
-			Uid:       uint64(tc.player.GetUid()),
-			ClientID:  uint64(agent.GetClientID()),
-			GateID:    agent.GetGateID(),
-			HandCards: tc.player.GetComponent(consts.CardCpt).(types.ICardComponent).CreatePvpHandCards(campID),
-			Name:      tc.player.GetName(),
-			Camp:      int32(campID),
-			IsRobot:   false,
-			GridCards: gridCards,
-			HeadImgUrl: tc.player.GetHeadImgUrl(),
-			HeadFrame: tc.player.GetHeadFrame(),
-			WinRate: winRate,
-			Region: agent.GetRegion(),
+			Uid:         uint64(tc.player.GetUid()),
+			ClientID:    uint64(agent.GetClientID()),
+			GateID:      agent.GetGateID(),
+			HandCards:   tc.player.GetComponent(consts.CardCpt).(types.ICardComponent).CreatePvpHandCards(campID),
+			Name:        tc.player.GetName(),
+			Camp:        int32(campID),
+			IsRobot:     false,
+			GridCards:   gridCards,
+			HeadImgUrl:  tc.player.GetHeadImgUrl(),
+			HeadFrame:   tc.player.GetHeadFrame(),
+			WinRate:     winRate,
+			Region:      agent.GetRegion(),
 			CountryFlag: tc.player.GetCountryFlag(),
 		},
 
 		Fighter2: &pb.FighterData{
-			Uid:       1,
-			HandCards: enemyHands,
-			Camp:      int32(battle.Country),
-			IsRobot:   true,
-			GridCards: robotGridCards,
+			Uid:        1,
+			HandCards:  enemyHands,
+			Camp:       int32(battle.Country),
+			IsRobot:    true,
+			GridCards:  robotGridCards,
 			HeadImgUrl: battle.Head,
-			HeadFrame: battle.HeadFrame,
-			NameText: int32(battle.Name),
+			HeadFrame:  battle.HeadFrame,
+			NameText:   int32(battle.Name),
 		},
 	}
 }
@@ -257,10 +257,9 @@ func (tc *tutorialComponent) OnBattleEnd(fighterData *pb.EndFighterData, isWin b
 	}
 	//}
 
-
 	msg.ChangeRes = resCpt.BatchModifyResource(map[int]int{
-		consts.Score: rewardStar,
-		consts.Gold:  rewardGold,
+		consts.Score:      rewardStar,
+		consts.Gold:       rewardGold,
 		consts.MatchScore: rewardMatchScore,
 	}, consts.RmrBattleWin)
 	msg.UpPvpLevelRewardCards = pvpComponent.UplevelReward()

@@ -1,12 +1,12 @@
 package main
 
 import (
-	"kinger/gopuppy/common"
-	"kinger/gopuppy/attribute"
-	"kinger/proto/pb"
-	"kinger/common/consts"
-	"kinger/apps/game/module/types"
 	"fmt"
+	"kinger/apps/game/module/types"
+	"kinger/common/consts"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/proto/pb"
 	"math"
 )
 
@@ -14,17 +14,17 @@ var _ iCaster = &fightCard{}
 
 type fightCard struct {
 	baseCaster
-	gcardID uint32
-	cardID uint32
-	skin string
-	gridObjID                   int
-	up                          int
-	initUp                      int
-	down                        int
-	initDown                    int
-	left                        int
-	initLeft                    int
-	right                       int
+	gcardID                uint32
+	cardID                 uint32
+	skin                   string
+	gridObjID              int
+	up                     int
+	initUp                 int
+	down                   int
+	initDown               int
+	left                   int
+	initLeft               int
+	right                  int
 	initRight              int
 	upValueRate            float32
 	downValueRate          float32
@@ -40,20 +40,20 @@ type fightCard struct {
 	isPlayInHand           bool
 	isSummon               bool
 	isDestroy              bool
-	hasTurnOverCauseByOth  bool   // 曾经被其他人翻过
-	hasTurnOver bool  // 曾经被翻过
+	hasTurnOverCauseByOth  bool // 曾经被其他人翻过
+	hasTurnOver            bool // 曾经被翻过
 	forceAttackSkillAmount int
 	theCopy                *fightCard
 	publicEnemySkillAmount int
 	fogAmount              int
-	hideEquip string   // 文丑的宝物，召唤颜良时用
+	hideEquip              string // 文丑的宝物，召唤颜良时用
 }
 
 func newCardByData(objID int, cardData types.IFightCardData, cardSkin, equipID string, situation *battleSituation) *fightCard {
 	c := &fightCard{
-		gcardID: cardData.GetGCardID(),
-		cardID: cardData.GetCardID(),
-		skin: cardSkin,
+		gcardID:        cardData.GetGCardID(),
+		cardID:         cardData.GetCardID(),
+		skin:           cardSkin,
 		up:             cardData.RandomUp(),
 		down:           cardData.RandomDown(),
 		left:           cardData.RandomLeft(),
@@ -170,15 +170,15 @@ func (fc *fightCard) packAttr() *attribute.MapAttr {
 	attr.SetInt("fogAmount", fc.fogAmount)
 	attr.SetStr("hideEquip", fc.hideEquip)
 	/*
-	if self.diyInfo != nil {
-		diyAttr := attribute.NewMapAttr()
-		attr.SetMapAttr("diy", diyAttr)
-		diyAttr.SetUInt32("cardID", self.diyInfo.CardId)
-		diyAttr.SetStr("name", self.diyInfo.Name)
-		diyAttr.SetInt32("diySkillId1", self.diyInfo.DiySkillId1)
-		diyAttr.SetInt32("diySkillId2", self.diyInfo.DiySkillId2)
-		diyAttr.SetStr("weapon", self.diyInfo.Weapon)
-	}
+		if self.diyInfo != nil {
+			diyAttr := attribute.NewMapAttr()
+			attr.SetMapAttr("diy", diyAttr)
+			diyAttr.SetUInt32("cardID", self.diyInfo.CardId)
+			diyAttr.SetStr("name", self.diyInfo.Name)
+			diyAttr.SetInt32("diySkillId1", self.diyInfo.DiySkillId1)
+			diyAttr.SetInt32("diySkillId2", self.diyInfo.DiySkillId2)
+			diyAttr.SetStr("weapon", self.diyInfo.Weapon)
+		}
 	*/
 
 	return attr
@@ -513,7 +513,7 @@ func (fc *fightCard) copyCard(beCopyCard *fightCard) (*fightCard, []*clientActio
 	c.isPlayInHand = fc.isPlayInHand
 	c.controller = beCopyCard.controller
 	c.setSit(beCopyCard.getSit())
-	c.setObjID( fc.getObjID() )
+	c.setObjID(fc.getObjID())
 	c.setGrid(fc.getGridObj())
 	c.owner = fc.owner
 	c.forceAttackSkillAmount = fc.forceAttackSkillAmount

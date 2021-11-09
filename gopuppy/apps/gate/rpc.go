@@ -3,6 +3,7 @@ package main
 import (
 	"kinger/gopuppy/apps/center/api"
 	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/evq"
 	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/monitor"
 	"kinger/gopuppy/common/opmon"
@@ -10,7 +11,6 @@ import (
 	"kinger/gopuppy/network/protoc"
 	"kinger/gopuppy/proto/pb"
 	"time"
-	"kinger/gopuppy/common/evq"
 )
 
 func forwardClientPacket(ses *network.Session, msgID int32, msgType protoc.MessageType, pktSeq uint32, payload []byte) {
@@ -42,7 +42,7 @@ func forwardClientPacket(ses *network.Session, msgID int32, msgType protoc.Messa
 	if cp.uid > 0 {
 		centerSes = api.SelectCenterByUUid(cp.uid, gService.region)
 	} else {
-		isLogin = msgID == 100   // rpc login shit
+		isLogin = msgID == 100 // rpc login shit
 		centerSes = api.SelectCenterByAppID(gService.appID, gService.region)
 	}
 
@@ -51,8 +51,8 @@ func forwardClientPacket(ses *network.Session, msgID int32, msgType protoc.Messa
 			ClientID: uint64(clientID),
 			GateID:   gService.appID,
 			Uid:      uint64(cp.uid),
-			Region: gService.region,
-			IP: ses.GetIP(),
+			Region:   gService.region,
+			IP:       ses.GetIP(),
 		},
 		MsgID:   msgID,
 		Payload: payload,
@@ -243,7 +243,6 @@ func rpc_L2C_PlayerLogout(_ *network.Session, arg interface{}) (interface{}, err
 	cp.ses.Close()
 	return nil, nil
 }
-
 
 func registerRpc(peer *network.Peer) {
 	peer.SetRawPacketHandler(forwardClientPacket)

@@ -13,7 +13,7 @@ type centerSession struct {
 	rawSes               *network.Session
 	appID                uint16
 	appName              string
-	region uint32
+	region               uint32
 	cfg                  *config.CenterConfig
 	centerClientDelegate ICenterClientDelegate
 }
@@ -23,7 +23,7 @@ func newCenterSession(appID uint16, appName string, cfg *config.CenterConfig, ce
 	return &centerSession{
 		appID:                appID,
 		appName:              appName,
-		region: cfg.Region,
+		region:               cfg.Region,
 		cfg:                  cfg,
 		centerClientDelegate: centerClientDelegate,
 	}
@@ -59,9 +59,9 @@ func (cs *centerSession) assureConnected(region uint32, isReconnect bool) {
 
 func (cs *centerSession) registerApp(region uint32, isReconnect bool) bool {
 	c := cs.rawSes.CallAsync(pb.MessageID_A2C_REGISTER_APP, &pb.AppInfo{
-		AppID:   uint32(cs.appID),
-		AppName: cs.appName,
-		Region: region,
+		AppID:       uint32(cs.appID),
+		AppName:     cs.appName,
+		Region:      region,
 		IsReconnect: isReconnect,
 	})
 	result := <-c

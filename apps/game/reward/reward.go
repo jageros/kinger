@@ -1,27 +1,27 @@
 package reward
 
 import (
-	"kinger/proto/pb"
-	"kinger/apps/game/module/types"
 	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
 	"kinger/gopuppy/common/glog"
+	"kinger/proto/pb"
 	"math/rand"
 	"time"
 )
 
 type rewardResult struct {
-	rewardTblName string
-	rewardIdxs []int  // 获得了哪些奖励？奖励表里的id
-	resources map[int]int
-	cards map[uint32]int
-	cardSkins []string
-	equips []string
-	headFrames []string
-	emojis []int
-	privileges []*pb.GiftPrivilegeReward
-	convertResources map[int]int
+	rewardTblName      string
+	rewardIdxs         []int // 获得了哪些奖励？奖励表里的id
+	resources          map[int]int
+	cards              map[uint32]int
+	cardSkins          []string
+	equips             []string
+	headFrames         []string
+	emojis             []int
+	privileges         []*pb.GiftPrivilegeReward
+	convertResources   map[int]int
 	upLevelRewardCards map[uint32]int
 }
 
@@ -79,8 +79,8 @@ func (rr *rewardResult) GetEmojis() []int {
 
 func (rr *rewardResult) PackOpenTreasureMsg() *pb.OpenTreasureReply {
 	msg := &pb.OpenTreasureReply{
-		OK: true,
-		CardSkins: rr.cardSkins,
+		OK:         true,
+		CardSkins:  rr.cardSkins,
 		Headframes: rr.headFrames,
 	}
 
@@ -107,7 +107,7 @@ func (rr *rewardResult) PackOpenTreasureMsg() *pb.OpenTreasureReply {
 	if rr.resources != nil {
 		for resType, amount := range rr.resources {
 			msg.Resources = append(msg.Resources, &pb.Resource{
-				Type: int32(resType),
+				Type:   int32(resType),
 				Amount: int32(amount),
 			})
 		}
@@ -116,7 +116,7 @@ func (rr *rewardResult) PackOpenTreasureMsg() *pb.OpenTreasureReply {
 	if rr.convertResources != nil {
 		for resType, amount := range rr.convertResources {
 			msg.ConvertResources = append(msg.ConvertResources, &pb.Resource{
-				Type: int32(resType),
+				Type:   int32(resType),
 				Amount: int32(amount),
 			})
 		}
@@ -163,7 +163,7 @@ func (rr *rewardResult) addUpLevelRewardCards(cardID uint32, amount int) {
 
 func (rr *rewardResult) addPrivilege(privID int, remainTime int) {
 	rr.privileges = append(rr.privileges, &pb.GiftPrivilegeReward{
-		PrivID: int32(privID),
+		PrivID:     int32(privID),
 		RemainTime: int32(remainTime),
 	})
 }
@@ -171,7 +171,6 @@ func (rr *rewardResult) addPrivilege(privID int, remainTime int) {
 func (rr *rewardResult) GetPrivileges() []*pb.GiftPrivilegeReward {
 	return rr.privileges
 }
-
 
 type iRewarder interface {
 	doReward(player types.IPlayer, amount int, rr *rewardResult)
@@ -187,7 +186,7 @@ func (r *resourceRewarder) doReward(player types.IPlayer, amount int, rr *reward
 		oldPvpLevel = player.GetPvpLevel()
 	}
 
-	module.Player.ModifyResource(player, r.resType, amount, consts.RmrRewardTbl + rr.rewardTblName)
+	module.Player.ModifyResource(player, r.resType, amount, consts.RmrRewardTbl+rr.rewardTblName)
 	rr.addResource(r.resType, amount)
 
 	if r.resType == consts.Score && oldPvpLevel < player.GetPvpLevel() {
@@ -234,7 +233,7 @@ func (r *spCardRewarder) doReward(player types.IPlayer, amount int, rr *rewardRe
 
 	rr.addCard(r.cardID, amount)
 	if pieceAmount > 0 {
-		module.Player.ModifyResource(player, consts.CardPiece, pieceAmount, consts.RmrRewardTbl + rr.rewardTblName)
+		module.Player.ModifyResource(player, consts.CardPiece, pieceAmount, consts.RmrRewardTbl+rr.rewardTblName)
 		rr.addConvertResources(consts.CardPiece, pieceAmount)
 	}
 }
@@ -257,7 +256,7 @@ func (r *cardSkinRewarder) doReward(player types.IPlayer, amount int, rr *reward
 	}
 
 	if pieceAmount > 0 {
-		module.Player.ModifyResource(player, consts.SkinPiece, pieceAmount, consts.RmrRewardTbl + rr.rewardTblName)
+		module.Player.ModifyResource(player, consts.SkinPiece, pieceAmount, consts.RmrRewardTbl+rr.rewardTblName)
 		rr.addConvertResources(consts.SkinPiece, pieceAmount)
 	}
 }
@@ -336,7 +335,7 @@ func (r *tryPrivilegeRewarder) doReward(player types.IPlayer, amount int, rr *re
 		privGameData := gamedata.GetGameData(consts.PrivConfig).(*gamedata.PrivilegeGameData)
 		privAmount := len(privGameData.Privileges)
 		if privAmount > 0 {
-			privID = privGameData.Privileges[ rand.Intn(privAmount) ].ID
+			privID = privGameData.Privileges[rand.Intn(privAmount)].ID
 		}
 	}
 

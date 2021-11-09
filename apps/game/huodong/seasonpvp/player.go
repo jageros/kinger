@@ -1,15 +1,15 @@
 package seasonpvp
 
 import (
-	"kinger/gopuppy/attribute"
+	htypes "kinger/apps/game/huodong/types"
+	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/config"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
 	"kinger/proto/pb"
-	"kinger/apps/game/module"
 	"math/rand"
-	htypes "kinger/apps/game/huodong/types"
 )
 
 type seasonPvpHdPlayerData struct {
@@ -104,14 +104,14 @@ func (hpd *seasonPvpHdPlayerData) getWinAmount() int {
 
 func (hpd *seasonPvpHdPlayerData) onPvpEnd(isWin, isFirstHand bool, seasonData gamedata.ISeasonPvp) {
 	if isFirstHand {
-		hpd.Attr.SetInt("firstHandAmount", hpd.Attr.GetInt("firstHandAmount") + 1)
+		hpd.Attr.SetInt("firstHandAmount", hpd.Attr.GetInt("firstHandAmount")+1)
 		if isWin {
-			hpd.Attr.SetInt("firstHandWinAmount", hpd.Attr.GetInt("firstHandWinAmount") + 1)
+			hpd.Attr.SetInt("firstHandWinAmount", hpd.Attr.GetInt("firstHandWinAmount")+1)
 		}
 	} else {
-		hpd.Attr.SetInt("backHandAmount", hpd.Attr.GetInt("backHandAmount") + 1)
+		hpd.Attr.SetInt("backHandAmount", hpd.Attr.GetInt("backHandAmount")+1)
 		if isWin {
-			hpd.Attr.SetInt("backHandWinAmount", hpd.Attr.GetInt("backHandWinAmount") + 1)
+			hpd.Attr.SetInt("backHandWinAmount", hpd.Attr.GetInt("backHandWinAmount")+1)
 		}
 	}
 
@@ -259,10 +259,10 @@ func (hpd *seasonPvpHdPlayerData) getChooseCardData(seasonData gamedata.ISeasonP
 	}
 
 	return &pb.SeasonPvpChooseCardData{
-		CardIDs: cards,
+		CardIDs:          cards,
 		NeedChooseAmount: int32(seasonData.GetHandCardType()[2]),
-		FreeRefreshCnt: int32(hpd.getFreeRefreshChooseCardCnt()),
-		JadeRefreshCnt: int32(hpd.getJadeRefreshChooseCardCnt()),
+		FreeRefreshCnt:   int32(hpd.getFreeRefreshChooseCardCnt()),
+		JadeRefreshCnt:   int32(hpd.getJadeRefreshChooseCardCnt()),
 	}
 }
 
@@ -287,7 +287,8 @@ func (hpd *seasonPvpHdPlayerData) delChooseCards(seasonData gamedata.ISeasonPvp,
 	}
 
 	var cardIDs []uint32
-L:	for _, cardID := range chooseCardData.CardIDs {
+L:
+	for _, cardID := range chooseCardData.CardIDs {
 		for _, cardID2 := range handCards {
 			if cardID == cardID2 {
 				continue L
@@ -358,7 +359,8 @@ func (hpd *seasonPvpHdPlayerData) chooseHandCards(seasonData gamedata.ISeasonPvp
 		needAmount := 5 - amount
 		camp := hpd.getCamp()
 		allCollectCards := hpd.getShuffledColllectCards(camp)
-	L:	for _, card := range allCollectCards {
+	L:
+		for _, card := range allCollectCards {
 			if needAmount <= 0 {
 				break
 			}

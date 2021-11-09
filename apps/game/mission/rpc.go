@@ -1,12 +1,12 @@
 package mission
 
 import (
+	"kinger/apps/game/module"
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/common/eventhub"
 	"kinger/proto/pb"
-	"kinger/apps/game/module"
-	"kinger/gamedata"
-	"kinger/common/consts"
 )
 
 func rpc_C2S_FetchMissionInfo(agent *logic.PlayerAgent, arg interface{}) (interface{}, error) {
@@ -47,9 +47,9 @@ func rpc_C2S_GetMissionReward(agent *logic.PlayerAgent, arg interface{}) (interf
 		return nil, err
 	}
 	return &pb.MissionReward{
-		Jade: int32(jade),
-		Gold: int32(gold),
-		Bowlder: int32(bowlder),
+		Jade:        int32(jade),
+		Gold:        int32(gold),
+		Bowlder:     int32(bowlder),
 		NextMission: nextMission,
 	}, nil
 }
@@ -67,7 +67,7 @@ func rpc_C2S_OpenMissionTreasure(agent *logic.PlayerAgent, arg interface{}) (int
 	}
 	return &pb.OpenMissionTreasureReply{
 		TreasureReward: reward,
-		NextTreasure: treasureObj.packMsg(),
+		NextTreasure:   treasureObj.packMsg(),
 	}, nil
 }
 

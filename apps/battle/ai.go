@@ -13,7 +13,7 @@ const (
 type battleAction struct {
 	cardObjID int
 	gridID    int
-	value float32
+	value     float32
 }
 
 func (ba *battleAction) String() string {
@@ -36,9 +36,9 @@ func newBattleAction(cardObjID, gridID int) *battleAction {
 }
 
 type actionQueue struct {
-	actions []*battleAction
-	idx int
-	maxIdx int
+	actions    []*battleAction
+	idx        int
+	maxIdx     int
 	isPositive bool
 }
 
@@ -87,14 +87,14 @@ func (q *actionQueue) push(action *battleAction) {
 		q.actions[index] = action
 
 		if q.idx < q.maxIdx {
-			q.idx ++
+			q.idx++
 		}
 	}
 }
 
 func (q *actionQueue) random() *battleAction {
 	if q.idx >= 0 {
-		return q.actions[ rand.Intn(q.idx + 1) ]
+		return q.actions[rand.Intn(q.idx+1)]
 	} else {
 		return nil
 	}
@@ -159,7 +159,6 @@ func alphaBetaSearch(situation *battleSituation, depth int, maxDepth int, alpha,
 	return alpha, bestAction
 }
 
-
 func searchBattleAction(situation *battleSituation, positive, negative int) *battleAction {
 
 	var bestAction *battleAction
@@ -188,7 +187,7 @@ func searchBattleAction(situation *battleSituation, positive, negative int) *bat
 		if myUid == bakSituation.getCurBoutFighter().getUid() {
 			action.value = value
 		} else {
-			action.value = - value
+			action.value = -value
 		}
 		actQueue.push(action)
 	}

@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_FETCH_MAIL_LIST    req: FetchMailListArg    resp: MailList
@@ -325,4 +325,3 @@ func (m *G2G_ON_UPDATE_WHOLE_SERVER_MAIL_Meta) DecodeReply(data []byte) (interfa
 }
 
 //------------------------------------ G2G_ON_UPDATE_WHOLE_SERVER_MAIL END ----------------------------------------
-

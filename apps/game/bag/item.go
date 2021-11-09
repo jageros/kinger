@@ -2,13 +2,13 @@ package bag
 
 import (
 	"fmt"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common/timer"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
 	"kinger/proto/pb"
 	"strconv"
 	"time"
@@ -223,13 +223,13 @@ func (i *equipItem) backEquip(player types.IPlayer, backPro int) (price int, res
 
 	price, resType = i.getEquipPriceAndResType(player, backPro)
 	switch resType {
-	case pb.ReturnResType_ResTypeReputation :
-			module.Player.ModifyResource(player, consts.Reputation, price, consts.RmrResetEquip)
-			player.GetComponent(consts.BagCpt).(*bagComponent).delItem(i)
+	case pb.ReturnResType_ResTypeReputation:
+		module.Player.ModifyResource(player, consts.Reputation, price, consts.RmrResetEquip)
+		player.GetComponent(consts.BagCpt).(*bagComponent).delItem(i)
 
 	case pb.ReturnResType_ResTypeContributions:
-			module.Campaign.ModifyContribution(player, price)
-		 	player.GetComponent(consts.BagCpt).(*bagComponent).delItem(i)
+		module.Campaign.ModifyContribution(player, price)
+		player.GetComponent(consts.BagCpt).(*bagComponent).delItem(i)
 	default:
 		if isNoData {
 			player.GetComponent(consts.BagCpt).(*bagComponent).delItem(i)

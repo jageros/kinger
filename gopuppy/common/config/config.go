@@ -1,17 +1,17 @@
 package config
 
 import (
+	"fmt"
 	"github.com/BurntSushi/toml"
 	"kinger/gopuppy/attribute"
-	"fmt"
 	"math/rand"
 )
 
 var (
-	configFile = "gopuppy.toml"
+	configFile       = "gopuppy.toml"
 	regionConfigFile = "region.toml"
-	cfg        *GoPuppyConfig
-	regionCfg *RegionConfig
+	cfg              *GoPuppyConfig
+	regionCfg        *RegionConfig
 )
 
 type (
@@ -20,8 +20,8 @@ type (
 		WriteTimeout  int
 		MaxPacketSize uint32
 		LogLevel      string
-		Region int
-		MonitorUrl string
+		Region        int
+		MonitorUrl    string
 		Opmon         *OpmonConfig
 		Gates         []*GateConfig
 		Centers       []*CenterConfig
@@ -40,21 +40,21 @@ type (
 	}
 
 	DBConfig struct {
-		Type     string
-		Region uint32
-		IsGlobal bool
-		LocalHost string
+		Type       string
+		Region     uint32
+		IsGlobal   bool
+		LocalHost  string
 		PublicHost string
-		Port int
-		Addr     string
-		DB       string
-		User     string
-		Password string
+		Port       int
+		Addr       string
+		DB         string
+		User       string
+		Password   string
 	}
 
 	RedisConfig struct {
 		Region int
-		Addr string
+		Addr   string
 	}
 
 	RedisClusterConfig struct {
@@ -72,7 +72,7 @@ type (
 	baseConfig struct {
 		ID       uint16
 		HttpPort int
-		Region uint32
+		Region   uint32
 	}
 
 	IAppConfig interface {
@@ -81,15 +81,15 @@ type (
 
 	GateConfig struct {
 		baseConfig
-		Host string
+		Host    string
 		Listens []*ListenConfig
 	}
 
 	CenterConfig struct {
 		baseConfig
-		LocalHost string
+		LocalHost  string
 		PublicHost string
-		Listen *ListenConfig
+		Listen     *ListenConfig
 	}
 
 	LogicConfig struct {
@@ -99,17 +99,17 @@ type (
 	}
 
 	EsConfig struct {
-		Url string
+		Url   string
 		Index string
 	}
 
 	RegionConfig struct {
-		Region uint32
+		Region    uint32
 		Databases []*DBConfig `toml:"databases"`
 		DB        *DBConfig
-		GlobalDB        *DBConfig
-		Redis *RedisConfig
-		ES            *EsConfig           `toml:"es"`
+		GlobalDB  *DBConfig
+		Redis     *RedisConfig
+		ES        *EsConfig `toml:"es"`
 	}
 )
 

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"kinger/proto/pb"
 	"kinger/gopuppy/attribute"
+	"kinger/proto/pb"
 	"strconv"
 )
 
@@ -26,10 +26,10 @@ type iCaster interface {
 
 type baseCaster struct {
 	baseTarget
-	i iCaster
-	skills []*skill
+	i                     iCaster
+	skills                []*skill
 	boutSkillTriggerTimes map[int32]int
-	equip *equipment
+	equip                 *equipment
 }
 
 func (bc *baseCaster) copyCaster(cpy *baseCaster) {
@@ -197,7 +197,7 @@ func (bc *baseCaster) casterAddSkill(skillID int32, boutTimeout int, isAddInHand
 	acts := sk.onAdd(bc.getSit())
 	sk.setPlayCardIdx(bc.situation.getPlayCardQueueIdx())
 	acts = append(acts, &clientAction{
-		actID: pb.ClientAction_AddSkill,
+		actID:  pb.ClientAction_AddSkill,
 		actMsg: &pb.ModifySkillAct{CardObjID: int32(bc.i.getObjID()), SkillID: skillID},
 	})
 	return acts
@@ -231,10 +231,10 @@ func (bc *baseCaster) delSkill(sk *skill) []*clientAction {
 		} else {
 			bc.skills = append(bc.skills[:index], bc.skills[index+1:]...)
 		}
-		acts = []*clientAction{ &clientAction{
-			actID: pb.ClientAction_DelSkill,
-			actMsg: &pb.ModifySkillAct{CardObjID: int32(bc.i.getObjID()), SkillID:sk.getID(), IsEquip: sk.isEquip},
-		} }
+		acts = []*clientAction{&clientAction{
+			actID:  pb.ClientAction_DelSkill,
+			actMsg: &pb.ModifySkillAct{CardObjID: int32(bc.i.getObjID()), SkillID: sk.getID(), IsEquip: sk.isEquip},
+		}}
 	}
 
 	if !isEffective {
@@ -245,7 +245,8 @@ func (bc *baseCaster) delSkill(sk *skill) []*clientAction {
 
 func (bc *baseCaster) getAllEffectiveSkills() []*skill {
 	var sks []*skill
-L:	for _, sk := range bc.skills {
+L:
+	for _, sk := range bc.skills {
 		for _, sk2 := range sks {
 			if sk.getID() == sk2.getID() {
 				continue L
@@ -322,8 +323,8 @@ func (bc *baseCaster) lostSkill(skillID int32, untilBout int) ([]*clientAction, 
 					isDel = true
 				}
 				actions = append(actions, &clientAction{
-					actID: pb.ClientAction_DelSkill,
-					actMsg: &pb.ModifySkillAct{CardObjID: int32(bc.i.getObjID()), SkillID:sk.getID()},
+					actID:  pb.ClientAction_DelSkill,
+					actMsg: &pb.ModifySkillAct{CardObjID: int32(bc.i.getObjID()), SkillID: sk.getID()},
 				})
 			}
 		}
@@ -347,7 +348,7 @@ func (bc *baseCaster) boutEnd() []*clientAction {
 	if bc.equip != nil {
 		size2 = len(bc.equip.skills)
 	}
-	sks := make([]*skill, size1 + size2)
+	sks := make([]*skill, size1+size2)
 	copy(sks, bc.skills)
 	if size2 > 0 {
 		copy(sks[size1:], bc.equip.skills)

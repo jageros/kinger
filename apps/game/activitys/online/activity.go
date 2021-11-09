@@ -1,14 +1,14 @@
 package online
 
 import (
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common/timer"
-	"kinger/gopuppy/common/utils"
 	aTypes "kinger/apps/game/activitys/types"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
+	"kinger/gopuppy/common/utils"
 	"strconv"
 	"strings"
 	"time"
@@ -164,10 +164,10 @@ func (a *activity) getAllTime() []int {
 			st := a.getStartTime(aid, rid)
 			et := a.getEndTime(aid, rid)
 			if st == 24 {
-				st =0
+				st = 0
 			}
 			if et == 24 {
-				et =0
+				et = 0
 			}
 			t = append(t, st, et)
 		}

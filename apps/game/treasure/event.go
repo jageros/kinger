@@ -1,23 +1,23 @@
 package treasure
 
 import (
-	"time"
-	"kinger/gopuppy/attribute"
+	"fmt"
 	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
-	"math/rand"
-	"kinger/proto/pb"
-	"fmt"
-	"strconv"
-	"kinger/apps/game/module/types"
+	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common/utils"
+	"kinger/proto/pb"
+	"math/rand"
+	"strconv"
+	"time"
 )
 
 var treasureEventDeadLine int64 = 24 * 60 * 60
 
 type baseTreasureEvent struct {
-	attr *attribute.MapAttr
+	attr   *attribute.MapAttr
 	player types.IPlayer
 }
 
@@ -25,7 +25,7 @@ func (te *baseTreasureEvent) init(player types.IPlayer, cptAttr *attribute.MapAt
 	attr := cptAttr.GetMapAttr("addCardEvent")
 	if attr == nil {
 		attr = attribute.NewMapAttr()
-		attr.SetInt64("lastTime", time.Now().Unix() - treasureEventDeadLine + 7200)
+		attr.SetInt64("lastTime", time.Now().Unix()-treasureEventDeadLine+7200)
 		cptAttr.SetMapAttr("addCardEvent", attr)
 	}
 
@@ -41,7 +41,7 @@ func (te *baseTreasureEvent) canTrigger() bool {
 	lastTime := te.attr.GetInt64("lastTime")
 	can := false
 	now := time.Now().Unix()
-	if now - lastTime >= treasureEventDeadLine {
+	if now-lastTime >= treasureEventDeadLine {
 		can = true
 	}
 
@@ -154,7 +154,6 @@ func (te *addCardEventSt) doAction(treasureID uint32) (*pb.WatchTreasureAddCardA
 	module.Card.ModifyCollectCards(te.player, cardChange)
 	return reply, nil
 }
-
 
 type upRareEventSt struct {
 	baseTreasureEvent

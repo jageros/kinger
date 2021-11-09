@@ -1,29 +1,29 @@
 package sdk
 
 import (
-	"fmt"
-	"net/http"
-	"encoding/json"
-	"kinger/gopuppy/common/glog"
-	"strings"
 	"crypto/md5"
+	"encoding/json"
+	"fmt"
 	"io"
+	"kinger/gopuppy/common/glog"
+	"net/http"
 	"strconv"
+	"strings"
 )
 
 var (
-	fire233Success, _ = json.Marshal(map[string]interface{} {
-		"code": 0,
+	fire233Success, _ = json.Marshal(map[string]interface{}{
+		"code":    0,
 		"message": "充值成功",
 	})
 
-	fire233GameErr, _ = json.Marshal(map[string]interface{} {
-		"code": 4,
+	fire233GameErr, _ = json.Marshal(map[string]interface{}{
+		"code":    4,
 		"message": "游戏服错误",
 	})
 
-	fire233SignErr, _ = json.Marshal(map[string]interface{} {
-		"code": 3,
+	fire233SignErr, _ = json.Marshal(map[string]interface{}{
+		"code":    3,
 		"message": "签名错误",
 	})
 )
@@ -33,7 +33,7 @@ type fire233 struct {
 }
 
 func newFire233() *fire233 {
-	return &fire233 {
+	return &fire233{
 		gameSecret: "069fb6c64bb486fda74f0ffa6b854cb0",
 	}
 }
@@ -73,7 +73,7 @@ func (s *fire233) RechargeAuthSign(request *http.Request) (uid uint64, channelUi
 	sourceStrBuilder.WriteString(s.gameSecret)
 	h := md5.New()
 	io.WriteString(h, sourceStrBuilder.String())
-	sign := fmt.Sprintf("%x", h.Sum(nil)) 
+	sign := fmt.Sprintf("%x", h.Sum(nil))
 	if sign != signature {
 		reply = fire233SignErr
 		return

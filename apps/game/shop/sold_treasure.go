@@ -1,15 +1,15 @@
 package shop
 
 import (
-	"kinger/proto/pb"
+	"fmt"
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/config"
 	"kinger/common/consts"
 	"kinger/gamedata"
-	"kinger/apps/game/module/types"
-	"fmt"
-	"strconv"
-	"kinger/apps/game/module"
-	"kinger/common/config"
 	"kinger/gopuppy/attribute"
+	"kinger/proto/pb"
+	"strconv"
 	//"time"
 	"kinger/gopuppy/common/timer"
 )
@@ -25,23 +25,25 @@ type iSoldTreasure interface {
 
 type nilSoldTreasureSt struct {
 }
+
 func (st *nilSoldTreasureSt) packMsg() *pb.SoldTreasureData { return nil }
 func (st *nilSoldTreasureSt) buy(treasureModelID string) (*pb.BuySoldTreasureReply, error) {
 	return nil, gamedata.InternalErr
 }
-func (st *nilSoldTreasureSt) onLogout() {}
-func (st *nilSoldTreasureSt) onCrossDay() {}
+func (st *nilSoldTreasureSt) onLogout()         {}
+func (st *nilSoldTreasureSt) onCrossDay()       {}
 func (st *nilSoldTreasureSt) onPvpLevelUpdate() {}
 
 type soldTreasureSt struct {
-	attr *attribute.MapAttr
+	attr        *attribute.MapAttr
 	campIdxAttr *attribute.MapAttr
-	player types.IPlayer
-	team int
+	player      types.IPlayer
+	team        int
 	//canBuyTimer *timer.Timer
 }
 
 var nilSoldTreasure = &nilSoldTreasureSt{}
+
 func newSoldTreasure(player types.IPlayer, cptAttr *attribute.MapAttr) iSoldTreasure {
 	if !config.GetConfig().IsXfServer() {
 		return nilSoldTreasure
@@ -60,10 +62,10 @@ func newSoldTreasure(player types.IPlayer, cptAttr *attribute.MapAttr) iSoldTrea
 	}
 
 	st := &soldTreasureSt{
-		player: player,
-		attr: attr,
+		player:      player,
+		attr:        attr,
 		campIdxAttr: campIdxAttr,
-		team: player.GetPvpTeam(),
+		team:        player.GetPvpTeam(),
 	}
 	//st.beginCanBuyTimer()
 	return st
@@ -162,8 +164,8 @@ func (st *soldTreasureSt) packMsg() *pb.SoldTreasureData {
 		if t != nil {
 			msg.SoldTreasures = append(msg.SoldTreasures, &pb.SoldTreasure{
 				TreasureModelID: t.TreasureModelID,
-				NeedJade: int32(t.JadePrice),
-				NexRemainTime: remainTime,
+				NeedJade:        int32(t.JadePrice),
+				NexRemainTime:   remainTime,
 			})
 		}
 	}
@@ -205,7 +207,7 @@ func (st *soldTreasureSt) buy(treasureModelID string) (*pb.BuySoldTreasureReply,
 			if !resCpt.HasResource(consts.Jade, price) {
 				return nil, gamedata.GameError(3)
 			}
-			resCpt.ModifyResource(consts.Jade, - price, consts.RmrSoldTreasure)
+			resCpt.ModifyResource(consts.Jade, -price, consts.RmrSoldTreasure)
 		}
 
 	}
@@ -213,11 +215,11 @@ func (st *soldTreasureSt) buy(treasureModelID string) (*pb.BuySoldTreasureReply,
 	treasureReward := st.player.GetComponent(consts.TreasureCpt).(types.ITreasureComponent).OpenTreasureByModelID(
 		treasureModelID, false)
 
-	st.setCampIdx(soldTreasure.Camp, st.getCampIdx(soldTreasure.Camp) + 1)
+	st.setCampIdx(soldTreasure.Camp, st.getCampIdx(soldTreasure.Camp)+1)
 	//if st.getNextCanBuyTreasure(soldTreasure.Camp) == nil {
-		//remainTime := timer.TimeDelta(0, 0, 0)
-		//st.attr.SetInt64("timeout", time.Now().Add(remainTime).Unix())
-		//st.beginCanBuyTimer()
+	//remainTime := timer.TimeDelta(0, 0, 0)
+	//st.attr.SetInt64("timeout", time.Now().Add(remainTime).Unix())
+	//st.beginCanBuyTimer()
 	//}
 
 	mod.LogShopBuyItem(st.player, fmt.Sprintf("soldTreasure_%s", treasureModelID),
@@ -225,7 +227,7 @@ func (st *soldTreasureSt) buy(treasureModelID string) (*pb.BuySoldTreasureReply,
 		strconv.Itoa(resType), module.Player.GetResourceName(resType), price, "")
 
 	return &pb.BuySoldTreasureReply{
-		TreasureReward: treasureReward,
+		TreasureReward:  treasureReward,
 		NewSoldTreasure: st.packMsg(),
 	}, nil
 }

@@ -1,11 +1,11 @@
 package module
 
 import (
+	"kinger/apps/game/module/types"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common"
-	"kinger/apps/game/module/types"
-	"kinger/gamedata"
 	"kinger/proto/pb"
 )
 
@@ -15,27 +15,27 @@ var (
 	//Battle   IBattleModule
 	AI IAiModule
 	//Bonus    IBonusModule
-	Pvp      IPvpModule
-	Campaign ICampaignModule
-	Card     ICardModule
-	Treasure ITreasureModule
-	Tutorial ITutorialModule
-	GiftCode IGiftCodeModule
-	Social   ISocialModule
-	WxGame   IWxGameModule
-	Service  IService
-	Shop IShopModule
-	Mission IMissionModule
-	Mail IMailModule
-	Huodong IHuodongModule
-	Bag IBagModule
-	Reborn IRebornModule
+	Pvp       IPvpModule
+	Campaign  ICampaignModule
+	Card      ICardModule
+	Treasure  ITreasureModule
+	Tutorial  ITutorialModule
+	GiftCode  IGiftCodeModule
+	Social    ISocialModule
+	WxGame    IWxGameModule
+	Service   IService
+	Shop      IShopModule
+	Mission   IMissionModule
+	Mail      IMailModule
+	Huodong   IHuodongModule
+	Bag       IBagModule
+	Reborn    IRebornModule
 	OutStatus IOutStatusModule
-	Reward IRewardModule
+	Reward    IRewardModule
 	Activitys IActivityModule
-	GM IGmModule
-	Televise ITeleviseModule
-	Rank IRankModule
+	GM        IGmModule
+	Televise  ITeleviseModule
+	Rank      IRankModule
 )
 
 type IPlayerModule interface {

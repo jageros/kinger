@@ -1,32 +1,32 @@
 package pvp
 
 import (
+	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
+	"kinger/common/consts"
+	"kinger/common/utils"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common/eventhub"
 	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/timer"
-	"kinger/apps/game/module"
-	"kinger/apps/game/module/types"
-	"kinger/common/consts"
-	"kinger/gamedata"
 	"kinger/proto/pb"
 	"math"
 	"math/rand"
 	"strconv"
 	"strings"
-	"kinger/common/utils"
 )
 
 var _ types.IPvpComponent = &pvpComponent{}
 
 type pvpComponent struct {
-	player             types.IPlayer
-	gdata              *gamedata.RankGameData
-	attr               *attribute.MapAttr
+	player types.IPlayer
+	gdata  *gamedata.RankGameData
+	attr   *attribute.MapAttr
 	//historyBattlesAttr *attribute.AttrMgr
-	pvpLevel           int
-	pvpMaxLevel        int
+	pvpLevel    int
+	pvpMaxLevel int
 }
 
 func (pc *pvpComponent) ComponentID() string {
@@ -42,25 +42,25 @@ func (pc *pvpComponent) OnInit(player types.IPlayer) {
 	pc.gdata = gamedata.GetGameData(consts.Rank).(*gamedata.RankGameData)
 
 	/*
-	historyBattlesAttr := attribute.NewAttrMgr("historyBattles", pc.player.GetUid())
-	evq.CallLater(func() {
-		err := historyBattlesAttr.Load()
-		if err == attribute.NotExistsErr {
-			historyBattlesAttr.SetListAttr("battleIDs", attribute.NewListAttr())
-			historyBattlesAttr.Save(false)
-		} else if err != nil {
-			return
-		}
-		pc.historyBattlesAttr = historyBattlesAttr
-	})
+		historyBattlesAttr := attribute.NewAttrMgr("historyBattles", pc.player.GetUid())
+		evq.CallLater(func() {
+			err := historyBattlesAttr.Load()
+			if err == attribute.NotExistsErr {
+				historyBattlesAttr.SetListAttr("battleIDs", attribute.NewListAttr())
+				historyBattlesAttr.Save(false)
+			} else if err != nil {
+				return
+			}
+			pc.historyBattlesAttr = historyBattlesAttr
+		})
 	*/
 
 	/*
-	cnt := pc.attr.GetInt("rewardGoldCnt")
-	if cnt > 0 {
-		pc.attr.SetInt("rewardGoldCnt", 0)
-		pc.player.GetComponent(consts.ResourceCpt).(types.IResourceComponent).SetResource(consts.PvpGoldCnt, cnt)
-	}
+		cnt := pc.attr.GetInt("rewardGoldCnt")
+		if cnt > 0 {
+			pc.attr.SetInt("rewardGoldCnt", 0)
+			pc.player.GetComponent(consts.ResourceCpt).(types.IResourceComponent).SetResource(consts.PvpGoldCnt, cnt)
+		}
 	*/
 }
 
@@ -173,9 +173,9 @@ func (pc *pvpComponent) GetPvpFighterData() *pb.FighterData {
 		PvpScore:     int32(pc.player.GetComponent(consts.ResourceCpt).(types.IResourceComponent).GetResource(consts.Score)),
 		HeadImgUrl:   pc.player.GetHeadImgUrl(),
 		HeadFrame:    pc.player.GetHeadFrame(),
-		Area: int32(pc.player.GetArea()),
-		Region: agent.GetRegion(),
-		CountryFlag: pc.player.GetCountryFlag(),
+		Area:         int32(pc.player.GetArea()),
+		Region:       agent.GetRegion(),
+		CountryFlag:  pc.player.GetCountryFlag(),
 	}
 }
 
@@ -391,8 +391,8 @@ func (pc *pvpComponent) onBattleWin(fighterData *pb.EndFighterData, oppCamp int,
 	}
 	winningRateGameData := gamedata.GetGameData(consts.WinningRate).(*gamedata.WinningRateGameData)
 
-	changeMatchScore := int( math.Ceil( rankData.Kvalue * (1 -
-		winningRateGameData.GetExpectedWinningRate(int(fighterData.IndexDiff), pc.player.GetPvpTeam())) * matchParam.WinRevise ) )
+	changeMatchScore := int(math.Ceil(rankData.Kvalue * (1 -
+		winningRateGameData.GetExpectedWinningRate(int(fighterData.IndexDiff), pc.player.GetPvpTeam())) * matchParam.WinRevise))
 	rewardGold := 0
 	resComponent := pc.player.GetComponent(consts.ResourceCpt).(types.IResourceComponent)
 	rewardGoldCnt := resComponent.GetResource(consts.PvpGoldCnt)
@@ -441,10 +441,10 @@ func (pc *pvpComponent) onBattleWin(fighterData *pb.EndFighterData, oppCamp int,
 	}
 
 	resChange := resComponent.BatchModifyResource(map[int]int{
-		consts.Score: changeStar,
-		consts.Gold:  rewardGold,
+		consts.Score:          changeStar,
+		consts.Gold:           rewardGold,
 		consts.CrossAreaHonor: changeCrossAreaHonor,
-		consts.MatchScore: changeMatchScore,
+		consts.MatchScore:     changeMatchScore,
 	}, consts.RmrBattleWin)
 
 	pc.player.GetAgent().PushClient(pb.MessageID_S2C_BATTLE_END, &pb.BattleResult{
@@ -480,8 +480,8 @@ func (pc *pvpComponent) onBattleLose(fighterData *pb.EndFighterData, oppArea int
 	winningRateGameData := gamedata.GetGameData(consts.WinningRate).(*gamedata.WinningRateGameData)
 
 	changeStar = -1
-	changeMatchScore := - int( math.Ceil( rankData.Kvalue *
-		winningRateGameData.GetExpectedWinningRate(int(fighterData.IndexDiff), pc.player.GetPvpTeam()) * matchParam.WinRevise ))
+	changeMatchScore := -int(math.Ceil(rankData.Kvalue *
+		winningRateGameData.GetExpectedWinningRate(int(fighterData.IndexDiff), pc.player.GetPvpTeam()) * matchParam.WinRevise))
 
 	resCpt := pc.player.GetComponent(consts.ResourceCpt).(types.IResourceComponent)
 
@@ -523,9 +523,9 @@ func (pc *pvpComponent) onBattleLose(fighterData *pb.EndFighterData, oppArea int
 
 	var resChange []*pb.ChangeResInfo
 	resChange = resCpt.BatchModifyResource(map[int]int{
-		consts.Score: changeStar,
+		consts.Score:          changeStar,
 		consts.CrossAreaHonor: changeCrossAreaHonor,
-		consts.MatchScore: changeMatchScore,
+		consts.MatchScore:     changeMatchScore,
 	})
 
 	pc.player.GetAgent().PushClient(pb.MessageID_S2C_BATTLE_END, &pb.BattleResult{
@@ -538,8 +538,7 @@ func (pc *pvpComponent) onBattleLose(fighterData *pb.EndFighterData, oppArea int
 }
 
 func (pc *pvpComponent) OnBattleEnd(fighterData *pb.EndFighterData, isWin, isWonderful bool, oppMMr, oppCamp, oppArea int) {
-	pc.setRechargeMatchIndex( pc.getRechargeMatchIndex() + gamedata.GetGameData(consts.MatchParam).(
-		*gamedata.MatchParamGameData).RechargeReviseRecovery )
+	pc.setRechargeMatchIndex(pc.getRechargeMatchIndex() + gamedata.GetGameData(consts.MatchParam).(*gamedata.MatchParamGameData).RechargeReviseRecovery)
 	module.Mission.OnPvpBattleEnd(pc.player, fighterData, isWin)
 	resComponent := pc.player.GetComponent(consts.ResourceCpt).(types.IResourceComponent)
 	//myMmr := resComponent.GetResource(consts.Mmr)
@@ -580,7 +579,7 @@ func (pc *pvpComponent) OnTrainingBattleEnd(fighterData *pb.EndFighterData, isWi
 		winUid = 1
 	}
 	pc.player.GetAgent().PushClient(pb.MessageID_S2C_BATTLE_END, &pb.BattleResult{
-		WinUid:                uint64(winUid),
+		WinUid: uint64(winUid),
 	})
 }
 
@@ -640,31 +639,31 @@ func (pc *pvpComponent) crossSeassonResetScore() {
 	}
 
 	/*
-	oldMaxScore := pc.player.GetMaxRankScore()
-	baseScore := gamedata.GetGameData(consts.League).(*gamedata.LeagueGameData).GetScoreById(1)
-	if oldMaxScore < baseScore {
-		return
-	}
-	oldRankScore := pc.player.GetRankScore()
-	funGameData := gamedata.GetGameData(consts.FunctionPrice).(*gamedata.FunctionPriceGameData)
-	pro := float64(funGameData.LeagueResetRewardProp)/100
-	compensatoryScore := int(float64(oldRankScore-baseScore)*pro)
-	maxCompensatoryScore := funGameData.LeagueResetRewardMax
-	if compensatoryScore > maxCompensatoryScore {
-		compensatoryScore = maxCompensatoryScore
-	}
-	newScore := baseScore + compensatoryScore
-	modifyScore := newScore-oldRankScore
-	modifyMaxScore := newScore-oldMaxScore
-	if newScore < baseScore {
-		modifyMaxScore = baseScore-oldMaxScore
-	}
-	if modifyMaxScore < 0 {
-		module.Player.ModifyResource(pc.player, consts.MaxMatchScore, modifyMaxScore)
-	}
-	if modifyScore < 0 && newScore > baseScore{
-		module.Player.ModifyResource(pc.player, consts.MatchScore, modifyScore)
-	}
+		oldMaxScore := pc.player.GetMaxRankScore()
+		baseScore := gamedata.GetGameData(consts.League).(*gamedata.LeagueGameData).GetScoreById(1)
+		if oldMaxScore < baseScore {
+			return
+		}
+		oldRankScore := pc.player.GetRankScore()
+		funGameData := gamedata.GetGameData(consts.FunctionPrice).(*gamedata.FunctionPriceGameData)
+		pro := float64(funGameData.LeagueResetRewardProp)/100
+		compensatoryScore := int(float64(oldRankScore-baseScore)*pro)
+		maxCompensatoryScore := funGameData.LeagueResetRewardMax
+		if compensatoryScore > maxCompensatoryScore {
+			compensatoryScore = maxCompensatoryScore
+		}
+		newScore := baseScore + compensatoryScore
+		modifyScore := newScore-oldRankScore
+		modifyMaxScore := newScore-oldMaxScore
+		if newScore < baseScore {
+			modifyMaxScore = baseScore-oldMaxScore
+		}
+		if modifyMaxScore < 0 {
+			module.Player.ModifyResource(pc.player, consts.MaxMatchScore, modifyMaxScore)
+		}
+		if modifyScore < 0 && newScore > baseScore{
+			module.Player.ModifyResource(pc.player, consts.MatchScore, modifyScore)
+		}
 	*/
 }
 
@@ -688,7 +687,7 @@ func (pc *pvpComponent) updateLeagueSeason() {
 
 	if leagueLvl > 0 && pSerial > 0 {
 		rank, rankRewards, kingFlag, ok := leagueAttr.getPlayerLeagueRankReward(pc.player, pSerial)
-		glog.Infof("on cross league season, uid=%d area=%d rank=%d leagueLvl=%d serial=%d", pc.player.GetUid(), 
+		glog.Infof("on cross league season, uid=%d area=%d rank=%d leagueLvl=%d serial=%d", pc.player.GetUid(),
 			pc.player.GetArea(), rank, leagueLvl, pSerial)
 		reward := leagueAttr.getLeagueEndReward(pc.player.GetArea(), pSerial, leagueLvl)
 		sender := module.Mail.NewMailSender(pc.player.GetUid())
@@ -699,7 +698,7 @@ func (pc *pvpComponent) updateLeagueSeason() {
 				isRes, mty, num, itemId := pc.getMailReward(rw)
 				if isRes {
 					rewardOdj.AddAmountByType(mty, num)
-				}else {
+				} else {
 					rewardOdj.AddItem(mty, itemId, num)
 				}
 			}
@@ -707,8 +706,8 @@ func (pc *pvpComponent) updateLeagueSeason() {
 		addMailReward(reward)
 
 		if ok {
-				addMailReward(rankRewards)
-				module.Player.ModifyResource(pc.player, consts.KingFlag, kingFlag, consts.RmrLeagueReward+"kingFlag")
+			addMailReward(rankRewards)
+			module.Player.ModifyResource(pc.player, consts.KingFlag, kingFlag, consts.RmrLeagueReward+"kingFlag")
 		}
 
 		sender.Send()
@@ -717,7 +716,7 @@ func (pc *pvpComponent) updateLeagueSeason() {
 	pc.resetRewardReceive()
 }
 
-func (pc *pvpComponent) getMailReward(rw string) (isRes bool, ty pb.MailRewardType, num int, itemId string){
+func (pc *pvpComponent) getMailReward(rw string) (isRes bool, ty pb.MailRewardType, num int, itemId string) {
 	rws := strings.Split(rw, ":")
 	if len(rws) >= 2 {
 		var err error
@@ -734,4 +733,3 @@ func (pc *pvpComponent) getMailReward(rw string) (isRes bool, ty pb.MailRewardTy
 	}
 	return
 }
-

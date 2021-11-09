@@ -1,45 +1,45 @@
 package main
 
 import (
-	"kinger/proto/pb"
-	"kinger/gopuppy/common"
-	"kinger/gopuppy/apps/logic"
-	gpb "kinger/gopuppy/proto/pb"
-	"kinger/gopuppy/attribute"
-	"math/rand"
-	"kinger/gamedata"
-	"kinger/common/consts"
 	"fmt"
+	"kinger/common/consts"
+	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	gpb "kinger/gopuppy/proto/pb"
+	"kinger/proto/pb"
+	"math/rand"
 )
 
 type fighter struct {
 	baseTarget
-	agent       *logic.PlayerAgent
-	hand        []int  // []objID
-	initialHand []*pb.SkinGCard  // []cardID
-	isFirstHand bool
-	uid         common.UUid
-	battleID    common.UUid
-	isRobot     bool
-	sideboard   []uint32
-	boutTimeout int
-	name        string
-	nameText int
-	pvpScore    int
-	mmr         int
-	robotID     common.UUid
-	waiting bool
-	guanxing bool
-	useCards []uint32
-	headImgUrl string
-	headFrame string
-	countryFlag string
+	agent        *logic.PlayerAgent
+	hand         []int           // []objID
+	initialHand  []*pb.SkinGCard // []cardID
+	isFirstHand  bool
+	uid          common.UUid
+	battleID     common.UUid
+	isRobot      bool
+	sideboard    []uint32
+	boutTimeout  int
+	name         string
+	nameText     int
+	pvpScore     int
+	mmr          int
+	robotID      common.UUid
+	waiting      bool
+	guanxing     bool
+	useCards     []uint32
+	headImgUrl   string
+	headFrame    string
+	countryFlag  string
 	casterSkills []int32
-	pvpLevel int
-	winRate int
-	positive int
-	negative int
-	area int
+	pvpLevel     int
+	winRate      int
+	positive     int
+	negative     int
+	area         int
 	drawCardPool *drawCardPoolSt
 }
 
@@ -47,26 +47,26 @@ func newFighter(objID int, fighterData *pb.FighterData, battleID common.UUid, ha
 	situation *battleSituation) *fighter {
 
 	f := &fighter{
-		waiting: true,
-		uid:         common.UUid(fighterData.Uid),
-		battleID:    battleID,
-		isRobot:     fighterData.IsRobot,
-		boutTimeout: boutTimeOut,
-		name:        fighterData.Name,
-		pvpScore:    int(fighterData.PvpScore),
-		robotID:     common.UUid(fighterData.RobotID),
-		sideboard:   sideboard,
-		mmr:         int(fighterData.Mmr),
-		headImgUrl: fighterData.HeadImgUrl,
-		headFrame: fighterData.HeadFrame,
-		countryFlag: fighterData.CountryFlag,
+		waiting:      true,
+		uid:          common.UUid(fighterData.Uid),
+		battleID:     battleID,
+		isRobot:      fighterData.IsRobot,
+		boutTimeout:  boutTimeOut,
+		name:         fighterData.Name,
+		pvpScore:     int(fighterData.PvpScore),
+		robotID:      common.UUid(fighterData.RobotID),
+		sideboard:    sideboard,
+		mmr:          int(fighterData.Mmr),
+		headImgUrl:   fighterData.HeadImgUrl,
+		headFrame:    fighterData.HeadFrame,
+		countryFlag:  fighterData.CountryFlag,
 		casterSkills: fighterData.CasterSkills,
-		nameText: int(fighterData.NameText),
-		winRate: int(fighterData.WinRate),
-		positive: -1,
-		negative: -1,
+		nameText:     int(fighterData.NameText),
+		winRate:      int(fighterData.WinRate),
+		positive:     -1,
+		negative:     -1,
 		drawCardPool: &drawCardPoolSt{},
-		area: int(fighterData.Area),
+		area:         int(fighterData.Area),
 	}
 	f.camp = int(fighterData.Camp)
 	f.objID = objID
@@ -78,7 +78,7 @@ func newFighter(objID int, fighterData *pb.FighterData, battleID common.UUid, ha
 		Uid:      fighterData.Uid,
 		ClientID: fighterData.ClientID,
 		GateID:   fighterData.GateID,
-		Region: fighterData.Region,
+		Region:   fighterData.Region,
 	})
 
 	for _, card := range hand {
@@ -216,8 +216,8 @@ func (f *fighter) restoredFromAttr(attr *attribute.MapAttr, situation *battleSit
 		cAttr := initialHandAttr.GetMapAttr(index)
 		c := &pb.SkinGCard{
 			GCardID: cAttr.GetUInt32("gcardID"),
-			Skin: cAttr.GetStr("skin"),
-			Equip: cAttr.GetStr("equip"),
+			Skin:    cAttr.GetStr("skin"),
+			Equip:   cAttr.GetStr("equip"),
 		}
 		f.initialHand = append(f.initialHand, c)
 		return true
@@ -261,12 +261,12 @@ func (f *fighter) restoredFromAttr(attr *attribute.MapAttr, situation *battleSit
 func (f *fighter) getAiIQ(battleType int) (positive, negative int) {
 	if f.positive < 0 || f.negative < 0 {
 		/*
-		aiData := gamedata.GetGameData(consts.AiMatch).(*gamedata.AiMatchGameData).GetAiIQ(f.winRate)
-		if aiData != nil {
-			f.positive, f.negative = aiData.PositiveIQ, aiData.NegativeIQ
-		} else {
-			f.positive, f.negative = 0, 0
-		}
+			aiData := gamedata.GetGameData(consts.AiMatch).(*gamedata.AiMatchGameData).GetAiIQ(f.winRate)
+			if aiData != nil {
+				f.positive, f.negative = aiData.PositiveIQ, aiData.NegativeIQ
+			} else {
+				f.positive, f.negative = 0, 0
+			}
 		*/
 		if f.winRate >= 100 && battleType == consts.BtGuide {
 			f.positive = 1
@@ -332,8 +332,8 @@ func (f *fighter) setInitialHand() {
 		}
 		f.initialHand = append(f.initialHand, &pb.SkinGCard{
 			GCardID: card.gcardID,
-			Skin: card.skin,
-			Equip: equip,
+			Skin:    card.skin,
+			Equip:   equip,
 		})
 	}
 }
@@ -427,9 +427,9 @@ func (f *fighter) drawSideboardCard() *clientAction {
 		return &clientAction{
 			actID: pb.ClientAction_DrawCard,
 			actMsg: &pb.DrawCardAct{
-				Items: []*pb.DrawCardItem {
-					&pb.DrawCardItem {
-						Uid: uint64(f.uid),
+				Items: []*pb.DrawCardItem{
+					&pb.DrawCardItem{
+						Uid:   uint64(f.uid),
 						Cards: cardMsg,
 					},
 				},
@@ -485,7 +485,7 @@ func (f *fighter) boutEnd() []*clientAction {
 			isOldLost := sk.isLostByBout(curBout - 1)
 			if isOldLost && !sk.isLostByBout(curBout) {
 				actions = append(actions, &clientAction{
-					actID: pb.ClientAction_AddSkill,
+					actID:  pb.ClientAction_AddSkill,
 					actMsg: &pb.ModifySkillAct{CardObjID: int32(card.getObjID()), SkillID: sk.getID()},
 				})
 
@@ -507,10 +507,10 @@ func (f *fighter) packMsg() *pb.Fighter {
 		Name:          f.name,
 		PvpScore:      int32(f.pvpScore),
 		MaxHandAmount: int32(f.situation.getMaxHandCardAmount()),
-		HeadImgUrl: f.headImgUrl,
-		HeadFrame: f.headFrame,
-		CountryFlag: f.countryFlag,
-		NameText: int32(f.nameText),
+		HeadImgUrl:    f.headImgUrl,
+		HeadFrame:     f.headFrame,
+		CountryFlag:   f.countryFlag,
+		NameText:      int32(f.nameText),
 	}
 
 	if f.isRobot {
@@ -532,38 +532,38 @@ func (f *fighter) packMsg() *pb.Fighter {
 }
 
 type endFighterData struct {
-	uid         common.UUid
-	isRobot     bool
-	isSurrender bool
-	camp        int
-	useCards    []uint32
+	uid           common.UUid
+	isRobot       bool
+	isSurrender   bool
+	camp          int
+	useCards      []uint32
 	initHandCards []*pb.SkinGCard
-	isFighter1  bool
-	isFirstHand bool
-	mmr         int
-	pvpScore    int
-	name        string
-	nameText int
-	area int
-	indexDiff int
+	isFighter1    bool
+	isFirstHand   bool
+	mmr           int
+	pvpScore      int
+	name          string
+	nameText      int
+	area          int
+	indexDiff     int
 }
 
 func newEndFighterData(f *fighter, isSurrender bool, indexDiff int) *endFighterData {
 	return &endFighterData{
-		uid: f.getUid(),
-		isRobot: f.isRobot,
-		isSurrender: isSurrender,
-		camp: f.getCamp(),
-		useCards: f.useCards,
+		uid:           f.getUid(),
+		isRobot:       f.isRobot,
+		isSurrender:   isSurrender,
+		camp:          f.getCamp(),
+		useCards:      f.useCards,
 		initHandCards: f.initialHand,
-		isFighter1: f.situation.getFighter1() == f,
-		isFirstHand: f.isFirstHand,
-		mmr: f.mmr,
-		pvpScore: f.pvpScore,
-		name: f.name,
-		nameText: f.nameText,
-		area: f.area,
-		indexDiff: indexDiff,
+		isFighter1:    f.situation.getFighter1() == f,
+		isFirstHand:   f.isFirstHand,
+		mmr:           f.mmr,
+		pvpScore:      f.pvpScore,
+		name:          f.name,
+		nameText:      f.nameText,
+		area:          f.area,
+		indexDiff:     indexDiff,
 	}
 }
 
@@ -575,7 +575,7 @@ func (ef *endFighterData) packVideoFighterData() *pb.VideoFighterData {
 		Camp:      int32(ef.camp),
 		HandCards: ef.initHandCards,
 		IsRobot:   ef.isRobot,
-		NameText: int32(ef.nameText),
+		NameText:  int32(ef.nameText),
 	}
 }
 
@@ -589,8 +589,8 @@ func (ef *endFighterData) packEndFighterMsg() *pb.EndFighterData {
 		IsFighter1:    ef.isFighter1,
 		IsFirstHand:   ef.isFirstHand,
 		Mmr:           int32(ef.mmr),
-		UseCards: ef.useCards,
-		Area: int32(ef.area),
-		IndexDiff: int32(ef.indexDiff),
+		UseCards:      ef.useCards,
+		Area:          int32(ef.area),
+		IndexDiff:     int32(ef.indexDiff),
 	}
 }

@@ -1,24 +1,24 @@
 package main
 
 import (
-	"kinger/gopuppy/network"
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common/consts"
-	"kinger/gopuppy/common/config"
-	"kinger/gopuppy/network/protoc"
 	"github.com/xiaonanln/go-xnsyncutil/xnsyncutil"
+	"kinger/gopuppy/common/config"
+	"kinger/gopuppy/common/consts"
 	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/network"
+	"kinger/gopuppy/network/protoc"
 )
 
 type logicSession struct {
 	*network.Session
-	isAlive bool
+	isAlive  bool
 	msgQueue *xnsyncutil.SyncQueue
 }
 
 func newLogicSession(ses *network.Session) *logicSession {
 	return &logicSession{
-		Session: ses,
+		Session:  ses,
 		msgQueue: xnsyncutil.NewSyncQueue(),
 	}
 }
@@ -75,7 +75,7 @@ func (ls *logicSession) CallAsync(msgID protoc.IMessageID, arg interface{}) chan
 		ls.msgQueue.Push(func() {
 			rpcChan := ls.Session.CallAsync(msgID, arg)
 			go func() {
-				result := <- rpcChan
+				result := <-rpcChan
 				c <- result
 			}()
 		})
@@ -118,18 +118,18 @@ func (ls *logicSession) Push(msgID protoc.IMessageID, arg interface{}) {
 }
 
 type logicSessionMgr struct {
-	appName string
-	gChooseIdx int
-	allSessions []*logicSession
+	appName          string
+	gChooseIdx       int
+	allSessions      []*logicSession
 	region2ChooseIdx map[uint32]int
-	region2Session map[uint32][]*logicSession
+	region2Session   map[uint32][]*logicSession
 }
 
 func newLogicSessionMgr(appName string) *logicSessionMgr {
 	return &logicSessionMgr{
-		appName: appName,
+		appName:          appName,
 		region2ChooseIdx: map[uint32]int{},
-		region2Session: map[uint32][]*logicSession{},
+		region2Session:   map[uint32][]*logicSession{},
 	}
 }
 
@@ -216,7 +216,7 @@ func (lsm *logicSessionMgr) getAppSessions() []*logicSession {
 
 func (lsm *logicSessionMgr) chooseApp(region uint32) *logicSession {
 	if region <= 0 {
-		ses := lsm.allSessions[lsm.gChooseIdx % len(lsm.allSessions)]
+		ses := lsm.allSessions[lsm.gChooseIdx%len(lsm.allSessions)]
 		lsm.gChooseIdx += 1
 		return ses
 	}
@@ -229,7 +229,7 @@ func (lsm *logicSessionMgr) chooseApp(region uint32) *logicSession {
 		return nil
 	}
 
-	ses := ls[lsm.region2ChooseIdx[region] % len(ls)]
+	ses := ls[lsm.region2ChooseIdx[region]%len(ls)]
 	lsm.region2ChooseIdx[region] += 1
 	return ses
 }

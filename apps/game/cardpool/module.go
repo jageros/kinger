@@ -1,17 +1,17 @@
 package cardpool
 
 import (
-	"kinger/gopuppy/attribute"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
-	"kinger/proto/pb"
+	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common/config"
 	gconsts "kinger/gopuppy/common/consts"
-	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/common/eventhub"
-	"kinger/gamedata"
 	"kinger/gopuppy/common/glog"
+	"kinger/proto/pb"
 	"math"
 )
 
@@ -22,7 +22,7 @@ type cardModule struct {
 
 type cardInfoLog struct {
 	name string
-	id int32
+	id   int32
 }
 
 func (ci *cardInfoLog) MarshalLogObject(encoder glog.ObjectEncoder) error {
@@ -134,7 +134,7 @@ func (m *cardModule) GetUnlockCards(player types.IPlayer, team int) []uint32 {
 	var unlockCards []uint32
 
 	if len(rs) > 0 {
-		r := rs[ len(rs) - 1 ]
+		r := rs[len(rs)-1]
 		for _, cardID := range r.Unlock {
 			cardData := poolGameData.GetCard(uint32(cardID), 1)
 			if cardData == nil {
@@ -154,7 +154,7 @@ func (m *cardModule) GetUnlockCards(player types.IPlayer, team int) []uint32 {
 		unlockCards = append(unlockCards, cardID)
 	}
 
-	unlockCards = append(unlockCards,  m.GetFirstRechargeUnlockCards(player)...)
+	unlockCards = append(unlockCards, m.GetFirstRechargeUnlockCards(player)...)
 	return unlockCards
 }
 
@@ -186,7 +186,7 @@ func (m *cardModule) GmAllCardUpLevel(player types.IPlayer) {
 				break
 			}
 		}
-	}	
+	}
 }
 
 func (m *cardModule) GetCardAmountLog(accountType pb.AccountTypeEnum, area int) map[pb.AccountTypeEnum]map[uint32]int {
@@ -206,7 +206,7 @@ func (m *cardModule) GetCardAmountLog(accountType pb.AccountTypeEnum, area int) 
 		}
 
 		result2 := result.(*pb.GetCardAmountLogReply)
-	    for _, cml := range result2.Logs {
+		for _, cml := range result2.Logs {
 			id2Amount, ok := reply[cml.AccountType]
 			if !ok {
 				id2Amount = map[uint32]int{}
@@ -318,7 +318,7 @@ func (m *cardModule) GetCardLevelLog(accountType pb.AccountTypeEnum, cardID uint
 	return reply
 }
 
-func (m *cardModule) LogBattleCards(player types.IPlayer, cards *pb.EndFighterData){
+func (m *cardModule) LogBattleCards(player types.IPlayer, cards *pb.EndFighterData) {
 	var cardInfos []glog.ObjectMarshaler
 	poolGameData := gamedata.GetGameData(consts.Pool).(*gamedata.PoolGameData)
 	for _, card := range cards.InitHandCards {
@@ -331,7 +331,7 @@ func (m *cardModule) LogBattleCards(player types.IPlayer, cards *pb.EndFighterDa
 
 		cardInfos = append(cardInfos, &cardInfoLog{
 			name: cardData2.GetName(),
-			id: int32(cardData2.CardID),
+			id:   int32(cardData2.CardID),
 		})
 	}
 
@@ -433,7 +433,6 @@ func (m *cardModule) GetCardPoolLog(accountType pb.AccountTypeEnum, pvpLevel, ar
 }
 */
 
-
 func onEquipDel(args ...interface{}) {
 	player := args[0].(types.IPlayer)
 	equipID := args[1].(string)
@@ -455,7 +454,7 @@ func onFixServer1Data(args ...interface{}) {
 		level := card.GetLevel()
 		if level >= 5 {
 			card.(*collectCard).setMaxUnlockLevel(level)
-			data := poolGameData.GetCard(card.GetCardID(), level - 1)
+			data := poolGameData.GetCard(card.GetCardID(), level-1)
 			if data != nil {
 				useSkyBook += data.ConsumeBook
 			}
@@ -493,7 +492,7 @@ func onFixServer1Data(args ...interface{}) {
 			}
 
 			returnFeats += returnRes[consts.Feats]
-			modifyCards[cardID] = &pb.CardInfo{Level:int32(- card.GetLevel())}
+			modifyCards[cardID] = &pb.CardInfo{Level: int32(-card.GetLevel())}
 			cardCpt.poolDelCard(cardID)
 		}
 	}
@@ -505,7 +504,7 @@ func onFixServer1Data(args ...interface{}) {
 	if cardPrice == 0 {
 		cardPrice = 50000
 	}
-	returnFeats += int(math.Ceil( float64(resCpt.GetResource(consts.Feats)) / float64(cardPrice) )) * cardPrice
+	returnFeats += int(math.Ceil(float64(resCpt.GetResource(consts.Feats))/float64(cardPrice))) * cardPrice
 	if returnFeats > 0 {
 		resCpt.SetResource(consts.Feats, returnFeats)
 	}

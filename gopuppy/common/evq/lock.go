@@ -4,13 +4,13 @@ import "fmt"
 
 type CoLock struct {
 	name string
-	cs map[interface{}]chan struct{}
+	cs   map[interface{}]chan struct{}
 }
 
 func NewLock(name string) *CoLock {
 	return &CoLock{
 		name: name,
-		cs: map[interface{}]chan struct{}{},
+		cs:   map[interface{}]chan struct{}{},
 	}
 }
 

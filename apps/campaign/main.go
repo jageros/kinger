@@ -1,20 +1,20 @@
 package main
 
 import (
-	_ "kinger/meta"
-	"time"
-	"kinger/gopuppy/apps/logic"
-	"kinger/gopuppy/common/app"
-	"kinger/common/consts"
 	"kinger/common/config"
-	"kinger/gopuppy/common/timer"
-	"kinger/gopuppy/common/evq"
+	"kinger/common/consts"
+	"kinger/common/utils"
 	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/app"
+	gconfig "kinger/gopuppy/common/config"
+	"kinger/gopuppy/common/evq"
 	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/rpubsub"
-	gconfig "kinger/gopuppy/common/config"
-	"kinger/gopuppy/common"
-	"kinger/common/utils"
+	"kinger/gopuppy/common/timer"
+	_ "kinger/meta"
+	"time"
 )
 
 var cService *campaignService
@@ -62,7 +62,7 @@ func (cs *campaignService) Start(appID uint16) {
 		cs.ReportRpcHandlers()
 		close(c)
 	})
-	<- c
+	<-c
 }
 
 func (cs *campaignService) Stop() {
@@ -77,7 +77,7 @@ func (cs *campaignService) Stop() {
 		warMgr.save(true)
 		close(c)
 	})
-	<- c
+	<-c
 	cs.OnStop()
 }
 

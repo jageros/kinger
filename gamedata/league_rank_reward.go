@@ -15,7 +15,7 @@ type LeagueRankReward struct {
 
 type LeagueRankRewardGameData struct {
 	baseGameData
-	ID2LeagueRankReward  map[int]*LeagueRankReward
+	ID2LeagueRankReward map[int]*LeagueRankReward
 }
 
 func newLeagueRankRewardGameData() *LeagueRankRewardGameData {

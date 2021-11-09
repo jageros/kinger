@@ -985,10 +985,12 @@ type TouristRegisterAccountArg struct {
 	Channel string `protobuf:"bytes,1,opt,name=Channel,proto3" json:"Channel,omitempty"`
 }
 
-func (m *TouristRegisterAccountArg) Reset()                    { *m = TouristRegisterAccountArg{} }
-func (m *TouristRegisterAccountArg) String() string            { return proto.CompactTextString(m) }
-func (*TouristRegisterAccountArg) ProtoMessage()               {}
-func (*TouristRegisterAccountArg) Descriptor() ([]byte, []int) { return fileDescriptorPlayer, []int{20} }
+func (m *TouristRegisterAccountArg) Reset()         { *m = TouristRegisterAccountArg{} }
+func (m *TouristRegisterAccountArg) String() string { return proto.CompactTextString(m) }
+func (*TouristRegisterAccountArg) ProtoMessage()    {}
+func (*TouristRegisterAccountArg) Descriptor() ([]byte, []int) {
+	return fileDescriptorPlayer, []int{20}
+}
 
 func (m *TouristRegisterAccountArg) GetChannel() string {
 	if m != nil {

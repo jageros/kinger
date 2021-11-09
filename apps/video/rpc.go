@@ -1,11 +1,11 @@
 package main
 
 import (
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/common"
 	"kinger/gopuppy/common/eventhub"
 	"kinger/gopuppy/network"
-	"kinger/gamedata"
 	"kinger/proto/pb"
 )
 
@@ -39,7 +39,7 @@ func rpc_C2S_WatchVideo(agent *logic.PlayerAgent, arg interface{}) (interface{},
 			return nil, gamedata.InternalErr
 		} else {
 			return &pb.WatchVideoResp{
-				VideoData:     videoData,
+				VideoData: videoData,
 			}, nil
 		}
 	}
@@ -133,7 +133,7 @@ func rpc_G2V_CommentsVideo(agent *logic.PlayerAgent, arg interface{}) (interface
 		arg2.CountryFlag)
 	return &pb.CommentsVideoReply{
 		CommentsID: int32(c.getID()),
-		Time: int32(c.getTime()),
+		Time:       int32(c.getTime()),
 	}, nil
 }
 

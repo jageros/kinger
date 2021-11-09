@@ -2,12 +2,12 @@ package growplan
 
 import (
 	"fmt"
-	"kinger/gopuppy/common/eventhub"
-	"kinger/gopuppy/common/timer"
 	aTypes "kinger/apps/game/activitys/types"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/common/eventhub"
+	"kinger/gopuppy/common/timer"
 	"kinger/proto/pb"
 )
 
@@ -69,7 +69,7 @@ func FetchActivityList(player types.IPlayer, aid int) (*pb.ActivityData, error) 
 func ReceiveReward(player types.IPlayer, activityID, rewardID int, rd *pb.Reward) error {
 	p := newComponent(player)
 	canReceive := p.getRewardReceiveStatus(activityID, rewardID)
-	if canReceive == pb.ActivityReceiveStatus_CanReceive{
+	if canReceive == pb.ActivityReceiveStatus_CanReceive {
 		err := p.giveReward(activityID, rewardID, rd)
 		if err != nil {
 			return err

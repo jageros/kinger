@@ -57,7 +57,7 @@ type Conn struct {
 	readCount    uint32
 	writeCount   uint32
 	OnDisconnect func()
-	OnReconnect func()
+	OnReconnect  func()
 }
 
 func Dial(config Config, dialer Dialer) (net.Conn, error) {

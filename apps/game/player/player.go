@@ -2,43 +2,43 @@ package player
 
 import (
 	"fmt"
-	"kinger/gopuppy/apps/center/mq"
-	"kinger/gopuppy/apps/logic"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common"
-	"kinger/gopuppy/common/eventhub"
-	"kinger/gopuppy/common/glog"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/config"
 	"kinger/common/consts"
 	"kinger/common/utils"
+	"kinger/gopuppy/apps/center/mq"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/eventhub"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
 	"kinger/proto/pb"
 	"strconv"
 	"time"
-	"kinger/gopuppy/common/evq"
 )
 
 var _ types.IPlayer = &Player{}
 
 type Player struct {
-	isLogout bool
-	uid        common.UUid
-	agent      *logic.PlayerAgent
-	attr       *attribute.AttrMgr
-	components map[string]types.IPlayerComponent
-	componentList []types.IPlayerComponent
-	hints map[pb.HintType]int
+	isLogout        bool
+	uid             common.UUid
+	agent           *logic.PlayerAgent
+	attr            *attribute.AttrMgr
+	components      map[string]types.IPlayerComponent
+	componentList   []types.IPlayerComponent
+	hints           map[pb.HintType]int
 	multiClickGuard *forbidMultiClick
 }
 
 func newPlayer(uid common.UUid, agent *logic.PlayerAgent, attr *attribute.AttrMgr) *Player {
 	p := &Player{
-		uid:        uid,
-		agent:      agent,
-		attr:       attr,
-		components: make(map[string]types.IPlayerComponent),
-		hints: map[pb.HintType]int{},
+		uid:             uid,
+		agent:           agent,
+		attr:            attr,
+		components:      make(map[string]types.IPlayerComponent),
+		hints:           map[pb.HintType]int{},
 		multiClickGuard: newForbidMultiClick(),
 	}
 
@@ -65,25 +65,25 @@ func (p *Player) createComponent() {
 		p.addComponent(fatigueCpt)
 	}
 
-	p.addComponent( module.Level.NewLevelComponent(p.attr) )
-	p.addComponent( module.Bag.NewComponent(p.attr) )
-	p.addComponent( module.Card.NewCardComponent(p.attr) )
-	p.addComponent( &ResourceComponent{} )
-	p.addComponent( module.Pvp.NewPvpComponent(p.attr) )
-	p.addComponent( module.Reborn.NewComponent(p.attr) )
-	p.addComponent( module.OutStatus.NewComponent(p.attr) )
-	p.addComponent( module.Treasure.NewTreasureComponent(p.attr) )
-	p.addComponent( module.Tutorial.NewTutorialComponent(p.attr) )
-	p.addComponent( newSurveyComponent(p) )
-	p.addComponent( module.GiftCode.NewComponent(p.attr) )
-	p.addComponent( module.Social.NewComponent(p.attr) )
-	p.addComponent( module.WxGame.NewComponent(p.attr) )
-	p.addComponent( module.Shop.NewComponent(p.attr) )
-	p.addComponent( module.Mission.NewComponent(p.attr) )
-	p.addComponent( module.Mail.NewComponent(p.attr) )
-	p.addComponent( module.Huodong.NewComponent(p.attr) )
-	p.addComponent( module.Campaign.NewComponent(p.attr) )
-	p.addComponent( module.Activitys.NewComponent(p.attr) )
+	p.addComponent(module.Level.NewLevelComponent(p.attr))
+	p.addComponent(module.Bag.NewComponent(p.attr))
+	p.addComponent(module.Card.NewCardComponent(p.attr))
+	p.addComponent(&ResourceComponent{})
+	p.addComponent(module.Pvp.NewPvpComponent(p.attr))
+	p.addComponent(module.Reborn.NewComponent(p.attr))
+	p.addComponent(module.OutStatus.NewComponent(p.attr))
+	p.addComponent(module.Treasure.NewTreasureComponent(p.attr))
+	p.addComponent(module.Tutorial.NewTutorialComponent(p.attr))
+	p.addComponent(newSurveyComponent(p))
+	p.addComponent(module.GiftCode.NewComponent(p.attr))
+	p.addComponent(module.Social.NewComponent(p.attr))
+	p.addComponent(module.WxGame.NewComponent(p.attr))
+	p.addComponent(module.Shop.NewComponent(p.attr))
+	p.addComponent(module.Mission.NewComponent(p.attr))
+	p.addComponent(module.Mail.NewComponent(p.attr))
+	p.addComponent(module.Huodong.NewComponent(p.attr))
+	p.addComponent(module.Campaign.NewComponent(p.attr))
+	p.addComponent(module.Activitys.NewComponent(p.attr))
 }
 
 func (p *Player) getAttr() *attribute.AttrMgr {
@@ -145,13 +145,13 @@ func (p *Player) getGuideAttr() *attribute.ListAttr {
 	return guideAttr
 }
 
-func (p *Player) GetModifytime() string{
+func (p *Player) GetModifytime() string {
 	return p.attr.GetStr("modifyTime")
 }
 
 func (p *Player) setModifytime() {
 	now := time.Now().Unix()
-	strNow := strconv.FormatInt(now,10)
+	strNow := strconv.FormatInt(now, 10)
 	p.attr.SetStr("modifyTime", strNow)
 }
 
@@ -211,7 +211,7 @@ func (p *Player) GetIP() string {
 	return p.attr.GetStr("ipAddr")
 }
 
-func (p *Player) SetIP(ipAddr string){
+func (p *Player) SetIP(ipAddr string) {
 	p.attr.SetStr("ipAddr", ipAddr)
 }
 
@@ -229,11 +229,11 @@ func (p *Player) setName(name string) {
 
 func (p *Player) OnSimpleInfoUpdate() {
 	logic.BroadcastBackend(pb.MessageID_L2L_UPDATE_SIMPLE_PLAYER, &pb.UpdateSimplePlayerArg{
-		Uid: uint64(p.GetUid()),
-		Name: p.GetName(),
+		Uid:        uint64(p.GetUid()),
+		Name:       p.GetName(),
 		HeadImgUrl: p.GetHeadImgUrl(),
-		HeadFrame: p.GetHeadFrame(),
-		PvpScore: int32(p.GetPvpScore()),
+		HeadFrame:  p.GetHeadFrame(),
+		PvpScore:   int32(p.GetPvpScore()),
 	})
 }
 
@@ -262,10 +262,10 @@ func (p *Player) IsOnline() bool {
 }
 
 func (p *Player) OnBeginBattle(battleID common.UUid, battleType int, battleAppID uint32) {
-	glog.Infof("OnBeginBattle, uid=%d, battleID=%d, battletype=%d, battleAppID=%d, oldBattleID=%d, oldBattleAppID=%d, oldBattleType=%d", 
+	glog.Infof("OnBeginBattle, uid=%d, battleID=%d, battletype=%d, battleAppID=%d, oldBattleID=%d, oldBattleAppID=%d, oldBattleType=%d",
 		p.GetUid(), battleID, battleType, battleAppID, p.attr.GetUInt64("battleID"), p.attr.GetUInt32("battleAppID"), p.attr.GetInt("battleType"))
 	if p.attr.GetUInt64("battleID") > 0 {
-		glog.Infof("fuck OnBeginBattle, uid=%d, battleID=%d, battletype=%d, battleAppID=%d, oldBattleID=%d, oldBattleAppID=%d, oldBattleType=%d", 
+		glog.Infof("fuck OnBeginBattle, uid=%d, battleID=%d, battletype=%d, battleAppID=%d, oldBattleID=%d, oldBattleAppID=%d, oldBattleType=%d",
 			p.GetUid(), battleID, battleType, battleAppID, p.attr.GetUInt64("battleID"), p.attr.GetUInt32("battleAppID"), p.attr.GetInt("battleType"))
 	}
 
@@ -399,7 +399,7 @@ func (p *Player) getUpdateCountryFlagCD() int {
 		return 0
 	}
 
-	t := lastUpdateTime + 7 * 24 * 60 * 60
+	t := lastUpdateTime + 7*24*60*60
 	now := time.Now().Unix()
 	cd := now - t
 	if cd < 0 {
@@ -431,7 +431,6 @@ func (p *Player) getLoginTime() int64 {
 func (p *Player) GetLastLoginTime() int64 {
 	return p.getLoginTime()
 }
-
 
 func (p *Player) isNetAlive() bool {
 	return p.attr.GetBool("isNetAlive")
@@ -496,11 +495,11 @@ func (p *Player) GetPvpCardPoolsByCamp(camp int) []types.ICollectCard {
 func (p *Player) CalcCollectCardNumByLevel(lvl int) int {
 	return p.GetComponent(consts.CardCpt).(types.ICardComponent).GetCollectCardNumByLevel(lvl)
 }
+
 //统计指定星的卡
 func (p *Player) CalcCollectCardNumByStar(star int) int {
 	return p.GetComponent(consts.CardCpt).(types.ICardComponent).GetCollectCardNumByStar(star)
 }
-
 
 func (p *Player) setAccountType(accountType pb.AccountTypeEnum) {
 	if p.attr.GetInt32("accountType") != int32(accountType) {
@@ -524,7 +523,7 @@ func (p *Player) setCurGuideGroup(groupID int) {
 	p.attr.SetInt("groupID", groupID)
 }
 
-func (p* Player) getCurGuideGroup() int {
+func (p *Player) getCurGuideGroup() int {
 	return p.attr.GetInt("groupID")
 }
 
@@ -556,15 +555,15 @@ func (p *Player) packSimpleMsg() *pb.SimplePlayerInfo {
 		IsOnline:           p.IsOnline(),
 		IsInBattle:         p.IsInBattle(),
 		LastOnlineTime:     int32(p.GetLastOnlineTime()),
-		PvpCamp: int32(p.GetComponent(consts.CardCpt).(types.ICardComponent).GetFightCamp()),
-		Country: p.GetCountry(),
-		HeadFrame: p.GetHeadFrame(),
-		RebornCnt: int32(module.Reborn.GetRebornCnt(p)),
-		StatusIDs: statusIDs,
-		CrossAreaHonor: int32(module.Player.GetResource(p, consts.CrossAreaHonor)),
-		CountryFlag: p.GetCountryFlag(),
-		Area: int32(p.GetArea()),
-		MaxRankScore: int32(p.GetMaxRankScore()),
+		PvpCamp:            int32(p.GetComponent(consts.CardCpt).(types.ICardComponent).GetFightCamp()),
+		Country:            p.GetCountry(),
+		HeadFrame:          p.GetHeadFrame(),
+		RebornCnt:          int32(module.Reborn.GetRebornCnt(p)),
+		StatusIDs:          statusIDs,
+		CrossAreaHonor:     int32(module.Player.GetResource(p, consts.CrossAreaHonor)),
+		CountryFlag:        p.GetCountryFlag(),
+		Area:               int32(p.GetArea()),
+		MaxRankScore:       int32(p.GetMaxRankScore()),
 	}
 }
 
@@ -766,7 +765,7 @@ func (p *Player) Tellme(msg string, text int) {
 	agent := p.GetAgent()
 	if agent != nil {
 		agent.PushClient(pb.MessageID_S2C_TELL_ME, &pb.TellMe{
-			Msg: msg,
+			Msg:  msg,
 			Text: int32(text),
 		})
 	}
@@ -801,13 +800,13 @@ func (p *Player) SubBowlder(amount int, reason string) {
 	resCpt := p.GetComponent(consts.ResourceCpt).(*ResourceComponent)
 	bowlder := resCpt.GetResource(consts.Bowlder)
 	if bowlder >= amount {
-		resCpt.ModifyResource(consts.Bowlder, - amount, reason)
+		resCpt.ModifyResource(consts.Bowlder, -amount, reason)
 		return
 	}
 
 	resCpt.BatchModifyResource(map[int]int{
-		consts.Bowlder: - bowlder,
-		consts.Jade: bowlder - amount,
+		consts.Bowlder: -bowlder,
+		consts.Jade:    bowlder - amount,
 	}, reason)
 }
 
@@ -898,7 +897,7 @@ func (p *Player) UpdateHint(type_ pb.HintType, count int) {
 	p.hints[type_] = count
 	if p.agent != nil {
 		p.agent.PushClient(pb.MessageID_S2C_UPDATE_HINT, &pb.Hint{
-			Type: type_,
+			Type:  type_,
 			Count: int32(count),
 		})
 	}
@@ -913,7 +912,7 @@ func (p *Player) DelHint(type_ pb.HintType) {
 	delete(p.hints, type_)
 	if count > 0 && p.agent != nil {
 		p.agent.PushClient(pb.MessageID_S2C_UPDATE_HINT, &pb.Hint{
-			Type: type_,
+			Type:  type_,
 			Count: 0,
 		})
 	}
@@ -947,7 +946,7 @@ func (p *Player) GetHintCount(type_ pb.HintType) int {
 	return int(count)
 }
 
-func (p *Player) forEachHint(callback func(type_ pb.HintType, count int))  {
+func (p *Player) forEachHint(callback func(type_ pb.HintType, count int)) {
 	for t, c := range p.hints {
 		callback(t, c)
 	}

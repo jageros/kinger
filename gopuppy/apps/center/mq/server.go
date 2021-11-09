@@ -1,23 +1,23 @@
 package mq
 
 import (
+	"gopkg.in/redis.v3"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/config"
+	"kinger/gopuppy/common/consts"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
+	"kinger/gopuppy/common/utils"
 	"kinger/gopuppy/network"
 	"kinger/gopuppy/proto/pb"
-	"kinger/gopuppy/common"
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common/evq"
-	"kinger/gopuppy/common/consts"
-	"kinger/gopuppy/common/timer"
-	"gopkg.in/redis.v3"
 	"time"
-	"kinger/gopuppy/common/config"
-	"kinger/gopuppy/common/utils"
 )
 
 var (
 	consumer2Queues = map[int64]common.StringSet{}
-	queue2Consumer = map[string]*network.Session{}
-	redisClient *redis.Client
+	queue2Consumer  = map[string]*network.Session{}
+	redisClient     *redis.Client
 )
 
 func rpc_L2C_MqAddConsumer(ses *network.Session, arg interface{}) (interface{}, error) {
@@ -94,7 +94,7 @@ func onPublish(msg *pb.RmqMessage) {
 	if consumer, ok := queue2Consumer[msg.Queue]; ok {
 		_, err := consumer.Call(pb.MessageID_C2L_MQ_CONSUME, msg)
 		if err != nil {
-			timer.AfterFunc(200 * time.Millisecond, func() {
+			timer.AfterFunc(200*time.Millisecond, func() {
 				onPublish(msg)
 			})
 		}

@@ -12,12 +12,12 @@ type IHuodongGoodsGameData interface {
 }
 
 type HuodongGoods struct {
-	ID              int      `json:"__id__"`
-	Type     string      `json:"type"`
-	RewardID     string      `json:"rewardId"`
-	Amount int `json:"cnt"`
-	ExchangeCnt int `json:"exchangeCnt"`
-	Price int `json:"price"`
+	ID          int    `json:"__id__"`
+	Type        string `json:"type"`
+	RewardID    string `json:"rewardId"`
+	Amount      int    `json:"cnt"`
+	ExchangeCnt int    `json:"exchangeCnt"`
+	Price       int    `json:"price"`
 }
 
 type HuodongGoodsGameData struct {

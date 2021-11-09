@@ -33,8 +33,8 @@ type PlayerAgent struct {
 	clientID common.UUid
 	uid      common.UUid
 	gateID   uint32
-	region uint32  // 机房
-	ip string
+	region   uint32 // 机房
+	ip       string
 }
 
 func NewPlayerAgent(client *pb.PlayerClient) *PlayerAgent {
@@ -46,8 +46,8 @@ func NewPlayerAgent(client *pb.PlayerClient) *PlayerAgent {
 		clientID: common.UUid(client.ClientID),
 		uid:      common.UUid(client.Uid),
 		gateID:   client.GateID,
-		region: client.Region,
-		ip: client.IP,
+		region:   client.Region,
+		ip:       client.IP,
 	}
 }
 
@@ -147,7 +147,7 @@ func (pa *PlayerAgent) CallBackendAsync(msgID protoc.IMessageID, arg interface{}
 			ClientID: uint64(pa.clientID),
 			Uid:      uint64(pa.uid),
 			GateID:   pa.gateID,
-			Region: region,
+			Region:   region,
 		},
 		MsgID:   msgID.ID(),
 		Payload: payload,
@@ -208,7 +208,7 @@ func (pa *PlayerAgent) PushBackend(msgID protoc.IMessageID, arg interface{}) {
 			ClientID: uint64(pa.clientID),
 			Uid:      uint64(pa.uid),
 			GateID:   pa.gateID,
-			Region: region,
+			Region:   region,
 		},
 		MsgID:   msgID.ID(),
 		Payload: payload,
@@ -244,7 +244,7 @@ func (pa *PlayerAgent) PushClient(msgID protoc.IMessageID, arg interface{}) {
 			ClientID: uint64(pa.clientID),
 			Uid:      uint64(pa.uid),
 			GateID:   pa.gateID,
-			Region: region,
+			Region:   region,
 		},
 		MsgID:   msgID.ID(),
 		Payload: payload,
@@ -279,9 +279,9 @@ func (pa *PlayerAgent) SetClientFilter(key, val string) {
 	}
 
 	centerSes.Push(pb.MessageID_C2GT_CLIENT_SET_FILTER, &pb.ClientSetFilterArg{
-		Uid: uint64(pa.uid),
+		Uid:      uint64(pa.uid),
 		ClientID: uint64(pa.clientID),
-		Filter: &pb.BroadcastClientFilter {
+		Filter: &pb.BroadcastClientFilter{
 			Key: key,
 			Val: val,
 		},
@@ -302,9 +302,9 @@ func (pa *PlayerAgent) ClearClientFilter() {
 
 	centerSes.Push(pb.MessageID_C2GT_CLIENT_CLEAR_FILTER, &pb.PlayerClient{
 		ClientID: uint64(pa.clientID),
-		GateID: pa.gateID,
-		Uid: uint64(pa.uid),
-		Region: region,
+		GateID:   pa.gateID,
+		Uid:      uint64(pa.uid),
+		Region:   region,
 	})
 }
 
@@ -313,7 +313,7 @@ func (pa *PlayerAgent) packMsg() *pb.PlayerClient {
 		ClientID: uint64(pa.clientID),
 		Uid:      uint64(pa.uid),
 		GateID:   pa.gateID,
-		Region: pa.GetRegion(),
+		Region:   pa.GetRegion(),
 	}
 }
 

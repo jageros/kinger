@@ -2,11 +2,11 @@ package bag
 
 import (
 	"fmt"
-	"kinger/gopuppy/apps/logic"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
 	"kinger/proto/pb"
 	"strconv"
 )

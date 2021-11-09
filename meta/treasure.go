@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_GET_TREASURES    resp: GetTreasuresReply
@@ -297,4 +297,3 @@ func (m *S2C_UPDATE_DAILY_TREASURE_Meta) DecodeReply(data []byte) (interface{}, 
 }
 
 //------------------------------------ S2C_UPDATE_DAILY_TREASURE END ----------------------------------------
-

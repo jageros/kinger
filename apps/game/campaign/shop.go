@@ -1,13 +1,13 @@
 package campaign
 
 import (
-	"kinger/apps/game/module/types"
-	"kinger/common/consts"
-	"kinger/proto/pb"
 	"fmt"
 	"kinger/apps/game/module"
+	"kinger/apps/game/module/types"
 	"kinger/common/config"
+	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/proto/pb"
 	"time"
 )
 
@@ -36,7 +36,7 @@ type iGoods interface {
 }
 
 type baseGoods struct {
-	id int
+	id    int
 	type_ string
 	price int
 }
@@ -77,7 +77,7 @@ func (g *cardGoods) buy(player types.IPlayer) (string, string) {
 type itemGoods struct {
 	baseGoods
 	itemType int
-	itemID string
+	itemID   string
 }
 
 func (g *itemGoods) canBuy(player types.IPlayer) bool {
@@ -113,7 +113,7 @@ func (g *itemGoods) buy(player types.IPlayer) (string, string) {
 type resourceGoods struct {
 	baseGoods
 	resType int
-	amount int
+	amount  int
 }
 
 func (g *resourceGoods) canBuy(player types.IPlayer) bool {

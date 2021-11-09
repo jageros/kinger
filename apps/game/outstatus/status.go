@@ -2,11 +2,11 @@ package outstatus
 
 import (
 	"fmt"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/eventhub"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/eventhub"
 	"kinger/proto/pb"
 	"strings"
 	"time"
@@ -36,10 +36,10 @@ type iClientOutStatus interface {
 }
 
 type baseStatus struct {
-	i iOutStatus
+	i      iOutStatus
 	player types.IPlayer
-	id string
-	attr *attribute.MapAttr
+	id     string
+	attr   *attribute.MapAttr
 }
 
 func (st *baseStatus) GetID() string {
@@ -111,7 +111,7 @@ func (st *baseStatus) Over(leftTime int, args ...interface{}) {
 	if timeout < 0 {
 		return
 	}
-	st.attr.SetInt64("timeout", timeout + int64(leftTime))
+	st.attr.SetInt64("timeout", timeout+int64(leftTime))
 }
 
 func (st *baseStatus) GetLeftTime() int {
@@ -128,9 +128,9 @@ func (st *baseStatus) SetLeftTime(leftTime int) {
 
 func (st *baseStatus) PackMsg() *pb.OutStatus {
 	return &pb.OutStatus{
-		StatusID: st.GetID(),
+		StatusID:   st.GetID(),
 		RemainTime: int32(st.GetRemainTime()),
-		BuffLevel: int32(module.OutStatus.GetBuffLevel(st.player)),
+		BuffLevel:  int32(module.OutStatus.GetBuffLevel(st.player)),
 	}
 }
 

@@ -2,27 +2,27 @@ package main
 
 import (
 	"fmt"
-	"kinger/proto/pb"
+	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/center/api"
-	gpb "kinger/gopuppy/proto/pb"
 	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/common"
-	"kinger/gopuppy/common/timer"
-	"time"
-	"strconv"
 	"kinger/gopuppy/common/eventhub"
-	"kinger/gamedata"
-	"kinger/common/consts"
+	"kinger/gopuppy/common/timer"
+	gpb "kinger/gopuppy/proto/pb"
+	"kinger/proto/pb"
+	"strconv"
+	"time"
 )
 
 var campaignMgr = &campaignMgrSt{}
 
 type campaignMgrSt struct {
-	countryJobs []pb.CampaignJob
-	cityJobs []pb.CampaignJob
+	countryJobs  []pb.CampaignJob
+	cityJobs     []pb.CampaignJob
 	sortCountrys common.UInt32Set
-	sortCitys common.IntSet
-	info *pb.GCampaignInfo
+	sortCitys    common.IntSet
+	info         *pb.GCampaignInfo
 }
 
 func (cm *campaignMgrSt) initialize() {
@@ -97,7 +97,7 @@ func (cm *campaignMgrSt) getCityJobs() []pb.CampaignJob {
 
 func (cm *campaignMgrSt) broadcastClient(msgID pb.MessageID, arg interface{}) {
 	api.BroadcastClient(msgID, arg, &gpb.BroadcastClientFilter{
-		OP: gpb.BroadcastClientFilter_EQ,
+		OP:  gpb.BroadcastClientFilter_EQ,
 		Key: "campaign",
 		Val: "all",
 	})
@@ -143,7 +143,7 @@ func (cm *campaignMgrSt) getCampaignMissionInfo(cty *city, p *player) *pb.Campai
 func (cm *campaignMgrSt) getCampaignInfo() *pb.GCampaignInfo {
 	if cm.info == nil {
 		cm.info = &pb.GCampaignInfo{
-			Version: version,
+			Version:       version,
 			CampaignState: int32(warMgr.getState()),
 		}
 	}

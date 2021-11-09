@@ -1,21 +1,21 @@
 package gamedata
 
 import (
-	"kinger/common/consts"
-	"encoding/json"
-	"strconv"
 	"bytes"
+	"encoding/json"
 	"errors"
+	"kinger/common/consts"
+	"strconv"
 )
 
 const (
 	limitNewbieGiftWeiPrefix = "giftwei"
 	limitNewbieGiftShuPrefix = "giftshu"
-	limitNewbieGiftWuPrefix = "giftwu"
+	limitNewbieGiftWuPrefix  = "giftwu"
 
 	limitCommonGiftWeiPrefix = "commonWei"
 	limitCommonGiftShuPrefix = "commonShu"
-	limitCommonGiftWuPrefix = "commonwu"
+	limitCommonGiftWuPrefix  = "commonwu"
 )
 
 type ILimitGiftGameData interface {
@@ -35,7 +35,7 @@ type LimitGift struct {
 	RefreshHour    int64      `json:"refreashTime"`
 	JadePrice      int        `json:"jadePrice"`
 	ShowConditions [][]string `json:"showTrue"`
-	HideConditions [][]string  `json:"showFalse"`
+	HideConditions [][]string `json:"showFalse"`
 	HeadFrame      string     `json:"headFrame"`
 	Version        int        `json:"version"`
 	BowlderPrice   int        `json:"bowlderPrice"`
@@ -46,13 +46,13 @@ type LimitGift struct {
 	Areas          [][]int    `json:"areas"`
 	Visiable       int        `json:"visiable"`
 
-	MaxTeam int
-	Visible bool
-	RefreshTime int64
+	MaxTeam      int
+	Visible      bool
+	RefreshTime  int64
 	ContinueTime int64
-	areaLimit *AreaLimitConfig
+	areaLimit    *AreaLimitConfig
 
-	GiftIDPrefix string
+	GiftIDPrefix       string
 	NewbieGiftIDPrefix string
 	CommonGiftIDPrefix string
 }
@@ -100,11 +100,11 @@ func (l *LimitGift) IsVip() bool {
 
 type LimitGiftGameData struct {
 	baseGameData
-	rawData []byte
-	areaVersion int
-	idToGift map[string]*LimitGift
-	areaToLimitGifts map[int][]*LimitGift
-	areaToVipCard    map[int]*LimitGift
+	rawData            []byte
+	areaVersion        int
+	idToGift           map[string]*LimitGift
+	areaToLimitGifts   map[int][]*LimitGift
+	areaToVipCard      map[int]*LimitGift
 	areaToFirstVipCard map[int]*LimitGift
 }
 
@@ -133,7 +133,7 @@ func (rg *LimitGiftGameData) init(d []byte) error {
 	rg.areaVersion = areaVersion
 	rg.rawData = d
 	rg.areaToLimitGifts = map[int][]*LimitGift{}
-	rg.areaToVipCard =    map[int]*LimitGift{}
+	rg.areaToVipCard = map[int]*LimitGift{}
 	rg.areaToFirstVipCard = map[int]*LimitGift{}
 	rg.idToGift = map[string]*LimitGift{}
 	for _, g := range l {

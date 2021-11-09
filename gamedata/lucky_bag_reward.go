@@ -6,9 +6,9 @@ import (
 )
 
 type LuckBagReward struct {
-	ID         int `json:"__id__"`
+	ID     int      `json:"__id__"`
 	Reward []string `json:"reward"`
-	Prop int `json:"prop"`
+	Prop   int      `json:"prop"`
 }
 
 type LuckBagRewardGameData struct {

@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_FETCH_MISSION_INFO    resp: MissionInfo
@@ -396,4 +396,3 @@ func (m *S2C_UPDATE_MISSION_TREASURE_PROCESS_Meta) DecodeReply(data []byte) (int
 }
 
 //------------------------------------ S2C_UPDATE_MISSION_TREASURE_PROCESS END ----------------------------------------
-

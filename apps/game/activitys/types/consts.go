@@ -9,7 +9,7 @@ const (
 	ContinueLoginDay = "continueLoginDay"
 	TotalLoginDay    = "totalLoginDay"
 	LoginRewardBool  = "loginRewardBool"
-	SpringActivity    = "springAct"
+	SpringActivity   = "springAct"
 
 	//充值活动数据键
 	RechargeActivity    = "rechargeActivity"
@@ -71,8 +71,8 @@ const (
 	GrowPlan_totalRecharge        = "totalRecharge"
 
 	//每日充值活动
-	DailyRechargeActivity   = "dailyRechargeActivity"
-	TodayRechargeAmount     = "todayRechargeAmount"
+	DailyRechargeActivity    = "dailyRechargeActivity"
+	TodayRechargeAmount      = "todayRechargeAmount"
 	DailyRechargeReceiveBool = "dailyRechargeReceiveBool"
 
 	//每日分享活动

@@ -2,46 +2,46 @@ package gamedata
 
 import (
 	"encoding/json"
-	"kinger/gopuppy/common/glog"
 	"kinger/common/consts"
+	"kinger/gopuppy/common/glog"
 	"strconv"
 	"strings"
 	"time"
 )
 
 type FunctionPrice struct {
-	ID int `json:"__id__"`
-	Type string `json:"type"`
-	Price int `json:"price"`
+	ID    int    `json:"__id__"`
+	Type  string `json:"type"`
+	Price int    `json:"price"`
 }
 
 type FunctionPriceGameData struct {
 	baseGameData
-	ModifyName int
-	TreasureUp int
-	CardMore int
-	DailyDouble int
-	LuckyBag int
-	VipAccTicket int
-	AccountTransfer int
-	SpCardToPiece int
-	SkinToPiece int
-	ShopTreasureMaxBuyCnt int
-	ClearLevel int
-	VipContinuedTime int              // vip持续时间
-	PrivContinuedTime int             // 勋章持续时间
-	RankSeasonRefreshPrice int        // 锦标赛刷新卡池
-	ShopGoldCD time.Duration          // 商城买金币cd
-	ShopTreasureCD time.Duration      // 商城买军备宝箱cd
-	TryPrivContinuedTime int          // 试用勋章持续时间
-	TryVipContinuedTime int           // 试用vip持续时间
-	AccTreasure float64               // 宝箱加速每1元宝多少秒
-	PrivLevel2Num map[int]int         // 特权等级对应的特权个数
-	Team2MissionExtReward map[int]int // 任务每个段位额外获得
-	JadeToGold int
-	LeagueResetRewardProp int         // 联赛积分补偿百分比
-	LeagueResetRewardMax  int         // 最大补偿积分
-	LeagueCycle       *LeagueCycleTime         //赛季时间
+	ModifyName             int
+	TreasureUp             int
+	CardMore               int
+	DailyDouble            int
+	LuckyBag               int
+	VipAccTicket           int
+	AccountTransfer        int
+	SpCardToPiece          int
+	SkinToPiece            int
+	ShopTreasureMaxBuyCnt  int
+	ClearLevel             int
+	VipContinuedTime       int           // vip持续时间
+	PrivContinuedTime      int           // 勋章持续时间
+	RankSeasonRefreshPrice int           // 锦标赛刷新卡池
+	ShopGoldCD             time.Duration // 商城买金币cd
+	ShopTreasureCD         time.Duration // 商城买军备宝箱cd
+	TryPrivContinuedTime   int           // 试用勋章持续时间
+	TryVipContinuedTime    int           // 试用vip持续时间
+	AccTreasure            float64       // 宝箱加速每1元宝多少秒
+	PrivLevel2Num          map[int]int   // 特权等级对应的特权个数
+	Team2MissionExtReward  map[int]int   // 任务每个段位额外获得
+	JadeToGold             int
+	LeagueResetRewardProp  int              // 联赛积分补偿百分比
+	LeagueResetRewardMax   int              // 最大补偿积分
+	LeagueCycle            *LeagueCycleTime //赛季时间
 }
 
 type LeagueCycleTime struct {
@@ -120,16 +120,16 @@ func (gd *FunctionPriceGameData) init(d []byte) error {
 			gd.LeagueResetRewardProp = d.Price
 		case "leagueResetRewardMax":
 			gd.LeagueResetRewardMax = d.Price
-			
+
 		default:
-			
+
 			ty := strings.Split(d.Type, "_")
 			switch ty[0] {
 			case "privLevel":
 				lv, err := strconv.Atoi(ty[1])
 				if err != nil {
 					glog.Infof("function_price init PrivLevel2Num err=%s, arg2=%s", err, ty[1])
-				}else {
+				} else {
 					gd.PrivLevel2Num[lv] = d.Price
 				}
 
@@ -141,11 +141,11 @@ func (gd *FunctionPriceGameData) init(d []byte) error {
 				day, _ := strconv.Atoi(ty[2])
 				gd.LeagueCycle = &LeagueCycleTime{
 					TimeType: ty[1],
-					TimeDay: day,
-					TimeNum: d.Price,
+					TimeDay:  day,
+					TimeNum:  d.Price,
 				}
 			}
-			
+
 		}
 	}
 

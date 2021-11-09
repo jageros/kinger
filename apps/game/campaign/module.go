@@ -1,16 +1,16 @@
 package campaign
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/apps/game/module/types"
 	"kinger/apps/game/module"
-	"kinger/proto/pb"
+	"kinger/apps/game/module/types"
+	"kinger/common/config"
 	"kinger/common/consts"
 	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common/glog"
 	"kinger/gopuppy/common/timer"
+	"kinger/proto/pb"
 	"time"
-	"kinger/common/config"
 )
 
 const limitPvpLevel = 11
@@ -56,7 +56,7 @@ func (m *campaignModule) GetPlayerOfflineInfo(player types.IPlayer) *pb.GCampaig
 	return player.GetComponent(consts.CampaignCpt).(*campaignComponent).getInfo()
 }
 
-func (m *campaignModule) updateCampaignInfo(info *pb.GCampaignInfo)  {
+func (m *campaignModule) updateCampaignInfo(info *pb.GCampaignInfo) {
 	m.info = info
 	glog.Infof("updateCampaignInfo state=%s", pb.CampaignState_StateEnum(info.CampaignState))
 }
@@ -65,7 +65,7 @@ func (m *campaignModule) getCampaignInfo() *pb.GCampaignInfo {
 	if config.GetConfig().IsMultiLan {
 		return nil
 	}
-	
+
 	if m.info == nil {
 		reply, err := logic.CallBackend("", 0, pb.MessageID_G2CA_GET_CAMPAIGN_INFO, nil)
 		if err != nil {
@@ -130,7 +130,7 @@ func Initialize() {
 	module.Campaign = mod
 	registerRpc()
 
-	timer.AfterFunc(2 * time.Second, func() {
+	timer.AfterFunc(2*time.Second, func() {
 		mod.getCampaignInfo()
 	})
 }

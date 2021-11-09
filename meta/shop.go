@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_FETCH_SHOP_DATA    resp: ShopData
@@ -1350,4 +1350,3 @@ func (m *S2C_UPDATE_EXCHANGE_CARD_SKIN_IDS_Meta) DecodeReply(data []byte) (inter
 }
 
 //------------------------------------ S2C_UPDATE_EXCHANGE_CARD_SKIN_IDS END ----------------------------------------
-

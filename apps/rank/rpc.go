@@ -1,10 +1,10 @@
 package main
 
 import (
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/common"
 	"kinger/gopuppy/network"
-	"kinger/gamedata"
 	"kinger/proto/pb"
 )
 
@@ -59,7 +59,6 @@ func rpc_G2R_SeasonPvpEnd(_ *network.Session, arg interface{}) (interface{}, err
 		RankUids: board.getCurRankList(10),
 	}, nil
 }
-
 
 func rpc_G2R_fetchPlayerRank(_ *network.Session, arg interface{}) (interface{}, error) {
 	maxRank := int(arg.(*pb.MaxRankArg).MaxRank)

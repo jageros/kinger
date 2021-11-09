@@ -230,11 +230,11 @@ func UpdateDirtyWords(words []string, isAccurate bool, isAdd bool) {
 			}
 			if isAccurate {
 				currentBranch.isAccurate = false
-			}else {
+			} else {
 				currentBranch.isFuzzy = false
 			}
 
-			if !currentBranch.isAccurate && !currentBranch.isFuzzy && ! currentBranch.isGeneral {
+			if !currentBranch.isAccurate && !currentBranch.isFuzzy && !currentBranch.isGeneral {
 				currentBranch.isEnd = false
 			}
 

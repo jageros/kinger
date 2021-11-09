@@ -6,8 +6,8 @@ package meta
 import (
 	"errors"
 
-	"kinger/proto/pb"
 	"kinger/gopuppy/network/protoc"
+	"kinger/proto/pb"
 )
 
 //@ C2S_DEL_HINT  req: Hint
@@ -95,4 +95,3 @@ func (m *S2C_UPDATE_HINT_Meta) DecodeReply(data []byte) (interface{}, error) {
 }
 
 //------------------------------------ S2C_UPDATE_HINT END ----------------------------------------
-

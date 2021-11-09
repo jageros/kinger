@@ -1,12 +1,12 @@
 package fight
 
 import (
-	"kinger/gopuppy/common/glog"
 	aTypes "kinger/apps/game/activitys/types"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/common/glog"
 	"strconv"
 	"strings"
 )
@@ -96,7 +96,7 @@ func onFightEnd(args ...interface{}) {
 	p.updateHint()
 }
 
-func updateAllPlayerHint(){
+func updateAllPlayerHint() {
 	module.Player.ForEachOnlinePlayer(func(player types.IPlayer) {
 		p := newComponent(player)
 		p.updateHint()

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"kinger/gopuppy/common"
 	"kinger/gopuppy/common/config"
 	"kinger/gopuppy/common/consts"
@@ -12,13 +13,12 @@ import (
 	"kinger/gopuppy/proto/pb"
 	"math/rand"
 	"time"
-	"fmt"
 )
 
 var (
 	region2CenterSessions = map[uint32][]*centerSession{}
 	peer                  *network.Peer
-	isAppClose                 = false
+	isAppClose            = false
 )
 
 type ICenterClientDelegate interface {
@@ -157,7 +157,7 @@ func CallAllCenter(msgID protoc.IMessageID, arg interface{}) {
 	evq.Await(func() {
 		for _, c := range cs {
 			if c != nil {
-				<- c
+				<-c
 			}
 		}
 	})
@@ -172,7 +172,7 @@ func BroadcastClient(msgID protoc.IMessageID, arg interface{}, filter *pb.Broadc
 	SelectCenterByRandom(1).Push(pb.MessageID_C2GT_BROADCAST_CLIENT, &pb.BroadcastClientArg{
 		MsgID:   msgID.ID(),
 		Payload: payload,
-		Filter: filter,
+		Filter:  filter,
 	})
 }
 
@@ -184,7 +184,7 @@ func NotifyPlayerBeginLogin(uid, clientID common.UUid, gateID, region uint32) {
 		ClientID: uint64(clientID),
 		Uid:      uint64(uid),
 		GateID:   gateID,
-		Region: region,
+		Region:   region,
 	})
 }
 
@@ -198,11 +198,11 @@ func NotifyPlayerLoginDone(uid, clientID common.UUid, gateID, region uint32, beM
 	}
 
 	SelectCenterByUUid(uid, region).Push(pb.MessageID_PLAYER_LOGIN_DONE, &pb.PlayerLoginDone{
-		Client:    &pb.PlayerClient{
+		Client: &pb.PlayerClient{
 			ClientID: uint64(clientID),
 			Uid:      uint64(uid),
 			GateID:   gateID,
-			Region: region,
+			Region:   region,
 		},
 		BeMonitor: beMonitor,
 	})
@@ -217,7 +217,7 @@ func EndMonitorPlayer(uid, clientID common.UUid, gateID, region uint32) {
 		ClientID: uint64(clientID),
 		Uid:      uint64(uid),
 		GateID:   gateID,
-		Region: region,
+		Region:   region,
 	})
 }
 

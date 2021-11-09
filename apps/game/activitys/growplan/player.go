@@ -1,11 +1,11 @@
 package growplan
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/glog"
 	aTypes "kinger/apps/game/activitys/types"
 	"kinger/apps/game/module/types"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/glog"
 	"kinger/proto/pb"
 	"strconv"
 )
@@ -155,8 +155,8 @@ func (c *activityCom) setContinuousWinNum(aid int, isWin bool) {
 			continue
 		}
 		if isWin {
-			c.set2ArgAttrNum(aid, aTypes.GrowPlan_continuousWinNum, val[0], num + 1)
-		}else {
+			c.set2ArgAttrNum(aid, aTypes.GrowPlan_continuousWinNum, val[0], num+1)
+		} else {
 			c.set2ArgAttrNum(aid, aTypes.GrowPlan_continuousWinNum, val[0], 0)
 		}
 
@@ -299,7 +299,7 @@ func (c *activityCom) conformRewardCondition(activityID, rewardID int) bool {
 		}
 	}
 
-	if !c.ipc.Conform(activityID) || received || !lastReceived{
+	if !c.ipc.Conform(activityID) || received || !lastReceived {
 		return false
 	}
 

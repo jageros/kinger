@@ -14,9 +14,6 @@ import (
 	"kinger/gopuppy/common/timer"
 	//"kinger/gopuppy/network"
 	//"kinger/apps/game/campaign"
-	"kinger/gopuppy/apps/logic"
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common/rpubsub"
 	"kinger/apps/game/bag"
 	"kinger/apps/game/campaign"
 	"kinger/apps/game/cardpool"
@@ -37,13 +34,16 @@ import (
 	"kinger/apps/game/tutorial"
 	"kinger/apps/game/web"
 	"kinger/apps/game/wxgame"
+	"kinger/common/aicardpool"
 	kconfig "kinger/common/config"
 	kconsts "kinger/common/consts"
 	"kinger/common/utils"
 	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/rpubsub"
 	_ "kinger/meta"
 	"kinger/sdk"
-	"kinger/common/aicardpool"
 )
 
 type gameService struct {
@@ -117,7 +117,7 @@ func (gs *gameService) Start(appid uint16) {
 
 	})
 
-	<- c
+	<-c
 }
 
 func (gs *gameService) Stop() {
@@ -130,7 +130,7 @@ func (gs *gameService) Stop() {
 		aicardpool.Save()
 		close(c)
 	})
-	<- c
+	<-c
 	gs.OnStop()
 }
 

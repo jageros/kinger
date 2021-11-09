@@ -1,31 +1,31 @@
 package main
 
 import (
-	"kinger/proto/pb"
-	"kinger/gopuppy/common"
 	"container/list"
-	"kinger/gopuppy/apps/logic"
-	"time"
 	"kinger/gopuppy/apps/center/api"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/common"
 	gpb "kinger/gopuppy/proto/pb"
+	"kinger/proto/pb"
+	"time"
 )
 
 type chatChannel struct {
-	channel pb.ChatChannel
-	area int                      // 区
-	campaignCryID uint32          // 国战国家id
-	subscribes common.UInt64Set   // 哪些玩家关注了
-	chatLets *list.List           // 当前频道聊天记录
-	key string
+	channel       pb.ChatChannel
+	area          int              // 区
+	campaignCryID uint32           // 国战国家id
+	subscribes    common.UInt64Set // 哪些玩家关注了
+	chatLets      *list.List       // 当前频道聊天记录
+	key           string
 }
 
 func newChatChannel(channel pb.ChatChannel, area int, campaignCryID uint32) *chatChannel {
 	return &chatChannel{
-		channel: channel,
-		area: area,
+		channel:       channel,
+		area:          area,
 		campaignCryID: campaignCryID,
-		subscribes: common.UInt64Set{},
-		chatLets: list.New(),
+		subscribes:    common.UInt64Set{},
+		chatLets:      list.New(),
 	}
 }
 
@@ -83,18 +83,18 @@ func (cc *chatChannel) unsubscribe(uid common.UUid, isLogout bool) {
 
 func (cc *chatChannel) broadcast(senderUid common.UUid, sender *pb.CSendChatArg, msg string) {
 	chat := &pb.ChatItem{
-		Uid:        uint64(senderUid),
-		Name:       sender.Name,
-		HeadImgUrl: sender.HeadImgUrl,
-		Time:       int32(time.Now().Unix()),
-		Msg:        msg,
-		PvpLevel: sender.PvpLevel,
-		Country: sender.Country,
-		HeadFrame: sender.HeadFrame,
-		CityID: sender.CityID,
-		CityJob: sender.CityJob,
-		CountryJob: sender.CountryJob,
-		ChatPop:sender.ChatPop,
+		Uid:         uint64(senderUid),
+		Name:        sender.Name,
+		HeadImgUrl:  sender.HeadImgUrl,
+		Time:        int32(time.Now().Unix()),
+		Msg:         msg,
+		PvpLevel:    sender.PvpLevel,
+		Country:     sender.Country,
+		HeadFrame:   sender.HeadFrame,
+		CityID:      sender.CityID,
+		CityJob:     sender.CityJob,
+		CountryJob:  sender.CountryJob,
+		ChatPop:     sender.ChatPop,
 		CountryFlag: sender.CountryFlag,
 	}
 

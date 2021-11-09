@@ -1,10 +1,10 @@
 package wxgame
 
 import (
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common/utils"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/utils"
 	"math/rand"
 	"strconv"
 	"time"

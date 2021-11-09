@@ -10,8 +10,8 @@ type RecruitRefreshConfig struct {
 	Weeks int `json:"weeks"`
 	Day   int `json:"day"`
 	Hours int `json:"hours"`
-	Min int `json:"minute"`
-	Sec int `json:"second"`
+	Min   int `json:"minute"`
+	Sec   int `json:"second"`
 }
 
 type RecruitRefreshConfigGameData struct {

@@ -4,23 +4,23 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/gogo/protobuf/proto"
 	"github.com/pkg/errors"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/eventhub"
-	"kinger/gopuppy/common/evq"
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common/td"
 	"io/ioutil"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/config"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/eventhub"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/td"
 	"kinger/proto/pb"
 	"net/http"
 	"strings"
 	"time"
-	"github.com/gogo/protobuf/proto"
 )
 
 // 花钱，怎样买东西
@@ -250,7 +250,7 @@ func (p *basePayment) getVipGoods(goodsID string, player types.IPlayer) *gamedat
 }
 
 func (p *basePayment) logMoneyNotEnough(player types.IPlayer, goodsID, cpOrderID, channelOrderID, channel,
-currency string, paymentAmount float64, needMoney int) {
+	currency string, paymentAmount float64, needMoney int) {
 	glog.Errorf("onRecharge paymentAmount not enough, uid=%d, accountType=%s, channelUid=%s, cpOrderID=%s, "+
 		"channelOrderID=%s, paymentAmount=%f, goodsID=%s, needPayment=%d, channel=%s, currency=%s",
 		player.GetUid(), player.GetAccountType(), player.GetChannelUid(), cpOrderID, channelOrderID, paymentAmount, goodsID,
@@ -311,7 +311,7 @@ func (p *basePayment) buyGift(player types.IPlayer, goodsID, cpOrderID, channelO
 	if giftData == nil {
 		return
 	}
-	
+
 	if needCheckMoney && paymentAmount < float64(giftData.Price) {
 		p.logMoneyNotEnough(player, goodsID, cpOrderID, channelOrderID, channel, currency, paymentAmount,
 			giftData.Price)
@@ -327,7 +327,7 @@ func (p *basePayment) buyGift(player types.IPlayer, goodsID, cpOrderID, channelO
 	mod.LogShopBuyItem(player, itemID, itemID, 1, "shop", currency,
 		currency, price, "")
 
-	if giftData.GiftID == "gift12"{
+	if giftData.GiftID == "gift12" {
 		module.Televise.SendNotice(pb.TeleviseEnum_LimitGiftGetCard, player.GetName(), uint32(109))
 	}
 
@@ -457,8 +457,8 @@ func (p *basePayment) onRecharge(player types.IPlayer, order *orderSt, channel s
 			glog.JsonInfo("pay", glog.Uint64("uid", uint64(player.GetUid())), glog.String("accountType",
 				accountType.String()), glog.String("channelID", channelUid), glog.String("cpOrderID", cpOrderID),
 				glog.String("channelOrderID", channelOrderID), glog.Float64("money", paymentAmount), glog.String(
-				"goodsID", goodsID), glog.Int("jade", jade), glog.String("channel", channel), glog.String(
-				"currency", currency), glog.Int("pvpLevel", player.GetPvpLevel()), glog.Int("area", player.GetArea()),
+					"goodsID", goodsID), glog.Int("jade", jade), glog.String("channel", channel), glog.String(
+					"currency", currency), glog.Int("pvpLevel", player.GetPvpLevel()), glog.Int("area", player.GetArea()),
 				glog.String("subChannel", player.GetSubChannel()))
 		}
 

@@ -2,17 +2,17 @@ package mq
 
 import (
 	"github.com/pkg/errors"
+	"kinger/gopuppy/apps/center/api"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/network"
 	"kinger/gopuppy/network/protoc"
 	"kinger/gopuppy/proto/pb"
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/apps/center/api"
-	"kinger/gopuppy/network"
-	"kinger/gopuppy/common/evq"
 )
 
 var (
 	rmqMessgeGreaters = map[int32]func() IRmqMessge{}
-	consumers = map[string]IConsumer {}
+	consumers         = map[string]IConsumer{}
 )
 
 func RegisterRmqMessage(type_ protoc.IMessageID, greater func() IRmqMessge) {
@@ -45,7 +45,6 @@ func decodeRmqMessage(msg *pb.RmqMessage) (IRmqMessge, error) {
 	}
 }
 
-
 func Publish(queue string, type_ protoc.IMessageID, region uint32, msg IRmqMessge) error {
 	payload, err := msg.Marshal()
 	if err != nil {
@@ -54,8 +53,8 @@ func Publish(queue string, type_ protoc.IMessageID, region uint32, msg IRmqMessg
 	}
 
 	api.SelectCenterByString(queue, region).Push(pb.MessageID_L2C_MQ_PUBLISH, &pb.RmqMessage{
-		Queue: queue,
-		Type: type_.ID(),
+		Queue:   queue,
+		Type:    type_.ID(),
 		Payload: payload,
 	})
 	return nil

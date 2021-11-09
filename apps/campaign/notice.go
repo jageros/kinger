@@ -1,17 +1,17 @@
 package main
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/proto/pb"
-	"kinger/gopuppy/common"
-	"kinger/gopuppy/common/timer"
-	"time"
-	"math/rand"
-	"kinger/gopuppy/common/eventhub"
-	"kinger/gopuppy/common/glog"
-	"sort"
 	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/eventhub"
 	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
+	"kinger/proto/pb"
+	"math/rand"
+	"sort"
+	"time"
 )
 
 var noticeMgr = &noticeMgrSt{}
@@ -26,7 +26,7 @@ type noticeMgrSt struct {
 	// 某个玩家
 	playerNotices map[common.UUid]*playerNoticeBoard
 	// 玩家不在线时收到的
-	offlinePlayerNotices map[common.UUid]*noticeBoard
+	offlinePlayerNotices        map[common.UUid]*noticeBoard
 	offlinePlayerNoticesLoading map[common.UUid]chan struct{}
 }
 
@@ -69,10 +69,10 @@ func (nm *noticeMgrSt) initialize() {
 	eventhub.Subscribe(evPlayerChangeCity, nm.onPlayerChangeCity)
 	eventhub.Subscribe(evPlayerChangeCountry, nm.onPlayerChangeCountry)
 
-	timer.AddTicker(time.Duration(rand.Intn(20) + 290) * time.Second, func() {
+	timer.AddTicker(time.Duration(rand.Intn(20)+290)*time.Second, func() {
 		nm.save(false)
 	})
-	timer.AddTicker(20 * time.Second, nm.checkTimeout)
+	timer.AddTicker(20*time.Second, nm.checkTimeout)
 }
 
 func (nm *noticeMgrSt) loadOfflinePlayerNotices(uid common.UUid) (*noticeBoard, bool) {
@@ -84,7 +84,7 @@ func (nm *noticeMgrSt) loadOfflinePlayerNotices(uid common.UUid) (*noticeBoard, 
 	c, ok := nm.offlinePlayerNoticesLoading[uid]
 	if ok {
 		evq.Await(func() {
-			<- c
+			<-c
 		})
 		return nm.offlinePlayerNotices[uid], true
 	}
@@ -169,7 +169,7 @@ func (nm *noticeMgrSt) onPlayerChangeCity(args ...interface{}) {
 func (nm *noticeMgrSt) onPlayerChangeCountry(args ...interface{}) {
 	p := args[0].(*player)
 	uid := p.getUid()
-	nb, ok := nm.playerNotices[uid];
+	nb, ok := nm.playerNotices[uid]
 	if !ok {
 		return
 	}
@@ -281,7 +281,7 @@ func (nm *noticeMgrSt) save(isStopServer bool) {
 	}
 }
 
-func (nm *noticeMgrSt) sendNoticeToPlayer(uid common.UUid, type_ pb.CampaignNoticeType, args ...interface{})  {
+func (nm *noticeMgrSt) sendNoticeToPlayer(uid common.UUid, type_ pb.CampaignNoticeType, args ...interface{}) {
 	if nb, ok := nm.playerNotices[uid]; ok {
 		nb.sendNotice(type_, args...)
 	} else {
@@ -294,9 +294,8 @@ func (nm *noticeMgrSt) sendNoticeToPlayer(uid common.UUid, type_ pb.CampaignNoti
 	}
 }
 
-
 type notice struct {
-	attr *attribute.MapAttr
+	attr    *attribute.MapAttr
 	lowData map[string]interface{}
 }
 
@@ -366,7 +365,7 @@ func (n *notice) op() {
 
 func (n *notice) packMsg() *pb.CampaignNotice {
 	return &pb.CampaignNotice{
-		ID: int32(n.getID()),
+		ID:   int32(n.getID()),
 		Type: n.getType(),
 		Time: int32(n.getTime()),
 		Args: []byte(n.attr.GetStr("args")),
@@ -374,13 +373,13 @@ func (n *notice) packMsg() *pb.CampaignNotice {
 }
 
 func (n *notice) isTimeut(now int64) bool {
-	return int64(n.getTime() + noticeTimeout) <= now
+	return int64(n.getTime()+noticeTimeout) <= now
 }
 
 type noticeBoard struct {
-	attr *attribute.AttrMgr
+	attr        *attribute.AttrMgr
 	noticesAttr *attribute.ListAttr
-	notices []*notice
+	notices     []*notice
 }
 
 func newNoticeBoard(attr *attribute.AttrMgr) *noticeBoard {
@@ -412,7 +411,7 @@ func (nb *noticeBoard) initNotices() {
 	})
 
 	if i >= 0 {
-		nb.noticesAttr.DelBySection(0, i + 1)
+		nb.noticesAttr.DelBySection(0, i+1)
 	}
 }
 
@@ -474,82 +473,82 @@ func (nb *noticeBoard) newNotice(type_ pb.CampaignNoticeType, args ...interface{
 	switch type_ {
 	case pb.CampaignNoticeType_NewCountryNt:
 		arg := &pb.NewCountryNtArg{
-			PlayerName: args[0].(string),
+			PlayerName:  args[0].(string),
 			CountryName: args[1].(string),
-			CityID: int32( args[2].(int) ),
+			CityID:      int32(args[2].(int)),
 		}
 		argsData, _ = arg.Marshal()
 	case pb.CampaignNoticeType_AppointJobNt:
 		arg := &pb.AppointJobNtArg{
-			PlayerName: args[0].(string),
+			PlayerName:       args[0].(string),
 			TargetPlayerName: args[1].(string),
-			Job: args[2].(pb.CampaignJob),
-			CityID: int32(args[3].(int)),
+			Job:              args[2].(pb.CampaignJob),
+			CityID:           int32(args[3].(int)),
 		}
 		argsData, _ = arg.Marshal()
 	case pb.CampaignNoticeType_RecallJobNt:
 		arg := &pb.RecallJobNtArg{
-			Job: args[0].(pb.CampaignJob),
+			Job:    args[0].(pb.CampaignJob),
 			CityID: int32(args[1].(int)),
 		}
 		argsData, _ = arg.Marshal()
 	case pb.CampaignNoticeType_AutocephalyNt:
 		arg := &pb.AutocephalyNtArg{
-			Job: args[0].(pb.CampaignJob),
-			PlayerName: args[1].(string),
-			CountryName: args[2].(string),
+			Job:            args[0].(pb.CampaignJob),
+			PlayerName:     args[1].(string),
+			CountryName:    args[2].(string),
 			NewCountryName: args[3].(string),
 		}
 		argsData, _ = arg.Marshal()
 	case pb.CampaignNoticeType_KickOutNt:
 		arg := &pb.KickOutNtArg{
-			Job: args[0].(pb.CampaignJob),
+			Job:        args[0].(pb.CampaignJob),
 			PlayerName: args[1].(string),
-			CityID: int32(args[2].(int)),
+			CityID:     int32(args[2].(int)),
 		}
 		argsData, _ = arg.Marshal()
 	case pb.CampaignNoticeType_YourMajestyChangeNt:
 		arg := &pb.YourMajestyChangeNtArg{
-			YourMajestyName: args[0].(string),
+			YourMajestyName:    args[0].(string),
 			NewYourMajestyName: args[1].(string),
 		}
 		argsData, _ = arg.Marshal()
 	case pb.CampaignNoticeType_ResignNt:
 		arg := &pb.ResignNtArg{
-			Job: args[0].(pb.CampaignJob),
+			Job:        args[0].(pb.CampaignJob),
 			PlayerName: args[1].(string),
-			CityID: int32(args[2].(int)),
+			CityID:     int32(args[2].(int)),
 		}
 		argsData, _ = arg.Marshal()
 	case pb.CampaignNoticeType_BeOccupyNt:
 		arg := &pb.BeOccupyNtArg{
-			CountryName: args[0].(string),
-			BeOccupyCityID: int32( args[1].(int) ),
-			CaptiveAmount: int32(args[2].(int)),
+			CountryName:    args[0].(string),
+			BeOccupyCityID: int32(args[1].(int)),
+			CaptiveAmount:  int32(args[2].(int)),
 		}
 		argsData, _ = arg.Marshal()
 	case pb.CampaignNoticeType_DestoryCountryNt:
 		arg := &pb.DestoryCountryNtArg{
-			CountryName: args[0].(string),
+			CountryName:          args[0].(string),
 			BeDestoryCountryName: args[1].(string),
 		}
 		argsData, _ = arg.Marshal()
 	case pb.CampaignNoticeType_UnifiedWordNt:
 		arg := &pb.UnifiedWordNtArg{
-			CountryName: args[0].(string),
+			CountryName:     args[0].(string),
 			YourMajestyName: args[1].(string),
 		}
 		argsData, _ = arg.Marshal()
 	case pb.CampaignNoticeType_CapitalInjectionNt:
 		arg := &pb.CapitalInjectionNtArg{
-			Job: args[0].(pb.CampaignJob),
+			Job:        args[0].(pb.CampaignJob),
 			PlayerName: args[1].(string),
-			Gold: int32(args[2].(int)),
+			Gold:       int32(args[2].(int)),
 		}
 		argsData, _ = arg.Marshal()
 	case pb.CampaignNoticeType_ProductionNt:
 		arg := &pb.ProductionNtArg{
-			Gold: int32(args[0].(int)),
+			Gold:   int32(args[0].(int)),
 			Forage: int32(args[1].(int)),
 		}
 		argsData, _ = arg.Marshal()
@@ -560,15 +559,15 @@ func (nb *noticeBoard) newNotice(type_ pb.CampaignNoticeType, args ...interface{
 		argsData, _ = arg.Marshal()
 	case pb.CampaignNoticeType_TransportNt:
 		arg := &pb.TransportNtArg{
-			FromCity: int32(args[0].(int)),
-			TargetCity: int32(args[1].(int)),
+			FromCity:      int32(args[0].(int)),
+			TargetCity:    int32(args[1].(int)),
 			TransportType: args[2].(pb.TransportTypeEnum),
-			Amount: int32(args[3].(int)),
+			Amount:        int32(args[3].(int)),
 		}
 		argsData, _ = arg.Marshal()
 	case pb.CampaignNoticeType_OccupyNt:
 		arg := &pb.OccupyNtArg{
-			OccupyCityID: int32( args[0].(int) ),
+			OccupyCityID:  int32(args[0].(int)),
 			CaptiveAmount: int32(args[1].(int)),
 		}
 		argsData, _ = arg.Marshal()
@@ -601,38 +600,38 @@ func (nb *noticeBoard) newNotice(type_ pb.CampaignNoticeType, args ...interface{
 		fallthrough
 	case pb.CampaignNoticeType_SurrenderCity3Nt:
 		arg := &pb.SurrenderCity1NtArg{
-			PlayerName: args[0].(string),
-			CityID: int32(args[1].(int)),
+			PlayerName:        args[0].(string),
+			CityID:            int32(args[1].(int)),
 			TargetCountryName: args[2].(string),
 		}
 		argsData, _ = arg.Marshal()
 	case pb.CampaignNoticeType_SurrenderCity2Nt:
 		arg := &pb.SurrenderCity2NtArg{
 			PlayerName: args[0].(string),
-			CityID: int32(args[1].(int)),
+			CityID:     int32(args[1].(int)),
 		}
 		argsData, _ = arg.Marshal()
 	case pb.CampaignNoticeType_SurrenderCountry1Nt:
 		fallthrough
 	case pb.CampaignNoticeType_SurrenderCountry2Nt:
 		arg := &pb.SurrenderCountry1NtArg{
-			PlayerName: args[0].(string),
+			PlayerName:        args[0].(string),
 			TargetCountryName: args[1].(string),
 		}
 		argsData, _ = arg.Marshal()
 	case pb.CampaignNoticeType_AutocephalyNt2:
 		arg := &pb.AutocephalyNt2Arg{
-			CityID: int32(args[0].(int)),
-			Job: args[1].(pb.CampaignJob),
-			PlayerName: args[2].(string),
+			CityID:         int32(args[0].(int)),
+			Job:            args[1].(pb.CampaignJob),
+			PlayerName:     args[2].(string),
 			OldCountryName: args[3].(string),
 			NewCountryName: args[4].(string),
 		}
 		argsData, _ = arg.Marshal()
 	case pb.CampaignNoticeType_AutocephalyNt3:
 		arg := &pb.AutocephalyNt3Arg{
-			PlayerName: args[0].(string),
-			CityID: int32(args[1].(int)),
+			PlayerName:     args[0].(string),
+			CityID:         int32(args[1].(int)),
 			NewCountryName: args[2].(string),
 		}
 		argsData, _ = arg.Marshal()

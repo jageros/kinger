@@ -1,8 +1,8 @@
 package logic
 
 import (
-	"kinger/gopuppy/common"
 	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
 )
 
 var uid2Region = map[common.UUid]uint32{}

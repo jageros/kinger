@@ -1,19 +1,19 @@
 package main
 
 import (
-	"kinger/gopuppy/apps/logic"
-	"kinger/gopuppy/common/app"
-	gconfig "kinger/gopuppy/common/config"
-	"kinger/gopuppy/common/rpubsub"
-	"kinger/gopuppy/common/timer"
+	"kinger/common/aicardpool"
 	"kinger/common/config"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/app"
+	gconfig "kinger/gopuppy/common/config"
+	"kinger/gopuppy/common/evq"
+	"kinger/gopuppy/common/rpubsub"
+	"kinger/gopuppy/common/timer"
 	_ "kinger/meta"
 	"time"
-	"kinger/gopuppy/common/evq"
-	"kinger/gopuppy/common"
-	"kinger/common/aicardpool"
 )
 
 var mService *matchService
@@ -41,7 +41,7 @@ func (ms *matchService) Start(appID uint16) {
 		ms.ReportRpcHandlers()
 		close(c)
 	})
-	<- c
+	<-c
 }
 
 func (ms *matchService) Stop() {
@@ -52,7 +52,7 @@ func (ms *matchService) Stop() {
 		aicardpool.Save()
 		close(c)
 	})
-	<- c
+	<-c
 	ms.OnStop()
 }
 

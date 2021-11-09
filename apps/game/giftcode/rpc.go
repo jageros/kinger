@@ -1,10 +1,10 @@
 package giftcode
 
 import (
-	"kinger/gopuppy/apps/logic"
 	"kinger/apps/game/module"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/apps/logic"
 	"kinger/proto/pb"
 )
 

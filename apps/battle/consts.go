@@ -13,7 +13,7 @@ const (
 
 const (
 	campaignBonus = 1
-	pvpBonus = 2
+	pvpBonus      = 2
 )
 
 const (
@@ -30,15 +30,15 @@ const (
 	stMoveCard    = 10 // 移动的牌
 	stDestroyCard = 11 // 消灭的牌
 	stPreMoveCard = 12 // 准备移动的牌
-	stFort = 13   // 城防
-	stReturnCard    = 14  //  回手的牌
+	stFort        = 13 // 城防
+	stReturnCard  = 14 //  回手的牌
 )
 
 const (
 	// 技能触发时机
-	awaysTrigger            = 0   // 总会触发
-	boutBeginTrigger        = 1   // 回合开始
-	enterBattleTrigger      = 2   // 进场
+	awaysTrigger             = 0  // 总会触发
+	boutBeginTrigger         = 1  // 回合开始
+	enterBattleTrigger       = 2  // 进场
 	turnTrigger              = 3  // 翻面
 	beTurnTrigger            = 4  // 被翻面
 	afterAttackTrigger       = 5  // 进攻比点后
@@ -66,8 +66,8 @@ const (
 	surrenderTrigger         = 27 // 投降时
 	preAddValueTrigger       = 28 // 加点前
 	preSubValueTrigger       = 29 // 减点前
-	afterAddValueTrigger    = 30  // 加点后
-	afterSubValueTrigger    = 31  // 减点后
+	afterAddValueTrigger     = 30 // 加点后
+	afterSubValueTrigger     = 31 // 减点后
 )
 
 const (
@@ -96,11 +96,11 @@ const (
 )
 
 const (
-	sOwn               = 1 // 我方
-	sEnemy             = 2 // 敌方
+	sOwn   = 1 // 我方
+	sEnemy = 2 // 敌方
 
-	sInitOwn1               = 3 // 我方
-	sInitEnemy1             = 4 // 敌方
+	sInitOwn1          = 3 // 我方
+	sInitEnemy1        = 4 // 敌方
 	sInitOwn           = 5 // 初始我方
 	sInitEnemy         = 6 // 初始敌方
 	sRelativeInitOwn   = 7 // 相对者的初始我方
@@ -108,18 +108,18 @@ const (
 )
 
 const (
-	tTurner   = 1 // 翻面者
-	tBeTurner = 2 // 被翻面者
-	tPreTurner = 3 // 翻面前者
-	tPreBeTurner = 4 // 被翻面前者
-	tCantBeTurner = 5  // 不能被翻者
+	tTurner       = 1 // 翻面者
+	tBeTurner     = 2 // 被翻面者
+	tPreTurner    = 3 // 翻面前者
+	tPreBeTurner  = 4 // 被翻面前者
+	tCantBeTurner = 5 // 不能被翻者
 )
 
 const (
-	atAttacker   = 1 // 攻击者
-	atBeAttacker = 2 // 被攻击者
-	atForceAttacker = 3  // 出手的攻击者
-	atForceBeAttacker = 4  // 被出手者
+	atAttacker        = 1 // 攻击者
+	atBeAttacker      = 2 // 被攻击者
+	atForceAttacker   = 3 // 出手的攻击者
+	atForceBeAttacker = 4 // 被出手者
 )
 
 const (
@@ -129,11 +129,11 @@ const (
 	pApartEmpty  = 3 // 隔着空格
 	pApart       = 4 // 隔着格子
 	pOwn         = 5
-	pApart2Empty = 3 // 隔着2空格
-	pApart2      = 4 // 隔着2格子
-	pApart3Empty = 3 // 隔着2空格
-	pApart3      = 4 // 隔着2格子
-	pNotAdjoin = 10  // 非相邻
+	pApart2Empty = 3  // 隔着2空格
+	pApart2      = 4  // 隔着2格子
+	pApart3Empty = 3  // 隔着2空格
+	pApart3      = 4  // 隔着2格子
+	pNotAdjoin   = 10 // 非相邻
 )
 
 const (
@@ -153,7 +153,7 @@ const (
 
 const (
 	// 改变牌点数
-	mvtAll = 0        // 所有pos都改
-	mvtMinPos = 1     // 只改点数最小的pos
-	mvtAllBecome = 2  // 所有pos成为最大值
+	mvtAll       = 0 // 所有pos都改
+	mvtMinPos    = 1 // 只改点数最小的pos
+	mvtAllBecome = 2 // 所有pos成为最大值
 )

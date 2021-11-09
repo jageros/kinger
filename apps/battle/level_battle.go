@@ -1,27 +1,27 @@
 package main
 
 import (
-	"kinger/gopuppy/common"
-	"kinger/proto/pb"
-	"kinger/gamedata"
 	"kinger/common/consts"
-	"kinger/gopuppy/common/glog"
 	"kinger/common/utils"
-	"kinger/gopuppy/attribute"
+	"kinger/gamedata"
 	"kinger/gopuppy/apps/logic"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/glog"
+	"kinger/proto/pb"
 )
 
 type levelBattle struct {
 	battle
-	levelData *gamedata.Level
-	fighterData *pb.FighterData
+	levelData            *gamedata.Level
+	fighterData          *pb.FighterData
 	needChooseCardAmount int
-	canChooseCard map[uint32]*fightCard  // map[gcardID]*fightCard
+	canChooseCard        map[uint32]*fightCard // map[gcardID]*fightCard
 }
 
 func newLevelBattle(battleID common.UUid, fighterData *pb.FighterData, levelData *gamedata.Level, isHelp bool) *levelBattle {
 	battleObj := &levelBattle{
-		levelData: levelData,
+		levelData:   levelData,
 		fighterData: fighterData,
 	}
 	battleObj.battleID = battleID
@@ -52,15 +52,15 @@ func newLevelBattle(battleID common.UUid, fighterData *pb.FighterData, levelData
 	ownGridCards := levelData.GetOwnGridCards()
 	for gridID, gcardID := range ownGridCards {
 		fighterData.GridCards = append(fighterData.GridCards, &pb.InGridCard{
-			GridID: int32(gridID),
+			GridID:  int32(gridID),
 			GCardID: gcardID,
 		})
 	}
 
 	fighterData2 := &pb.FighterData{
-		Uid: 1,
+		Uid:      1,
 		NameText: int32(levelData.Name),
-		IsRobot: true,
+		IsRobot:  true,
 	}
 
 	var camp int
@@ -82,7 +82,7 @@ func newLevelBattle(battleID common.UUid, fighterData *pb.FighterData, levelData
 	enemyGridCards := levelData.GetEnemyGridCards()
 	for gridID, gcardID := range enemyGridCards {
 		fighterData2.GridCards = append(fighterData2.GridCards, &pb.InGridCard{
-			GridID: int32(gridID),
+			GridID:  int32(gridID),
 			GCardID: gcardID,
 		})
 	}
@@ -171,7 +171,7 @@ func (b *levelBattle) packMsg() interface{} {
 	msg := &pb.LevelBattle{
 		Desk:          battleMsg,
 		NeedChooseNum: int32(b.needChooseCardAmount),
-		LevelID: int32(b.levelData.ID),
+		LevelID:       int32(b.levelData.ID),
 	}
 	for _, c := range b.canChooseCard {
 		msg.ChoiceCards = append(msg.ChoiceCards, c.packMsg())

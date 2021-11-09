@@ -1,11 +1,11 @@
 package forbidlist
 
 import (
+	"kinger/apps/game/module"
+	"kinger/common/consts"
 	"kinger/gopuppy/apps/logic"
 	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common"
-	"kinger/apps/game/module"
-	"kinger/common/consts"
 	"kinger/proto/pb"
 	"time"
 )
@@ -23,7 +23,7 @@ const (
 )
 
 var (
-	forbidIPs       map[string]interface{}
+	forbidIPs map[string]interface{}
 )
 
 func InitForbidIP() {
@@ -144,7 +144,7 @@ func AddForbidIP(ipaddr string) {
 		attr.Save(false)
 
 		arg := &pb.IpAddrArg{
-			IpAddr: ipaddr,
+			IpAddr:   ipaddr,
 			IsForbid: true,
 		}
 		logic.BroadcastBackend(pb.MessageID_G2G_ON_FORBID_OR_UNBLOCK_IP, arg)
@@ -175,7 +175,7 @@ func DelForbidIP(ipaddr string) {
 	attr.Save(false)
 
 	arg := &pb.IpAddrArg{
-		IpAddr: ipaddr,
+		IpAddr:   ipaddr,
 		IsForbid: false,
 	}
 	logic.BroadcastBackend(pb.MessageID_G2G_ON_FORBID_OR_UNBLOCK_IP, arg)

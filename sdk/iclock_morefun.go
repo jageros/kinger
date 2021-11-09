@@ -1,31 +1,31 @@
 package sdk
 
 import (
-	"strings"
-	"kinger/gopuppy/common/glog"
-	"kinger/common/config"
-	"net/http"
-	"sort"
 	"crypto/md5"
 	"fmt"
 	"io"
+	"kinger/common/config"
+	"kinger/gopuppy/common/glog"
+	"net/http"
+	"sort"
+	"strings"
 )
 
 var (
 	iClockMoreFunSuccess = []byte("ok")
-	iClockMoreFunErr = []byte("fail")
+	iClockMoreFunErr     = []byte("fail")
 )
 
 type iClockMoreFun struct {
-	appID string
-	appKey string
+	appID     string
+	appKey    string
 	appSecret string
 }
 
 func newIClockMoreFun(cfg *config.LoginChannelConfig) ISdk {
 	s := &iClockMoreFun{
-		appID: cfg.AppID,
-		appKey: cfg.LoginKey,
+		appID:     cfg.AppID,
+		appKey:    cfg.LoginKey,
 		appSecret: cfg.LoginSecret,
 	}
 	return s
@@ -84,18 +84,18 @@ func (s *iClockMoreFun) RechargeAuthSign(request *http.Request) (uid uint64, cha
 	webPay := request.Form.Get("web_pay")
 
 	mySign := s.getSign(map[string]string{
-		"trade_no": channelOrderID,
-		"product_id": productID,
-		"url": url,
-		"app_id": appID,
-		"notify_type": notifyType,
-		"total_fee": totalFee,
+		"trade_no":     channelOrderID,
+		"product_id":   productID,
+		"url":          url,
+		"app_id":       appID,
+		"notify_type":  notifyType,
+		"total_fee":    totalFee,
 		"trade_status": tradeStatus,
-		"notify_id": notifyID,
+		"notify_id":    notifyID,
 		"product_name": productName,
-		"uuid": channelUid,
-		"extra": extra,
-		"web_pay": webPay,
+		"uuid":         channelUid,
+		"extra":        extra,
+		"web_pay":      webPay,
 	})
 
 	if mySign != sign {

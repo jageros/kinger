@@ -7,9 +7,9 @@ import (
 )
 
 type NewbiePvpBattle struct {
-	Camp             int      `json:"__id__"`
-	Hand      []uint32 `json:"hand"`
-	GridCard        [][]uint32  `json:"grid_card"`
+	Camp     int        `json:"__id__"`
+	Hand     []uint32   `json:"hand"`
+	GridCard [][]uint32 `json:"grid_card"`
 }
 
 type NewbiePvpGameData struct {

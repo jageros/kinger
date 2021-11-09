@@ -1,12 +1,12 @@
 package loginrecharge
 
 import (
-	"kinger/gopuppy/common/eventhub"
-	"kinger/gopuppy/common/timer"
 	aTypes "kinger/apps/game/activitys/types"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/common/eventhub"
+	"kinger/gopuppy/common/timer"
 	"kinger/proto/pb"
 	"strconv"
 )
@@ -40,7 +40,7 @@ func FetchActivityList(player types.IPlayer, aid int) (*pb.ActivityData, error) 
 		rrn := 0
 		if resID == "" {
 			resID = "0"
-		}else {
+		} else {
 			rrn = p.getRechargePrice(resID)
 		}
 

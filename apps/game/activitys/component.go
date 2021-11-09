@@ -2,10 +2,6 @@ package activitys
 
 import (
 	"fmt"
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common/timer"
-	"kinger/gopuppy/common/utils"
 	"kinger/apps/game/activitys/consume"
 	"kinger/apps/game/activitys/dailyrecharge"
 	"kinger/apps/game/activitys/dailyshare"
@@ -17,19 +13,23 @@ import (
 	"kinger/apps/game/activitys/online"
 	"kinger/apps/game/activitys/rank"
 	"kinger/apps/game/activitys/recharge"
+	"kinger/apps/game/activitys/spring"
 	aTypes "kinger/apps/game/activitys/types"
 	"kinger/apps/game/activitys/win"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
 	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
+	"kinger/gopuppy/common/utils"
 	"kinger/proto/pb"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
 	"unicode"
-	"kinger/apps/game/activitys/spring"
 )
 
 var _ types.IPlayerComponent = &activityComponent{}
@@ -90,7 +90,7 @@ func (ac *activityComponent) OnLogin(isRelogin, isRestore bool) {
 func (ac *activityComponent) OnLogout() {
 }
 
-func (ac *activityComponent) OnCrossDay (dayno int) {
+func (ac *activityComponent) OnCrossDay(dayno int) {
 	if ac.player.GetDataDayNo() == dayno {
 		return
 	}
@@ -255,7 +255,6 @@ func (ac *activityComponent) ConformOpen(activityID int) bool {
 		}
 	}
 
-
 	return true
 }
 
@@ -298,7 +297,7 @@ func (ac *activityComponent) ConformTime(activityID int) bool {
 
 func (ac *activityComponent) GetCreateDayNum() int {
 	createTime := ac.player.GetCreateTime()
-	dayNum := timer.GetDayNo() - timer.GetDayNo(createTime) +1
+	dayNum := timer.GetDayNo() - timer.GetDayNo(createTime) + 1
 	if dayNum < 1 {
 		dayNum = 1
 	}
@@ -443,7 +442,7 @@ func (ac *activityComponent) OnHeartBeat() {
 	}
 }
 
-func (p *activityComponent) PushFinshNum(aid, rid, num  int) {
+func (p *activityComponent) PushFinshNum(aid, rid, num int) {
 	msg := &pb.ActivityFinshChange{
 		ActivityID: int32(aid),
 		FinshNum:   int32(num),
@@ -464,7 +463,6 @@ func (p *activityComponent) PushReceiveStatus(aid, rid int, rst pb.ActivityRecei
 func (p *activityComponent) Conform(aid int) bool {
 	return p.ConformOpen(aid) && p.ConformTime(aid) && aTypes.IsInArry(int32(aid), p.GetActivityTagList())
 }
-
 
 func getRewardType(stuff string) int {
 	isNumbel := func() bool {
@@ -501,4 +499,3 @@ func getRewardType(stuff string) int {
 		return ty_unknow_
 	}
 }
-

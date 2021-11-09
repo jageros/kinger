@@ -5,19 +5,19 @@ import (
 )
 
 type ActivityConsumeReward struct {
-	ID       int      `json:"__id__"`
+	ID      int      `json:"__id__"`
 	Consume int      `json:"consume"`
-	Reward   []string `json:"reward"`
+	Reward  []string `json:"reward"`
 }
 
 type ActivityConsumeRewardGameData struct {
 	baseGameData
-	name_ string
+	name_                    string
 	ActivityConsumeRewardMap map[int]*ActivityConsumeReward
 }
 
 func newActivityConsumeRewardGameData(name_ string) *ActivityConsumeRewardGameData {
-	c := &ActivityConsumeRewardGameData{name_:name_}
+	c := &ActivityConsumeRewardGameData{name_: name_}
 	c.i = c
 	return c
 }

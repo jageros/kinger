@@ -1,15 +1,15 @@
 package treasure
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/gopuppy/common/timer"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
-	"kinger/common/consts"
 	"kinger/common/config"
-	"kinger/proto/pb"
-	"kinger/gopuppy/common/eventhub"
+	"kinger/common/consts"
+	"kinger/gopuppy/attribute"
 	"kinger/gopuppy/common"
+	"kinger/gopuppy/common/eventhub"
+	"kinger/gopuppy/common/timer"
+	"kinger/proto/pb"
 )
 
 var mod *treasureModule
@@ -45,7 +45,7 @@ func (t *treasureModule) GetDayAccTicketCanAdd(player types.IPlayer) int {
 			return module.OutStatus.BuffAccTreasureCnt(player, 10)
 		}
 	} else {
-			return module.OutStatus.BuffAccTreasureCnt(player, 3)
+		return module.OutStatus.BuffAccTreasureCnt(player, 3)
 	}
 }
 

@@ -1,13 +1,13 @@
 package reward
 
 import (
+	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
-	"strconv"
-	"kinger/gamedata"
 	"kinger/common/consts"
+	"kinger/gamedata"
 	"kinger/gopuppy/common/glog"
 	"math/rand"
-	"kinger/apps/game/module"
+	"strconv"
 )
 
 type rewardModule struct {

@@ -2,11 +2,11 @@ package reward
 
 import (
 	"fmt"
-	"kinger/gopuppy/common/glog"
-	"kinger/gopuppy/common/utils"
 	"kinger/apps/game/module"
 	"kinger/apps/game/module/types"
 	"kinger/common/consts"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/utils"
 	"kinger/proto/pb"
 	"strconv"
 	"strings"
@@ -49,7 +49,7 @@ func giveReward(player types.IPlayer, stuff string, num int, source string, rd *
 	case ty_resource_:
 		module.Player.ModifyResource(player, resType, num, source)
 		rd.StuffList[stuff] = int32(num)
-		glog.Infof("GiveReward give player resource, uid=%d, resType=%d, num=%d, source=%s",player.GetUid(), resType, num, source)
+		glog.Infof("GiveReward give player resource, uid=%d, resType=%d, num=%d, source=%s", player.GetUid(), resType, num, source)
 
 	case ty_headFrame_:
 		module.Bag.AddHeadFrame(player, strconv.Itoa(num))
@@ -59,7 +59,7 @@ func giveReward(player types.IPlayer, stuff string, num int, source string, rd *
 	case ty_chatPop_:
 		module.Bag.AddChatPop(player, strconv.Itoa(num))
 		rd.StuffList[stuff] = int32(num)
-		glog.Infof("GiveReward give player chatPop, uid=%d, chatpopID=%d, source=%s",player.GetUid(), num, source)
+		glog.Infof("GiveReward give player chatPop, uid=%d, chatpopID=%d, source=%s", player.GetUid(), num, source)
 
 	case ty_randomCard_:
 		cardNum := num/8 + 1
@@ -114,7 +114,7 @@ func giveCard(player types.IPlayer, cardID []uint32, num []int, rd *pb.RewardLis
 	glog.Infof("give player collect cards, uid=%d, cardSet=%s", player.GetUid(), cids)
 }
 
-func generateRandomCard(player types.IPlayer, num int)(cardIds []uint32, cardSums []int) {
+func generateRandomCard(player types.IPlayer, num int) (cardIds []uint32, cardSums []int) {
 	cardNum := num/8 + 1
 	card := utils.RandUInt32Sample(module.Card.GetUnlockCards(player, 0), cardNum, false)
 	cardSum := utils.RandFewNumberWithSum(num, cardNum)
@@ -259,4 +259,3 @@ func (m *rewardModule) GetMailItemType(stuff string) (isRes bool, ty pb.MailRewa
 	}
 	return false, -1
 }
-

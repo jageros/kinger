@@ -1,16 +1,16 @@
 package main
 
 import (
-	"kinger/gopuppy/attribute"
-	"kinger/proto/pb"
-	"kinger/gamedata"
-	"kinger/common/consts"
-	"time"
-	"kinger/gopuppy/common/timer"
 	"fmt"
-	"kinger/gopuppy/common/glog"
-	"math"
+	"kinger/common/consts"
 	"kinger/common/utils"
+	"kinger/gamedata"
+	"kinger/gopuppy/attribute"
+	"kinger/gopuppy/common/glog"
+	"kinger/gopuppy/common/timer"
+	"kinger/proto/pb"
+	"math"
+	"time"
 )
 
 type baseMission struct {
@@ -124,13 +124,13 @@ func (m *mission) getContribution() float64 {
 	paramGameData := gamedata.GetGameData(consts.CampaignParam).(*gamedata.CampaignParamGameData)
 	switch m.getType() {
 	case pb.CampaignMsType_Irrigation:
-		return math.Ceil( paramGameData.IrrigationVic * m.cty.getGlory() )
+		return math.Ceil(paramGameData.IrrigationVic * m.cty.getGlory())
 	case pb.CampaignMsType_Trade:
-		return math.Ceil( paramGameData.TradeVic * m.cty.getGlory() )
+		return math.Ceil(paramGameData.TradeVic * m.cty.getGlory())
 	case pb.CampaignMsType_Build:
-		return math.Ceil( paramGameData.BuildVic * m.cty.getGlory() )
+		return math.Ceil(paramGameData.BuildVic * m.cty.getGlory())
 	case pb.CampaignMsType_Transport:
-		return math.Ceil( paramGameData.TransportVic * float64(m.getTransportDistance()) * m.cty.getGlory() )
+		return math.Ceil(paramGameData.TransportVic * float64(m.getTransportDistance()) * m.cty.getGlory())
 	default:
 		return 0
 	}
@@ -172,19 +172,19 @@ func (m *mission) cancel() {
 	transportGold := m.getTransportGold()
 	transportForage := m.getTransportForage()
 	dispatchGold := m.getDispatchGold()
-	m.cty.modifyResource(resGold, float64((gold + transportGold + dispatchGold) * amount))
-	m.cty.modifyResource(resForage, float64(transportForage * amount))
+	m.cty.modifyResource(resGold, float64((gold+transportGold+dispatchGold)*amount))
+	m.cty.modifyResource(resForage, float64(transportForage*amount))
 }
 
 func (m *mission) packMsg() *pb.CampaignMission {
 	msg := &pb.CampaignMission{
-		Type: m.getType(),
-		GoldReward: int32(m.getGoldReward()),
-		Amount: int32(m.getAmount()),
+		Type:                m.getType(),
+		GoldReward:          int32(m.getGoldReward()),
+		Amount:              int32(m.getAmount()),
 		TransportTargetCity: int32(m.getTransportCity()),
-		TransportMaxTime: int32(m.getMaxTime()),
-		MaxAmount: int32(m.getMaxAmount()),
-		Contribution: int32(m.getContribution()),
+		TransportMaxTime:    int32(m.getMaxTime()),
+		MaxAmount:           int32(m.getMaxAmount()),
+		Contribution:        int32(m.getContribution()),
 	}
 
 	if m.getTransportForage() > 0 {
@@ -206,8 +206,8 @@ func (m *mission) setMaxTime(maxTime int) {
 
 type playerMission struct {
 	baseMission
-	owner *player
-	gcardIDsAttr *attribute.ListAttr
+	owner         *player
+	gcardIDsAttr  *attribute.ListAttr
 	completeTimer *timer.Timer
 }
 
@@ -259,13 +259,13 @@ func newPlayerMission(msType pb.CampaignMsType, gold, cityID int, p *player, gca
 		gcardIDsAttr.AppendUInt32(gcardID)
 	}
 
-	attr.SetInt64("timeout", time.Now().Unix() + int64(attr.GetInt("maxTime")))
+	attr.SetInt64("timeout", time.Now().Unix()+int64(attr.GetInt("maxTime")))
 	return newPlayerMissionByAttr(p, attr)
 }
 
 func newPlayerMissionByAttr(p *player, attr *attribute.MapAttr) *playerMission {
 	ms := &playerMission{
-		owner: p,
+		owner:        p,
 		gcardIDsAttr: attr.GetListAttr("gcardIDs"),
 	}
 	ms.attr = attr
@@ -283,7 +283,7 @@ func newPlayerMissionByAttr(p *player, attr *attribute.MapAttr) *playerMission {
 }
 
 func (m *playerMission) String() string {
-	return fmt.Sprintf("[pms cityID=%d, type=%s, gold=%d, transportCity=%d, transportForage=%d, transportGold=%d, " +
+	return fmt.Sprintf("[pms cityID=%d, type=%s, gold=%d, transportCity=%d, transportForage=%d, transportGold=%d, "+
 		"contribution=%f]", m.getCityID(), m.getType(), m.getGoldReward(), m.getTransportCity(), m.getTransportForage(),
 		m.getTransportGold(), m.getContribution())
 }
@@ -419,11 +419,11 @@ func (m *playerMission) getTimeout() int64 {
 
 func (m *playerMission) packMsg() *pb.ExecutingCampaignMission {
 	return &pb.ExecutingCampaignMission{
-		Type: m.getType(),
-		GoldReward: int32(m.getGoldReward()),
-		Cards: m.getCards(),
-		RemainTime: int32(m.getRemainTime().Seconds()),
-		MaxTime: int32(m.getMaxTime()),
+		Type:         m.getType(),
+		GoldReward:   int32(m.getGoldReward()),
+		Cards:        m.getCards(),
+		RemainTime:   int32(m.getRemainTime().Seconds()),
+		MaxTime:      int32(m.getMaxTime()),
 		Contribution: int32(m.getContribution()),
 	}
 }

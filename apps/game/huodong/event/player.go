@@ -18,6 +18,6 @@ func (hpd *EventPlayerData) GetVersion() int {
 	return hpd.Attr.GetInt("version")
 }
 
-func (hpd *EventPlayerData) Reset(version int)  {
+func (hpd *EventPlayerData) Reset(version int) {
 	hpd.Attr.SetInt("version", version)
 }

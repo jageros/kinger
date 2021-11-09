@@ -11,7 +11,7 @@ type WinningRate struct {
 	ExpectedWinningRateAdv     float64 `json:"expected_winning_rate_adv"`
 	ExpectedWinningRateInf     float64 `json:"expected_winning_rate_inf"`
 	ExpectedWinningRateAdvKing float64 `json:"expected_winning_rate_adv_king"`
-	ExpectedWinningRateInfKing     float64 `json:"expected_winning_rate_inf_king"`
+	ExpectedWinningRateInfKing float64 `json:"expected_winning_rate_inf_king"`
 
 	maxDiff int
 	minDiff int
@@ -29,7 +29,7 @@ func (w *WinningRate) init() {
 
 type WinningRateGameData struct {
 	baseGameData
-	WinningRates      []*WinningRate
+	WinningRates []*WinningRate
 }
 
 func newWinningRateGameData() *WinningRateGameData {
@@ -64,11 +64,11 @@ func (wg *WinningRateGameData) binarySearchWinRate(indexDiff, minIdx, maxIdx int
 		return w
 	} else if indexDiff < w.minDiff {
 		if idx > minIdx {
-			return wg.binarySearchWinRate(indexDiff, minIdx, idx - 1)
+			return wg.binarySearchWinRate(indexDiff, minIdx, idx-1)
 		}
 	} else {
 		if idx < maxIdx {
-			return wg.binarySearchWinRate(indexDiff, idx + 1, maxIdx)
+			return wg.binarySearchWinRate(indexDiff, idx+1, maxIdx)
 		}
 	}
 
@@ -78,10 +78,10 @@ func (wg *WinningRateGameData) binarySearchWinRate(indexDiff, minIdx, maxIdx int
 func (wg *WinningRateGameData) GetExpectedWinningRate(indexDiff int, lvl int) float64 {
 	indexDiff2 := indexDiff
 	if indexDiff2 < 0 {
-		indexDiff2 = - indexDiff2
+		indexDiff2 = -indexDiff2
 	}
 
-	w := wg.binarySearchWinRate(indexDiff2, 0, len(wg.WinningRates) - 1)
+	w := wg.binarySearchWinRate(indexDiff2, 0, len(wg.WinningRates)-1)
 	if w == nil {
 		return 0.5
 	} else if indexDiff < 0 {
